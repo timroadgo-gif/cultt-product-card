@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=4773eaed59f5';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=4773eaed59f5';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=4773eaed59f5';
-import { createButton } from './design-system/components/button/button.js?v=4773eaed59f5';
+import { createIcon } from './design-system/icons/icon.js?v=7921408f7da4';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=7921408f7da4';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=7921408f7da4';
+import { createButton } from './design-system/components/button/button.js?v=7921408f7da4';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -77,7 +77,25 @@ renderAvailability();
 
 // The gallery is pinned under the content, so the bar turns solid when the white surface reaches it.
 const productContent = document.querySelector('.product-content');
+// Compact title: mirrors the product name and follows the REAL title's position. p = 0 while the title's top is at or
+// below the bar's lower edge, 1 once it has travelled TITLE_RANGE px under the bar; anything between is shown as is.
+const productTitle = document.querySelector('#productName');
+const compactTitle = document.querySelector('.gallery__topbar-title');
+const TITLE_RANGE = 32;
+const syncTitleText = () => { compactTitle.textContent = productTitle.textContent.trim(); };
+syncTitleText();
+new MutationObserver(syncTitleText).observe(productTitle, { childList: true, characterData: true, subtree: true });
+let lastTitleP = -1;
+function updateCompactTitle() {
+  const barBottom = topbar.getBoundingClientRect().bottom;
+  const p = Math.min(1, Math.max(0, (barBottom - productTitle.getBoundingClientRect().top) / TITLE_RANGE));
+  if (Math.abs(p - lastTitleP) < 0.001) return;
+  lastTitleP = p;
+  compactTitle.style.setProperty('--title-p', p.toFixed(3));
+}
+
 function updateTopbar() {
+  updateCompactTitle();
   const solid = productContent.getBoundingClientRect().top <= topbar.offsetHeight;
   topbar.classList.toggle('is-scrolled', solid);
   // Over the solid bar the glass buttons refract the bar, not the page under it (UI Kit: data-glass-backdrop).

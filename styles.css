@@ -24,7 +24,12 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;user-select:none;-webkit-user-drag:none}
 /* Nav controls: GlassIconButton 44 from the UI Kit (live Liquid Glass); the bar only positions them */
 .gallery__topbar{--nav-inset:clamp(12px,4vw,16px);position:fixed;z-index:40;top:0;left:50%;width:100%;max-width:520px;padding:max(calc(env(safe-area-inset-top,0px) + 8px),16px) var(--nav-inset) 12px;transform:translateX(-50%);pointer-events:none;background:transparent;border-bottom:1px solid transparent;transition:background-color 220ms ease,border-color 220ms ease}
-.gallery__topbar-actions{display:flex;justify-content:space-between;align-items:center}
+.gallery__topbar-actions{position:relative;display:flex;justify-content:space-between;align-items:center}
+/* Compact title (Louis Vuitton-style): centred on the whole bar, not between the asymmetric controls — its width
+   reserves the wider control (Share|Cart, 88) plus 12 on both sides, so it never reaches either group. Opacity, a 5 px
+   rise and a 2 px blur are driven by --title-p (0…1) from the real title's position (app.js); no time-based animation. */
+.gallery__topbar-title{--title-p:0;position:absolute;inset:0;width:fit-content;max-width:calc(100% - 2 * (88px + var(--space-3)));height:var(--text-body-line-height);margin:auto;overflow:hidden;color:var(--ink);font-size:var(--text-body-size);font-weight:400;line-height:var(--text-body-line-height);white-space:nowrap;text-overflow:ellipsis;pointer-events:none;opacity:var(--title-p);transform:translate3d(0,calc((1 - var(--title-p)) * 5px),0);filter:blur(calc((1 - var(--title-p)) * 2px))}
+@media (prefers-reduced-motion:reduce){.gallery__topbar-title{transform:none;filter:none}}
 .gallery__topbar-group{display:flex;gap:var(--space-2)}
 .gallery__topbar .ds-icon-button,.gallery__topbar .ds-icon-button-group{pointer-events:auto}
 .gallery__topbar.is-scrolled{background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(20px) saturate(145%);backdrop-filter:blur(20px) saturate(145%);border-bottom-color:rgba(7,7,7,.09)}
