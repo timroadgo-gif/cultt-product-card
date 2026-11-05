@@ -65,10 +65,10 @@
   --icon-presentation-compact-optical-size: 11px;
   --icon-presentation-compact-stroke: 0.9px;
   --icon-presentation-compact-stroke-max: 1px;
-  --icon-presentation-large-viewport: 24px;
-  --icon-presentation-large-optical-size: 20px;
-  --icon-presentation-large-stroke: 1.25px;
-  --icon-presentation-large-stroke-max: 1.5px;
+  --icon-presentation-large-viewport: 18px;
+  --icon-presentation-large-optical-size: 15px;
+  --icon-presentation-large-stroke: 0.9px;
+  --icon-presentation-large-stroke-max: 1px;
   --text-display-size: 36px;
   --text-display-line-height: 40px;
   --text-display-weight: var(--font-weight-light);

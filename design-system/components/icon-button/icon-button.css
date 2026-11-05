@@ -19,7 +19,7 @@
   transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
 }
 .ds-icon-button .ds-icon { width: var(--icon-button-glass-icon-viewport); height: var(--icon-button-glass-icon-viewport); }
-/* iconSize "large" (approved 2026-11-06): same 44 circle, larger icon (icons/presentation.js, tokens icon.presentation.large.*). */
+/* iconSize "large" (approved 2026-11-06): same 44 circle, larger icon (≈ 15 px, same 0.9 px line) (icons/presentation.js, tokens icon.presentation.large.*). */
 .ds-icon-button--large-icon .ds-icon { width: var(--icon-presentation-large-viewport); height: var(--icon-presentation-large-viewport); }
 
 /* Interaction: iOS glass controls respond by compressing slightly and catching more light. */
