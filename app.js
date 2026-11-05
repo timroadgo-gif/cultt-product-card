@@ -1,8 +1,8 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=f7084f4fa6a4';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=f7084f4fa6a4';
-import { createButton } from './design-system/components/button/button.js?v=f7084f4fa6a4';
+import { createIcon } from './design-system/icons/icon.js?v=f4bbe88cf1cc';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=f4bbe88cf1cc';
+import { createButton } from './design-system/components/button/button.js?v=f4bbe88cf1cc';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 document.querySelectorAll('[data-icon]').forEach(slot => {
