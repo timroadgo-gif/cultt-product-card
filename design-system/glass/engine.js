@@ -6,7 +6,7 @@
 // ?glass=flat the CSS material in css/glass.css stays on its own.
 // Preset values come from tokens (glass.<material>.lens.*); there are no per-call shader settings.
 
-import liquidGL from "./vendor/liquidGL.js?v=a8b2f4cae8ba";
+import liquidGL from "./vendor/liquidGL.js?v=af66356b9e7c";
 
 export const PRESETS = ["light"]; // one preset per approved material
 
