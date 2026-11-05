@@ -6,7 +6,7 @@
 // ?glass=flat the CSS material in css/glass.css stays on its own.
 // Preset values come from tokens (glass.<material>.lens.*); there are no per-call shader settings.
 
-import liquidGL from "./vendor/liquidGL.js?v=b5450e17839c";
+import liquidGL from "./vendor/liquidGL.js?v=ae3d6ae00427";
 
 export const PRESETS = ["light"]; // one preset per approved material
 
@@ -49,16 +49,21 @@ function preset(el, material) {
   };
 }
 
-const snapshotScale = () => {
-  const b = document.body;
+// What a lens refracts: the whole page by default, or — for controls marked inside [data-glass-source="<selector>"] —
+// one pinned element (e.g. a sticky product gallery that content scrolls over). The renderer maps lenses to the
+// snapshot by position relative to that element, so a pinned source stays correct while the page scrolls.
+const sourceOf = (el) => el.closest("[data-glass-source]")?.dataset.glassSource || "body";
+const sourceEl = (sel) => document.querySelector(sel) || document.body;
+const snapshotScale = (sel = "body") => {
+  const b = sourceEl(sel);
   return (b.scrollWidth + b.scrollHeight) / 2 || 1;
 };
-const toUV = ({ refraction, bevelDepth }) => {
-  const k = snapshotScale();
+const toUV = ({ refraction, bevelDepth }, sel) => {
+  const k = snapshotScale(sel);
   return { refraction: refraction / k, bevelDepth: bevelDepth / k };
 };
 function scaleLenses() {
-  for (const lens of live.values()) if (lens?._dsPx) Object.assign(lens.options, toUV(lens._dsPx));
+  for (const lens of live.values()) if (lens?._dsPx) Object.assign(lens.options, toUV(lens._dsPx, lens._dsSource));
 }
 addEventListener("resize", scaleLenses, { passive: true });
 new ResizeObserver(scaleLenses).observe(document.documentElement);
@@ -72,7 +77,7 @@ export function attachLens(el, { material = "light" } = {}) {
   el.dataset.dsLens ||= String(++seq);
   const start = () => {
     if (live.has(el) || queue.has(el) || !el.isConnected || !el.offsetWidth) return;
-    queue.set(el, material);
+    queue.set(el, { material, source: sourceOf(el) });
     flushSoon();
   };
   const ro = new ResizeObserver(start);
@@ -81,7 +86,7 @@ export function attachLens(el, { material = "light" } = {}) {
   return () => { ro.disconnect(); queue.delete(el); detach(el); };
 }
 
-const queue = new Map(); // lens element → material, waiting for the next frame
+const queue = new Map(); // lens element → { material, source }, waiting for the next frame
 let flushing = null;
 const flushSoon = () => { flushing ??= requestAnimationFrame(flush); };
 
@@ -89,10 +94,12 @@ function flush() {
   flushing = null;
   const batch = [...queue.entries()].filter(([el]) => el.isConnected);
   queue.clear();
-  for (const material of PRESETS) {
+  const groups = new Set(batch.map(([, q]) => `${q.material}|${q.source}`)); // one renderer call per material + source
+  for (const group of groups) {
+    const [material, source] = group.split("|");
     const els = [];
-    for (const [el, m] of batch) {
-      if (m !== material) continue;
+    for (const [el, q] of batch) {
+      if (q.material !== material || q.source !== source) continue;
       const surface = el.closest(".ds-glass");
       // Canvas anchor: the nearest [data-glass-layer] (one shared canvas for all its lenses; <body> or a sticky
       // container with no stacking context between it and the surfaces) or, by default, the surface itself.
@@ -108,13 +115,14 @@ function flush() {
     if (!px.bevelDepth) { els.forEach((el) => detach(el)); continue; } // tokens not loaded
     const made = liquidGL({
       target: els.map((el) => `[data-ds-lens="${el.dataset.dsLens}"]`).join(","),
-      snapshot: "body",
+      snapshot: source,
       ...opts,
-      ...toUV(px),
+      ...toUV(px, source),
       on: { init: (lens) => { if (live.has(lens.el)) lens.el.closest(".ds-glass").dataset.lensLive = ""; } },
     });
     for (const lens of [made].flat().filter(Boolean)) {
       lens._dsPx = px;
+      lens._dsSource = source;
       live.set(lens.el, lens);
     }
     for (const el of els) if (!live.get(el)) detach(el);

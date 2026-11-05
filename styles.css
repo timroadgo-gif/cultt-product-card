@@ -10,7 +10,9 @@ button,a{font:inherit;color:inherit}
 button{cursor:pointer}
 button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--green);outline-offset:3px}
 .product-page{width:100%;max-width:520px;margin:0 auto;background:#fff;overflow:clip}
-.gallery{position:relative;aspect-ratio:3/4;background:#f6f5f3;overflow:clip}
+/* Scroll-driven overlap: the gallery is pinned (sticky, native scrolling, no JS), the white information surface is the
+   next layer and slides over it with the finger; scrolling up reveals the photo again. No shadow, radius or transform. */
+.gallery{position:sticky;top:0;z-index:0;aspect-ratio:3/4;background:#f6f5f3;overflow:clip}
 .gallery__track{position:absolute;inset:0;overflow:clip;touch-action:pan-y}
 .gallery__rail{width:100%;height:100%;display:flex;transition:transform 320ms cubic-bezier(.32,.72,0,1);will-change:transform}
 .gallery__slide{position:relative;flex:0 0 100%;height:100%;margin:0;overflow:clip;background:#f6f5f3}
@@ -29,7 +31,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__progress span.is-active{width:14px;background:#fff}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
    so each block reads as a unit. */
-.product-content{padding:calc(var(--space-5) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
+.product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-5) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
 /* Top block, proportioned on the Louis Vuitton mobile PDP: photo → article 28, article → name 8, name → price 4 (≈16 baseline-to-cap, as LV), price → Split 8;
    the price is quieter than the name (16 vs 20), as there. */
 .intro-block{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:0}

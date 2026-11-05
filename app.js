@@ -1,8 +1,8 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=b5450e17839c';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=b5450e17839c';
-import { createButton } from './design-system/components/button/button.js?v=b5450e17839c';
+import { createIcon } from './design-system/icons/icon.js?v=ae3d6ae00427';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=ae3d6ae00427';
+import { createButton } from './design-system/components/button/button.js?v=ae3d6ae00427';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 document.querySelectorAll('[data-icon]').forEach(slot => {
@@ -37,7 +37,6 @@ let touchStart = null;
 let mouseStartX = null;
 let lastWheelSlide = 0;
 const topbar = document.querySelector('.gallery__topbar');
-const gallery = document.querySelector('.gallery');
 const availabilityStates = ['available', 'sold_with_price', 'sold_price_hidden'];
 let availabilityIndex = 0;
 const priceTrigger = document.querySelector('.price-state-trigger');
@@ -70,8 +69,10 @@ priceTrigger.addEventListener('click', () => {
 findSimilar.addEventListener('click', () => showToast('Поиск похожих товаров'));
 renderAvailability();
 
+// The gallery is pinned under the content, so the bar turns solid when the white surface reaches it.
+const productContent = document.querySelector('.product-content');
 function updateTopbar() {
-  const solid = gallery.getBoundingClientRect().bottom <= topbar.offsetHeight;
+  const solid = productContent.getBoundingClientRect().top <= topbar.offsetHeight;
   topbar.classList.toggle('is-scrolled', solid);
   // Over the solid bar the glass buttons refract the bar, not the page under it (UI Kit: data-glass-backdrop).
   if (solid) topbar.dataset.glassBackdrop = 'solid';
