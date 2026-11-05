@@ -16,14 +16,14 @@
     <title>Louis Vuitton Noe — THE CULTT</title>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=ae3d6ae00427" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=ae3d6ae00427" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=ae3d6ae00427" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=ae3d6ae00427" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=ae3d6ae00427" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=ae3d6ae00427" />
-    <link rel="stylesheet" href="./styles.css?v=ae3d6ae00427" />
-    <meta name="build" content="ae3d6ae00427" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=f7084f4fa6a4" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=f7084f4fa6a4" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=f7084f4fa6a4" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=f7084f4fa6a4" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=f7084f4fa6a4" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=f7084f4fa6a4" />
+    <link rel="stylesheet" href="./styles.css?v=f7084f4fa6a4" />
+    <meta name="build" content="f7084f4fa6a4" />
   </head>
   <body>
     <header class="gallery__topbar" aria-label="Навигация по товару" data-glass-source=".gallery">
@@ -37,13 +37,11 @@
         <div class="gallery__track" id="galleryTrack">
           <div class="gallery__rail">
             <figure class="gallery__slide"><img src="./assets/product-1.png" alt="Красная сумка Louis Vuitton Noe, вид спереди" /></figure>
-            <figure class="gallery__slide"><img src="./assets/product-2.png" alt="Louis Vuitton Noe на модели" loading="lazy" /></figure>
-            <figure class="gallery__slide"><img src="./assets/product-3.png" alt="Красная сумка Louis Vuitton Noe, вид сбоку" loading="lazy" /></figure>
+            <figure class="gallery__slide"><img src="./assets/product-2.png" alt="Louis Vuitton Noe на модели" decoding="async" /></figure>
+            <figure class="gallery__slide"><img src="./assets/product-3.png" alt="Красная сумка Louis Vuitton Noe, вид сбоку" decoding="async" /></figure>
           </div>
         </div>
-        <div class="gallery__progress" id="galleryProgress" aria-label="Фото 1 из 3">
-          <span class="is-active"></span><span></span><span></span>
-        </div>
+        <div class="gallery__progress" id="galleryProgress" role="img" aria-label="Фото 1 из 3"><span class="gallery__progress-bar"></span></div>
       </section>
 
       <div class="product-content">
@@ -113,6 +111,6 @@
       <!-- Button primary (fill) + Button secondary icon-only, built from the UI Kit in app.js -->
     </nav>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=ae3d6ae00427"></script>
+    <script type="module" src="./app.js?v=f7084f4fa6a4"></script>
   </body>
 </html>

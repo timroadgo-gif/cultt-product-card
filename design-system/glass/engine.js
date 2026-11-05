@@ -6,7 +6,7 @@
 // ?glass=flat the CSS material in css/glass.css stays on its own.
 // Preset values come from tokens (glass.<material>.lens.*); there are no per-call shader settings.
 
-import liquidGL from "./vendor/liquidGL.js?v=ae3d6ae00427";
+import liquidGL from "./vendor/liquidGL.js?v=f7084f4fa6a4";
 
 export const PRESETS = ["light"]; // one preset per approved material
 
@@ -158,8 +158,9 @@ let pending = null;
 document.addEventListener("transitionend", (e) => {
   if (!live.size || e.target.closest?.(".ds-glass")) return;
   clearTimeout(pending);
+  // Re-rasterise in idle time (≤300 ms later), so it never lands inside the next gesture or animation frame.
   pending = setTimeout(() => {
-    pending = null;
-    for (const r of new Set([...live.values()].map((lens) => lens?.renderer))) r?.captureSnapshot?.();
+    const run = () => { pending = null; for (const r of new Set([...live.values()].map((lens) => lens?.renderer))) r?.captureSnapshot?.(); };
+    if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 300 }); else run();
   }, 60);
 }, true);

@@ -1,8 +1,8 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=ae3d6ae00427';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=ae3d6ae00427';
-import { createButton } from './design-system/components/button/button.js?v=ae3d6ae00427';
+import { createIcon } from './design-system/icons/icon.js?v=f7084f4fa6a4';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=f7084f4fa6a4';
+import { createButton } from './design-system/components/button/button.js?v=f7084f4fa6a4';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 document.querySelectorAll('[data-icon]').forEach(slot => {
@@ -29,12 +29,13 @@ const setBottomLabel = text => { bottomAdd.querySelector('.ds-button__label').te
 
 const track = document.querySelector('#galleryTrack');
 const rail = track.querySelector('.gallery__rail');
-const dots = [...document.querySelectorAll('#galleryProgress span')];
+const slides = rail.querySelectorAll('.gallery__slide');
+const progress = document.querySelector('#galleryProgress');
+const progressBar = progress.querySelector('.gallery__progress-bar');
+const galleryEl = track.closest('.gallery');
 const toast = document.querySelector('#toast');
 let toastTimer;
 let galleryIndex = 0;
-let touchStart = null;
-let mouseStartX = null;
 let lastWheelSlide = 0;
 const topbar = document.querySelector('.gallery__topbar');
 const availabilityStates = ['available', 'sold_with_price', 'sold_price_hidden'];
@@ -90,53 +91,90 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
 }
 
-function showGallerySlide(index) {
-  galleryIndex = Math.max(0, Math.min(index, dots.length - 1));
-  rail.style.transform = `translate3d(-${galleryIndex * 100}%, 0, 0)`;
-  dots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === galleryIndex));
-  document.querySelector('#galleryProgress').setAttribute('aria-label', `Фото ${galleryIndex + 1} из ${dots.length}`);
+// Gallery: one position value (in slides, fractional while dragging) drives the rail and the progress bar together.
+// Pointer events track the finger 1:1; the browser keeps vertical scrolling (touch-action: pan-y on the track), and a
+// gesture is claimed only once it is clearly horizontal. Release settles with a duration matched to the finger's speed.
+const count = slides.length;
+galleryEl.style.setProperty('--gallery-count', count);
+let position = 0; // current visual position, in slides
+let drag = null;
+const reduceGalleryMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function paintGallery(pos) {
+  position = pos;
+  rail.style.transform = `translate3d(${-pos * 100}%, 0, 0)`;
+  progressBar.style.transform = `translate3d(${pos * 100}%, 0, 0)`;
 }
 
-track.addEventListener('touchstart', event => {
-  const touch = event.touches[0];
-  touchStart = { x: touch.clientX, y: touch.clientY };
-}, { passive: true });
+function settleGallery(index, duration = 420) {
+  galleryIndex = Math.max(0, Math.min(index, count - 1));
+  galleryEl.style.setProperty('--gallery-settle', `${reduceGalleryMotion.matches ? 0 : Math.round(duration)}ms`);
+  galleryEl.classList.add('is-settling');
+  paintGallery(galleryIndex);
+  progress.setAttribute('aria-label', `Фото ${galleryIndex + 1} из ${count}`);
+}
+const showGallerySlide = index => settleGallery(index);
+rail.addEventListener('transitionend', event => { if (event.target === rail) galleryEl.classList.remove('is-settling'); });
 
-track.addEventListener('touchend', event => {
-  if (!touchStart) return;
-  const touch = event.changedTouches[0];
-  const dx = touch.clientX - touchStart.x;
-  const dy = touch.clientY - touchStart.y;
-  if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-    showGallerySlide(galleryIndex + (dx < 0 ? 1 : -1));
+// Where the rail is right now (mid-settle included), so grabbing a moving photo continues from where it is.
+function currentPosition() {
+  const m = new DOMMatrixReadOnly(getComputedStyle(rail).transform);
+  return -m.m41 / (track.clientWidth || 1);
+}
+
+track.addEventListener('pointerdown', event => {
+  if (event.button > 0 || drag) return;
+  const pos = galleryEl.classList.contains('is-settling') ? currentPosition() : position;
+  drag = { id: event.pointerId, x0: event.clientX, y0: event.clientY, start: pos, width: track.clientWidth, axis: null, samples: [[event.timeStamp, event.clientX]] };
+});
+
+track.addEventListener('pointermove', event => {
+  if (!drag || event.pointerId !== drag.id) return;
+  const dx = event.clientX - drag.x0, dy = event.clientY - drag.y0;
+  if (!drag.axis) {
+    if (Math.hypot(dx, dy) < 6) return;
+    drag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    if (drag.axis === 'y') { drag = null; return; } // vertical: leave it to page scrolling
+    track.setPointerCapture(event.pointerId);
+    galleryEl.classList.remove('is-settling');
+    paintGallery(drag.start);
   }
-  touchStart = null;
-}, { passive: true });
+  drag.samples.push([event.timeStamp, event.clientX]);
+  if (drag.samples.length > 6) drag.samples.shift();
+  let pos = drag.start - dx / drag.width;
+  if (pos < 0) pos *= 0.35; // soft edges instead of a hard stop; no looping
+  else if (pos > count - 1) pos = count - 1 + (pos - (count - 1)) * 0.35;
+  paintGallery(pos);
+});
 
-track.addEventListener('mousedown', event => {
-  if (event.button === 0) mouseStartX = event.clientX;
-});
-track.addEventListener('mouseup', event => {
-  if (mouseStartX === null) return;
-  const dx = event.clientX - mouseStartX;
-  if (Math.abs(dx) > 35) showGallerySlide(galleryIndex + (dx < 0 ? 1 : -1));
-  mouseStartX = null;
-});
-track.addEventListener('mouseleave', () => { mouseStartX = null; });
+function endDrag(event) {
+  if (!drag || event.pointerId !== drag.id) return;
+  const d = drag; drag = null;
+  if (d.axis !== 'x') return;
+  const [t0, x0] = d.samples[0], [t1, x1] = d.samples[d.samples.length - 1];
+  const velocity = (x1 - x0) / Math.max(16, t1 - t0); // px per ms, positive = finger moving right
+  let target = Math.round(position);
+  if (Math.abs(velocity) > 0.3) target = velocity < 0 ? Math.ceil(position - 0.02) : Math.floor(position + 0.02); // a flick goes one photo in its direction
+  target = Math.max(d.start - 1, Math.min(d.start + 1, target)); // one photo per gesture
+  const remaining = Math.abs(target - position) * d.width;
+  // Settle as fast as the finger was moving (ease-out starts at ~2.4× average speed), never jumpier than 220 ms or slower than 420.
+  const duration = Math.abs(velocity) > 0.05 ? Math.min(420, Math.max(220, (remaining / Math.abs(velocity)) * 1.6)) : 420;
+  settleGallery(Math.round(target), event.type === 'pointercancel' ? 300 : duration);
+}
+track.addEventListener('pointerup', endDrag);
+track.addEventListener('pointercancel', endDrag);
+track.addEventListener('dragstart', event => event.preventDefault());
 
 track.addEventListener('wheel', event => {
   if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
   event.preventDefault();
-  if (Date.now() - lastWheelSlide < 300 || Math.abs(event.deltaX) < 15) return;
+  if (Date.now() - lastWheelSlide < 450 || Math.abs(event.deltaX) < 15) return;
   showGallerySlide(galleryIndex + (event.deltaX > 0 ? 1 : -1));
   lastWheelSlide = Date.now();
 }, { passive: false });
 
-document.querySelector('.gallery__progress').addEventListener('click', event => {
-  const dot = event.target.closest('span');
-  if (!dot) return;
-  showGallerySlide(dots.indexOf(dot));
-});
+// Decode every photo up front so the first swipe never waits on image decoding.
+slides.forEach(slide => slide.querySelector('img')?.decode?.().catch(() => {}));
 
 document.querySelector('.copy-button').addEventListener('click', async () => {
   try {

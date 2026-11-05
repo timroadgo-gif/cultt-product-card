@@ -14,7 +14,12 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
    next layer and slides over it with the finger; scrolling up reveals the photo again. No shadow, radius or transform. */
 .gallery{position:sticky;top:0;z-index:0;aspect-ratio:3/4;background:#f6f5f3;overflow:clip}
 .gallery__track{position:absolute;inset:0;overflow:clip;touch-action:pan-y}
-.gallery__rail{width:100%;height:100%;display:flex;transition:transform 320ms cubic-bezier(.32,.72,0,1);will-change:transform}
+/* Gallery motion: the rail follows the finger 1:1 (no transition while dragging); on release it settles with a
+   velocity-matched ease-out (--gallery-settle, 220–420 ms, set from JS); taps / keys / wheel use 420 ms. The progress bar
+   gets the same transform timing, so both move as one. */
+.gallery{--gallery-ease:cubic-bezier(.22,.61,.36,1);--gallery-settle:420ms}
+.gallery__rail{width:100%;height:100%;display:flex;transform:translate3d(0,0,0);will-change:transform}
+.gallery.is-settling .gallery__rail,.gallery.is-settling .gallery__progress-bar{transition:transform var(--gallery-settle) var(--gallery-ease)}
 .gallery__slide{position:relative;flex:0 0 100%;height:100%;margin:0;overflow:clip;background:#f6f5f3}
 .gallery__slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;user-select:none;-webkit-user-drag:none}
 .gallery__slide:first-child img{transform:translateY(-25%) scale(1.33);transform-origin:top center}
@@ -26,9 +31,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__topbar .ds-icon-button{pointer-events:auto}
 .gallery__topbar.is-scrolled{background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(20px) saturate(145%);backdrop-filter:blur(20px) saturate(145%);border-bottom-color:rgba(7,7,7,.09)}
 @media (display-mode:standalone) and (max-width:520px){.gallery__topbar{padding-top:max(calc(env(safe-area-inset-top,0px) + 22px),16px)}}
-.gallery__progress{position:absolute;left:16px;bottom:4px;z-index:2;display:flex;align-items:center;gap:4px;padding:4px;border-radius:40px;background:rgba(0,0,0,.15);backdrop-filter:blur(4px)}
-.gallery__progress span{width:6px;height:6px;border-radius:10px;background:rgba(255,255,255,.48);transition:width 180ms ease}
-.gallery__progress span.is-active{width:14px;background:#fff}
+/* Progress: Louis Vuitton-style hairline at the bottom edge — neutral track, ink segment of 1/n width at the position. */
+.gallery__progress{position:absolute;left:0;right:0;bottom:0;z-index:2;height:2px;background:rgba(7,7,7,.1);pointer-events:none}
+.gallery__progress-bar{position:absolute;inset:0 auto 0 0;width:calc(100% / var(--gallery-count,3));background:var(--ink);transform:translate3d(0,0,0);will-change:transform}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
    so each block reads as a unit. */
 .product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-5) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
