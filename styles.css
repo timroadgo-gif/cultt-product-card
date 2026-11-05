@@ -27,7 +27,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__progress{position:absolute;left:16px;bottom:4px;z-index:2;display:flex;align-items:center;gap:4px;padding:4px;border-radius:40px;background:rgba(0,0,0,.15);backdrop-filter:blur(4px)}
 .gallery__progress span{width:6px;height:6px;border-radius:10px;background:rgba(255,255,255,.48);transition:width 180ms ease}
 .gallery__progress span.is-active{width:14px;background:#fff}
-.product-content{padding:16px clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-5)}
+/* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
+   so each block reads as a unit. */
+.product-content{padding:16px clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
 .intro-block{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:0}
 .product-heading{display:flex;flex-direction:column;gap:var(--space-1)}
 .sku-line{display:flex;align-items:center;gap:6px;color:var(--muted);font-family:Manrope,Arial,sans-serif;font-size:11px;line-height:16px;letter-spacing:.01em}
@@ -48,8 +50,6 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:24px}
 .info-button{flex:0 0 auto;display:grid;place-items:center;width:16px;height:16px;border:0;background:transparent;padding:0}
 .info-button{--icon-px:16px;color:var(--ink)}
 [data-icon]{display:grid;place-items:center}
-/* Editorial rhythm: related content stays close; major sections receive a full region gap. */
-.condition-section,.details-section{margin-top:var(--space-5)}
 /* Delivery is part of the product narrative, not a separate surface. Services follow Gucci's mobile PDP pattern:
    small icon inline with the title, description below at the full content width (title→text 8, service→service 16). */
 .delivery-card{display:flex;flex-direction:column}
@@ -65,7 +65,7 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:24px}
 .delivery-time{align-self:center;margin:0;text-align:right;white-space:nowrap;font-size:12px;font-weight:500;line-height:1.2}
 .text-link{position:relative;align-self:flex-start;border:0;background:transparent;padding:0;color:var(--green);font-size:13px;font-family:Manrope,Arial,sans-serif;font-weight:500;line-height:18px}
 .text-link::after{content:"";position:absolute;inset:-13px -8px}
-.condition-section{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-2)}
+.condition-section{display:flex;flex-direction:column;gap:var(--space-3)}
 .section-title-row{display:flex;align-items:center;gap:var(--space-2)}
 .section-title-row h2,.recommendation-section>h2{margin:0;font-size:16px;font-weight:400;line-height:23px}
 .section-title-row .info-button{width:18px;height:18px;opacity:.55}
@@ -85,7 +85,7 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:24px}
 .condition-note p{margin:0;color:#555;font-size:12px;line-height:18px}
 .wear-note{margin:0;color:#555;font-size:12px;line-height:18px}
 .wear-note strong{color:var(--ink);font-weight:400}
-.details-section{display:flex;flex-direction:column}
+.details-section{display:flex;flex-direction:column;margin-top:calc(var(--space-4) * -1)} /* the first accordion row has 16 top padding */
 /* Product information: quiet headings, compact lists, and a restrained reveal. */
 .accordion{border:0}
 .accordion summary{list-style:none;min-height:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;font-size:14px;font-weight:400;line-height:20px;cursor:pointer;-webkit-tap-highlight-color:transparent}
