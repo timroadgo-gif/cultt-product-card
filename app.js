@@ -1,8 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=b54a8754e952';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=b54a8754e952';
-import { createButton } from './design-system/components/button/button.js?v=b54a8754e952';
+import { createIcon } from './design-system/icons/icon.js?v=17f1afa39c2d';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=17f1afa39c2d';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=17f1afa39c2d';
+import { createButton } from './design-system/components/button/button.js?v=17f1afa39c2d';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 document.querySelectorAll('[data-icon]').forEach(slot => {
@@ -10,12 +11,14 @@ document.querySelectorAll('[data-icon]').forEach(slot => {
   slot.append(createIcon(slot.dataset.icon, { size }));
 });
 
-// Navigation over the photo: GlassIconButton 44 (functional layer over content).
-document.querySelector('[data-slot="nav-leading"]').append(createIconButton({ icon: 'arrow-left', ariaLabel: 'Назад' }));
-document.querySelector('[data-slot="nav-trailing"]').append(
-  createIconButton({ icon: 'share', ariaLabel: 'Поделиться' }),
-  createIconButton({ icon: 'shopping-bag', ariaLabel: 'Корзина' }),
-);
+// Navigation over the photo (functional layer over content): Back = GlassIconButton 44; Share + Cart = one
+// GlassIconButtonGroup capsule with two independent actions. Both with the large icon presentation (≈ 20 px, 1.25 px line).
+document.querySelector('[data-slot="nav-leading"]').append(createIconButton({ icon: 'arrow-left', ariaLabel: 'Назад', iconSize: 'large' }));
+document.querySelector('[data-slot="nav-trailing"]').append(createIconButtonGroup({
+  ariaLabel: 'Действия с товаром',
+  iconSize: 'large',
+  items: [{ icon: 'share', ariaLabel: 'Поделиться' }, { icon: 'shopping-bag', ariaLabel: 'Корзина' }],
+}));
 
 // Bottom actions: Button primary / large / fill + Button secondary / icon-only (favourite).
 const bottomBar = document.querySelector('.bottom-bar');

@@ -4,24 +4,27 @@
 // <button> keeps the 44 × 44 hit area around it. The surface refracts through the shared Liquid Glass engine
 // (glass/engine.js); refraction: false keeps the CSS material only (e.g. a control that is not painted until focused).
 // This file never styles glass or resizes icon geometry itself.
-import { createIcon } from "../../icons/icon.js?v=b54a8754e952";
-import { applyGlass } from "../../glass/glass.js?v=b54a8754e952";
+import { createIcon } from "../../icons/icon.js?v=17f1afa39c2d";
+import { applyGlass } from "../../glass/glass.js?v=17f1afa39c2d";
 
 const MATERIALS = ["glass-light"]; // IconButton / Glass / Light / 44 is the only approved variant
 
 const SIZES = ["regular", "compact"];
+const ICON_SIZES = ["standard", "large"]; // large: approved 2026-11-06 (product page top bar), regular size only
 
-export function createIconButton({ icon, ariaLabel, material = "glass-light", size = "regular", type = "button", refraction = true, onClick } = {}) {
+export function createIconButton({ icon, ariaLabel, material = "glass-light", size = "regular", iconSize = "standard", type = "button", refraction = true, onClick } = {}) {
   if (!icon) throw new Error("IconButton: icon is required");
   if (!ariaLabel) throw new Error("IconButton: ariaLabel is required (icon-only control)");
   if (!MATERIALS.includes(material)) throw new Error(`IconButton: material "${material}" is not one of ${MATERIALS.join(" | ")}`);
   if (!SIZES.includes(size)) throw new Error(`IconButton: size "${size}" is not one of ${SIZES.join(" | ")}`);
+  if (!ICON_SIZES.includes(iconSize)) throw new Error(`IconButton: iconSize "${iconSize}" is not one of ${ICON_SIZES.join(" | ")}`);
+  if (iconSize === "large" && size !== "regular") throw new Error("IconButton: iconSize \"large\" is defined for size \"regular\" only");
 
   const el = document.createElement("button");
-  el.className = `ds-icon-button${size === "compact" ? " ds-icon-button--compact" : ""}`;
+  el.className = `ds-icon-button${size === "compact" ? " ds-icon-button--compact" : ""}${iconSize === "large" ? " ds-icon-button--large-icon" : ""}`;
   el.type = type;
   el.setAttribute("aria-label", ariaLabel);
-  const icn = createIcon(icon, { presentation: "compact" });
+  const icn = createIcon(icon, { presentation: iconSize === "large" ? "large" : "compact" });
   if (size === "compact") {
     const surface = document.createElement("span");
     surface.className = "ds-icon-button__surface";

@@ -1,6 +1,6 @@
 // Button factory. Returns a <button> styled by button.css; state is switched with setButtonState().
 // `icon` is a registered icon name (see ../../icons/registry.json) or SVG markup using currentColor; either way every state recolours it.
-import { createIcon } from "../../icons/icon.js?v=b54a8754e952";
+import { createIcon } from "../../icons/icon.js?v=17f1afa39c2d";
 
 const VARIANTS = ["primary", "secondary"];
 const SIZES = ["large"];

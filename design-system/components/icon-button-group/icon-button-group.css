@@ -1,0 +1,34 @@
+/* GlassIconButtonGroup: one glass capsule (css/glass.css, shape pill) holding 44 × 44 icon actions side by side.
+   Height = icon-button.glass.size; items touch (the capsule is exactly n × 44 wide), so each icon keeps the same
+   negative space it has in a single GlassIconButton. Pressed: only the touched item darkens (its own circle). */
+.ds-icon-button-group {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  height: var(--icon-button-glass-size);
+  padding: 0;
+}
+.ds-icon-button-group__item {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: var(--icon-button-glass-size);
+  height: var(--icon-button-glass-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--icon-button-glass-foreground);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard), transform var(--motion-duration-fast) var(--motion-easing-standard);
+}
+.ds-icon-button-group__item .ds-icon { width: var(--icon-button-glass-icon-viewport); height: var(--icon-button-glass-icon-viewport); }
+.ds-icon-button-group[data-icon-size="large"] .ds-icon-button-group__item .ds-icon { width: var(--icon-presentation-large-viewport); height: var(--icon-presentation-large-viewport); }
+.ds-icon-button-group__item:active,
+.ds-icon-button-group__item[data-state="pressed"] { background: var(--glass-light-pressed-fill); }
+.ds-icon-button-group__item:active .ds-icon { transform: scale(var(--glass-light-pressed-scale)); }
+.ds-icon-button-group__item:focus-visible { outline: var(--button-focus-ring-width) solid var(--icon-button-glass-foreground); outline-offset: calc(var(--button-focus-ring-width) * -2); }
+@media (prefers-reduced-motion: reduce) { .ds-icon-button-group__item { transition: none; } }

@@ -4,13 +4,15 @@
 // `opticalSize` (× the icon's own `compact.scale`), centred on the grid centre (+ `compact.dx/dy` px) inside a
 // `viewport` box, and every line is rendered at `stroke` px. Tokens: icon.presentation.compact.*.
 
-export const PRESENTATIONS = ["compact"];
+export const PRESENTATIONS = ["compact", "large"]; // large: iconSize "large" glass buttons (tokens icon.presentation.large.*)
 const CENTER = 12; // centre of the 24 grid; library icons are optically centred on it
 
-export function compactFit(meta, { viewport, opticalSize, stroke }) {
+// `pxScale` scales the registry dx/dy (authored in compact px) for larger presentations.
+export function compactFit(meta, { viewport, opticalSize, stroke }, pxScale = 1) {
   if (!meta?.bounds) throw new Error("Icon presentation: registry `bounds` missing");
   const [x0, y0, x1, y1] = meta.bounds;
   const fix = { scale: 1, dx: 0, dy: 0, ...meta.compact };
+  fix.dx *= pxScale; fix.dy *= pxScale;
   const solid = meta.type === "fill"; // solid shapes scale as a whole; line icons get a normalised stroke
   const side = Math.max(x1 - x0, y1 - y0);
   // line icons: bounds include the library weight (1 unit); after fitting that weight is replaced by `stroke` px
