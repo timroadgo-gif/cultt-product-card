@@ -1,0 +1,103 @@
+/* GlassSurface — the shared native-inspired iOS 26 Liquid Glass material. The ONLY place glass is rendered.
+   Rule: follow Apple's system material (Glass.regular, light appearance) as closely as the web allows. No brand
+   textures, custom refraction, unusual blur or decorative highlights. Every glass component gets this one material.
+   Components never write their own glass; they call applyGlass() / put .ds-glass on an element.
+   Material  : tokens glass.<material>.* (only "light" exists).
+   Shape     : data-shape = circle | pill | rounded. circle/pill are true circles/capsules (no superellipse);
+               rounded uses the shared continuous geometry (.ds-corner + --corner-radius from the component).
+   Dimensions, content and interaction belong to the component.
+   Layers (back → front), each an approximation of a native layer: lens (real refraction, glass/engine.js) → backdrop
+   (frost + saturation) → fill → inner light (shade bottom; overlay-blended light top) → hairline edge with
+   angle-dependent specular light → content. Limits: docs/glass.md. */
+
+.ds-glass {
+  --_fill: var(--glass-light-fill);
+  position: relative;
+  isolation: isolate;
+  background: var(--_fill);
+  -webkit-backdrop-filter: blur(var(--glass-light-frost)) saturate(var(--glass-light-saturation));
+  backdrop-filter: blur(var(--glass-light-frost)) saturate(var(--glass-light-saturation));
+  box-shadow: var(--glass-light-bevel-shade), var(--glass-light-shadow);
+}
+
+/* Shape. Circle and pill are real circles/capsules: corner-shape stays round (corner rule exception). */
+.ds-glass[data-shape="circle"] { border-radius: 50%; }
+.ds-glass[data-shape="pill"] { border-radius: 9999px; }
+/* data-shape="rounded": radius and continuous shape come from .ds-corner (css/corners.css). */
+
+/* Edge: the native glass hairline. A 0.5px grey stroke overlaid with white specular light by angle: full at the
+   top (light source), none on the flanks, strong again at the bottom (light leaving through the far edge). Over light
+   content this gives the native look: a grey line on the flanks that dissolves at top and bottom. */
+.ds-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  corner-shape: inherit;
+  padding: var(--glass-light-stroke-width);
+  background:
+    conic-gradient(from 0deg,
+      rgb(255 255 255 / var(--glass-light-rim-top)) 0deg,
+      rgb(255 255 255 / var(--glass-light-rim-upper)) 45deg,
+      rgb(255 255 255 / var(--glass-light-rim-side)) 90deg,
+      rgb(255 255 255 / var(--glass-light-rim-lower)) 135deg,
+      rgb(255 255 255 / var(--glass-light-rim-bottom)) 180deg,
+      rgb(255 255 255 / var(--glass-light-rim-lower)) 225deg,
+      rgb(255 255 255 / var(--glass-light-rim-side)) 270deg,
+      rgb(255 255 255 / var(--glass-light-rim-upper)) 315deg,
+      rgb(255 255 255 / var(--glass-light-rim-top)) 360deg),
+    var(--glass-light-stroke-color);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+/* Inner light under the top edge. Overlay blending makes it luminance-adaptive like the native material: over light
+   content it lifts the glass to white, over dark content it adds almost nothing (no lit plastic dome). */
+.ds-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  corner-shape: inherit;
+  box-shadow: var(--glass-light-bevel-highlight);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Content sits above the material layers. */
+.ds-glass > * { position: relative; z-index: 2; }
+
+/* Lens layer (glass/glass.js): an empty layer filling the surface. The Liquid Glass engine (glass/engine.js) draws the
+   refracted backdrop for it on a shared canvas beneath the surface; the material layers above stay unchanged. */
+.ds-glass > .ds-glass__lens { position: absolute; inset: 0; z-index: auto; border-radius: inherit; pointer-events: none; }
+/* While the engine renders a lens the surface sits above what it refracts (z-index; the renderer snapshots only lower
+   content). Self-anchored ("self" = no glass layer): sticky without offsets (= relative layout) is what the
+   renderer anchors its canvas to, and overflow clips that canvas to the shape. Once live, the CSS backdrop is
+   redundant (the canvas covers it). */
+.ds-glass[data-lens] { z-index: var(--glass-lens-z-index); }
+.ds-glass[data-lens="self"] { position: sticky; overflow: hidden; }
+/* Self-anchored: the canvas is inside the surface, above its own background, so the fill (incl. pressed) moves to the
+   lens layer above the canvas and the CSS backdrop (now hidden behind the canvas) is dropped. Shared: the canvas is
+   behind the surface, so its background, frost and saturation apply to the refracted image as they did to the page. */
+.ds-glass[data-lens="self"][data-lens-live]:not([data-glass-backdrop="solid"] *) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.ds-glass[data-lens="self"][data-lens-live]:not([data-glass-backdrop="solid"] *) > .ds-glass__lens { background: var(--_fill) !important; }
+/* Over an opaque backdrop (e.g. a navigation bar that turns solid on scroll) the renderer, which snapshots only the
+   page below, would show the content the bar hides. A container marked [data-glass-backdrop="solid"] keeps its glass
+   controls on the CSS material: canvas hidden, CSS backdrop and fill back. Toggle the attribute with the bar. */
+[data-glass-backdrop="solid"] .ds-glass > canvas { visibility: hidden !important; } /* the renderer sets inline visibility */
+/* Shared lens layer: every glass surface inside renders on one canvas anchored here. <body> needs nothing; any other
+   container becomes sticky (= relative layout, so use it only on static / relative containers). */
+[data-glass-layer]:not(body) { position: sticky; }
+
+/* Accessibility: reduced transparency → nearly opaque surface; same silhouette and border. */
+@media (prefers-reduced-transparency: reduce) {
+  .ds-glass {
+    --_fill: var(--glass-light-reduced-transparency-fill);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

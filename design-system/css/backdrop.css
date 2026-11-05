@@ -1,0 +1,49 @@
+/* ModalBackdrop — the shared backdrop for every modal overlay (sheets, popups, dialogs, action sheets,
+   full-screen overlays). Light dimming and a small blur, always together. Not for tooltips, menus, dropdowns
+   or other non-modal UI. Runtime: backdrop/backdrop.js. Spec: docs/backdrop.md.
+   The blur is never animated: the whole layer (dim + blur) fades with opacity, which is smooth and cheap. */
+
+:root {
+  --backdrop-blur: var(--backdrop-modal-blur);
+  --backdrop-dim-opacity: var(--backdrop-modal-dim-opacity);
+}
+@media (min-width: 768px) { /* layout.desktop.breakpoint */
+  :root {
+    --backdrop-blur: var(--backdrop-modal-desktop-blur);
+    --backdrop-dim-opacity: var(--backdrop-modal-desktop-dim-opacity);
+  }
+}
+
+.ds-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(from var(--backdrop-modal-dim-color) r g b / var(--backdrop-dim-opacity));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+  backdrop-filter: blur(var(--backdrop-blur));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--backdrop-modal-transition-duration-out) var(--backdrop-modal-transition-easing);
+}
+@supports not (color: rgb(from red r g b)) {
+  .ds-backdrop { background: color-mix(in srgb, var(--backdrop-modal-dim-color) calc(var(--backdrop-dim-opacity) * 100%), transparent); }
+}
+.ds-backdrop[data-scope="container"] { position: absolute; } /* inside a frame/artboard instead of the viewport */
+.ds-backdrop[data-platform="mobile"] { --backdrop-blur: var(--backdrop-modal-blur); --backdrop-dim-opacity: var(--backdrop-modal-dim-opacity); }
+.ds-backdrop[data-platform="desktop"] { --backdrop-blur: var(--backdrop-modal-desktop-blur); --backdrop-dim-opacity: var(--backdrop-modal-desktop-dim-opacity); }
+
+.ds-backdrop[data-state="open"] {
+  opacity: 1;
+  pointer-events: auto; /* catches taps outside the modal; dismissal is the host's decision */
+  transition-duration: var(--backdrop-modal-transition-duration);
+}
+
+/* Nested overlays: only the lowest backdrop dims and blurs; upper ones only catch pointer events,
+   so depth never accumulates. */
+.ds-backdrop[data-nested] { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .ds-backdrop { --backdrop-dim-opacity: var(--backdrop-modal-reduced-transparency-dim-opacity); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-backdrop, .ds-backdrop[data-state="open"] { transition-duration: 1ms; }
+}

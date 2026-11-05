@@ -1,0 +1,17 @@
+/* TextAction (Figma Buttons «Ghost»): a text-only secondary action, usually under a primary Button. */
+.ds-text-action {
+  box-sizing: border-box;
+  min-height: var(--text-action-min-height);
+  margin: 0;
+  padding: var(--text-action-padding);
+  border: 0;
+  background: none;
+  color: var(--text-action-foreground-default);
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+.ds-text-action:active, .ds-text-action[data-state="pressed"] { color: var(--text-action-foreground-pressed); }
+.ds-text-action:focus-visible { outline: var(--button-focus-ring-width) solid var(--text-action-foreground-default); outline-offset: calc(var(--button-focus-ring-offset) * -2); }
+@media (prefers-reduced-motion: reduce) { .ds-text-action { transition: none; } }

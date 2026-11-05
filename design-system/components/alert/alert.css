@@ -1,0 +1,15 @@
+/* Alert: compact centred card for an urgent decision (e.g. discard entered data). Heading → message 12 · message → actions 24 ·
+   primary → cancel 8. No close button; the sheet header rules (X row, bottom 56) do not apply. */
+.ds-alert {
+  box-sizing: border-box;
+  width: min(var(--alert-width), 100% - 2 * var(--alert-inset));
+  padding: var(--alert-padding);
+  --corner-radius: var(--alert-radius);
+  background: var(--alert-background);
+  color: var(--alert-foreground);
+  text-align: center;
+  outline: none;
+}
+.ds-alert__text { display: flex; flex-direction: column; gap: var(--alert-heading-message); }
+.ds-alert__heading, .ds-alert__message { margin: 0; }
+.ds-alert__actions { display: flex; flex-direction: column; gap: var(--alert-action-gap); margin-top: var(--alert-message-actions); }

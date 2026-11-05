@@ -1,0 +1,8 @@
+/* DragIndicator: thin neutral capsule at the top of a swipe-dismissible popup. No shadow, no gradient. */
+.ds-drag-indicator {
+  width: var(--drag-indicator-width);
+  height: var(--drag-indicator-height);
+  --corner-radius: calc(var(--drag-indicator-height) / 2);
+  background: var(--drag-indicator-color);
+  pointer-events: none;
+}

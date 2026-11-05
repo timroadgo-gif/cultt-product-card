@@ -1,0 +1,25 @@
+/* Field (Figma «Input Form»). Kinds: text (label + input) and select (label + value + chevron).
+   Corners: shared continuous geometry (.ds-corner); the component only sets its semantic radius. */
+.ds-field {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--field-icon-gap);
+  width: 100%;
+  margin: 0;
+  padding: var(--field-padding);
+  border: 0;
+  --corner-radius: var(--field-radius);
+  background: var(--field-background);
+  color: var(--field-foreground);
+  font: inherit;
+  text-align: left;
+  cursor: text;
+}
+.ds-field[data-kind="select"] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ds-field__content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--field-gap); }
+.ds-field__input { width: 100%; margin: 0; padding: 0; border: 0; outline: 0; background: none; color: var(--field-foreground); }
+.ds-field__input::placeholder, .ds-field__value[data-empty] { color: var(--field-placeholder); opacity: 1; }
+.ds-field__chevron { flex: none; display: flex; }
+.ds-field__chevron .ds-icon { width: var(--field-chevron-size); height: var(--field-chevron-size); }
+.ds-field:focus-within, .ds-field:focus-visible { outline: 0; box-shadow: inset 0 0 0 var(--field-focus-ring-width) var(--field-foreground); }

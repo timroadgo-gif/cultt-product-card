@@ -1,0 +1,16 @@
+/* Responsive layout spacing. Mobile layer is the default; the desktop layer replaces it at the breakpoint
+   (token layout.desktop.breakpoint = 768px; media queries cannot read custom properties, keep in sync).
+   Component-internal spacing (spacing.*, popup.*, button.*) is shared and never changes with the breakpoint. */
+
+:root {
+  --layout-page-margin: var(--layout-mobile-page-margin);
+  --layout-content-gap: var(--layout-mobile-content-gap);
+  --layout-section-gap: var(--layout-mobile-section-gap);
+}
+@media (min-width: 768px) {
+  :root {
+    --layout-page-margin: var(--layout-desktop-page-margin);
+    --layout-content-gap: var(--layout-desktop-content-gap);
+    --layout-section-gap: var(--layout-desktop-section-gap);
+  }
+}

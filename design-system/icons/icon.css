@@ -1,0 +1,3 @@
+/* Icon: geometry is drawn on a 24×24 grid and scaled uniformly by the viewBox, so stroke width scales with size
+   (24px → 1×, 48px → 2×). No vector-effect, no per-size redraws. Colour comes from the surrounding `color`. */
+.ds-icon { display: block; flex: none; overflow: visible; }

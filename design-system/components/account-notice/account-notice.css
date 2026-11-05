@@ -1,0 +1,9 @@
+/* AccountNotice: avatar + message + inline links (sign-in prompt inside a form). */
+.ds-account-notice { display: flex; align-items: center; gap: var(--account-notice-gap); padding: var(--account-notice-padding); --corner-radius: var(--account-notice-radius); background: var(--account-notice-background); }
+.ds-account-notice__avatar { flex: none; display: grid; place-items: center; width: var(--account-notice-avatar-size); height: var(--account-notice-avatar-size); --corner-radius: 50%; background: var(--account-notice-avatar-background); color: var(--account-notice-avatar-foreground); }
+.ds-account-notice__avatar .ds-icon { width: var(--account-notice-avatar-icon-size); height: var(--account-notice-avatar-icon-size); }
+.ds-account-notice__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--account-notice-text-gap); }
+.ds-account-notice__text p { margin: 0; }
+.ds-account-notice__link { margin: 0; padding: 0; border: 0; background: none; font: inherit; font-weight: var(--font-weight-medium); color: var(--account-notice-link-default); cursor: pointer; }
+.ds-account-notice__link:active { color: var(--account-notice-link-pressed); }
+.ds-account-notice__link:focus-visible { outline: var(--button-focus-ring-width) solid var(--account-notice-link-default); outline-offset: var(--button-focus-ring-offset); }

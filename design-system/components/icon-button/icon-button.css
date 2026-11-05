@@ -1,0 +1,50 @@
+/* GlassIconButton (IconButton / Glass / Light / 44). Geometry, icon viewport and interaction only; the surface comes
+   from GlassSurface (css/glass.css). Three nested sizes: 44 circle → ~15 icon viewport → smaller optically fitted path
+   (icons/presentation.js, compact). */
+
+.ds-icon-button {
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--icon-button-glass-size);
+  height: var(--icon-button-glass-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--icon-button-glass-foreground);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
+}
+.ds-icon-button .ds-icon { width: var(--icon-button-glass-icon-viewport); height: var(--icon-button-glass-icon-viewport); }
+
+/* Interaction: iOS glass controls respond by compressing slightly and catching more light. */
+.ds-icon-button:active,
+.ds-icon-button[data-state="pressed"] {
+  --_fill: var(--glass-light-pressed-fill);
+  transform: scale(var(--glass-light-pressed-scale));
+}
+.ds-icon-button:focus-visible { outline: var(--button-focus-ring-width) solid var(--icon-button-glass-foreground); outline-offset: var(--button-focus-ring-offset); }
+
+/* Compact (secondary): visible 32 glass circle inside the 44 hit area. Negative margins make the layout footprint
+   equal to the visible circle, so surrounding layout aligns to what is seen; the extra 6 px of hit area overhangs. */
+.ds-icon-button--compact {
+  --_overhang: calc((var(--icon-button-glass-compact-size) - var(--icon-button-glass-size)) / 2);
+  margin: var(--_overhang);
+  background: none;
+}
+.ds-icon-button__surface {
+  display: grid;
+  place-items: center;
+  width: var(--icon-button-glass-compact-size);
+  height: var(--icon-button-glass-compact-size);
+}
+.ds-icon-button--compact .ds-icon { width: var(--icon-button-glass-compact-icon-viewport); height: var(--icon-button-glass-compact-icon-viewport); }
+.ds-icon-button--compact:active .ds-icon-button__surface,
+.ds-icon-button--compact[data-state="pressed"] .ds-icon-button__surface { --_fill: var(--glass-light-pressed-fill); }
+.ds-icon-button--compact:focus-visible { outline: none; }
+.ds-icon-button--compact:focus-visible .ds-icon-button__surface { outline: var(--button-focus-ring-width) solid var(--icon-button-glass-foreground); outline-offset: var(--button-focus-ring-offset); }
+
+@media (prefers-reduced-motion: reduce) { .ds-icon-button { transition: none; } }

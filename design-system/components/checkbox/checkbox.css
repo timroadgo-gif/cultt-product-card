@@ -1,0 +1,16 @@
+/* Checkbox (Figma «Check Boxes» M). Native input kept for accessibility, visually replaced by the box. */
+.ds-checkbox { position: relative; display: flex; align-items: center; gap: var(--checkbox-gap); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ds-checkbox__input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.ds-checkbox__box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  --corner-radius: var(--checkbox-radius);
+  box-shadow: inset 0 0 0 var(--checkbox-border-width) var(--checkbox-border-color);
+  color: transparent;
+}
+.ds-checkbox__box .ds-icon { width: var(--checkbox-icon-size); height: var(--checkbox-icon-size); }
+.ds-checkbox__input:checked + .ds-checkbox__box { background: var(--checkbox-checked-background); box-shadow: none; color: var(--checkbox-checked-foreground); }
+.ds-checkbox__input:focus-visible + .ds-checkbox__box { outline: var(--button-focus-ring-width) solid var(--checkbox-checked-background); outline-offset: var(--button-focus-ring-offset); }

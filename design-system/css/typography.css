@@ -1,0 +1,26 @@
+/* Typography base + semantic text styles. Values come from tokens (text.*); Manrope only, weight 300-500.
+   Use a .ds-text-* class (or the tokens directly) instead of writing font-size/weight by hand. */
+
+html { font-family: var(--font-family-sans); font-synthesis: none; } /* no synthetic bold/italic */
+h1, h2, h3, h4, h5, h6, b, strong, th { font-weight: inherit; } /* browser defaults would render 700 */
+
+.ds-text-display   { font: var(--text-display-weight) var(--text-display-size) / var(--text-display-line-height) var(--font-family-sans); letter-spacing: var(--text-display-letter-spacing); }
+.ds-text-heading-l { font: var(--text-heading-l-weight) var(--text-heading-l-size) / var(--text-heading-l-line-height) var(--font-family-sans); letter-spacing: var(--text-heading-l-letter-spacing); }
+.ds-text-heading-s { font: var(--text-heading-s-weight) var(--text-heading-s-size) / var(--text-heading-s-line-height) var(--font-family-sans); letter-spacing: var(--text-heading-s-letter-spacing); }
+.ds-text-body      { font: var(--text-body-weight) var(--text-body-size) / var(--text-body-line-height) var(--font-family-sans); letter-spacing: var(--text-body-letter-spacing); }
+.ds-text-body-s    { font: var(--text-body-s-weight) var(--text-body-s-size) / var(--text-body-s-line-height) var(--font-family-sans); letter-spacing: var(--text-body-s-letter-spacing); }
+.ds-text-caption   { font: var(--text-caption-weight) var(--text-caption-size) / var(--text-caption-line-height) var(--font-family-sans); letter-spacing: var(--text-caption-letter-spacing); }
+.ds-text-overline  { font: var(--text-overline-weight) var(--text-overline-size) / var(--text-overline-line-height) var(--font-family-sans); letter-spacing: var(--text-overline-letter-spacing); text-transform: uppercase; }
+.ds-text-label     { font: var(--text-label-weight) var(--text-label-size) / var(--text-label-line-height) var(--font-family-sans); letter-spacing: var(--text-label-letter-spacing); }
+.ds-text-input     { font: var(--text-input-weight) var(--text-input-size) / var(--text-input-line-height) var(--font-family-sans); letter-spacing: var(--text-input-letter-spacing); }
+.ds-text-button    { font: var(--text-button-weight) var(--text-button-size) / var(--text-button-line-height) var(--font-family-sans); letter-spacing: var(--text-button-letter-spacing); }
+
+@media (pointer: coarse) { .ds-text-input { font-size: var(--text-input-touch-size); } } /* iOS Safari zooms inputs below 16px */
+
+/* Popup roles (docs/typography.md → "Popup typography"): heading ≤16, body 13–14, meta 12–13. */
+.ds-text-popup-heading   { font: var(--text-popup-heading-weight) var(--text-popup-heading-size) / var(--text-popup-heading-line-height) var(--font-family-sans); letter-spacing: var(--text-popup-heading-letter-spacing); }
+.ds-text-popup-body      { font: var(--text-popup-body-weight) var(--text-popup-body-size) / var(--text-popup-body-line-height) var(--font-family-sans); letter-spacing: var(--text-popup-body-letter-spacing); }
+.ds-text-popup-meta      { font: var(--text-popup-meta-weight) var(--text-popup-meta-size) / var(--text-popup-meta-line-height) var(--font-family-sans); letter-spacing: var(--text-popup-meta-letter-spacing); }
+
+/* Heading → supporting text: never closer than spacing.text.heading-body-min. Use this wrapper for the pair. */
+.ds-text-group { display: flex; flex-direction: column; gap: var(--spacing-text-heading-body-min); margin: 0; }

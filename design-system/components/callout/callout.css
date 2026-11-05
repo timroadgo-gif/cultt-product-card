@@ -1,0 +1,2 @@
+/* Callout: tinted note box for a short supporting message inside a sheet. */
+.ds-callout { margin: 0; padding: var(--callout-padding); --corner-radius: var(--callout-radius); background: var(--callout-background); color: var(--callout-foreground); }
