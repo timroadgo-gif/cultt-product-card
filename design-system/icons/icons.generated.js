@@ -9,6 +9,7 @@ export const ICONS = {
   "chevron-right": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M9 18L15 12L9 6\"/></svg>",
   "chevron-up": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M18 15L12 9L6 15\"/></svg>",
   "close": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M18 6L12 12M12 12L6 18M12 12L6 6M12 12L18 18\"/></svg>",
+  "copy": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"9\" y=\"7\" width=\"9\" height=\"13\" rx=\"1.5\"/><path d=\"M15 7V5.5A1.5 1.5 0 0 0 13.5 4H7.5A1.5 1.5 0 0 0 6 5.5V15.5A1.5 1.5 0 0 0 7.5 17H9\"/></svg>",
   "credit-card": "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M19.5 5C20.8804 5.0003 22 6.1195 22 7.5V16.5C22 17.8805 20.8804 18.9997 19.5 19H4.4521C3.0714 19 1.9521 17.8807 1.9521 16.5V7.5C1.9521 6.1193 3.0714 5 4.4521 5H19.5ZM2.9521 10V16.5C2.9521 17.3284 3.6237 18 4.4521 18H19.5C20.3281 17.9997 21 17.3282 21 16.5V10H2.9521ZM9.1181 12C9.3942 12 9.6181 12.2239 9.6181 12.5C9.6181 12.7761 9.3942 13 9.1181 13H5.3086C5.0325 12.9998 4.8086 12.776 4.8086 12.5C4.8086 12.224 5.0325 12.0002 5.3086 12H9.1181ZM4.4521 6C3.6237 6 2.9521 6.6716 2.9521 7.5V9H21V7.5C21 6.6718 20.3281 6.0003 19.5 6H4.4521Z\"/></svg>",
   "hanger": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M10.2 6.3a1.8 1.8 0 1 1 2.65 1.59c-.52.28-.85.82-.85 1.41v.9M12 10.2 3.98 15.85a.9.9 0 0 0 .52 1.64h15a.9.9 0 0 0 .52-1.64L12 10.2\"/></svg>",
   "heart-filled": "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M15.7568 5C14.1216 5 12.7096 5.6283 12 7.0833C11.2904 5.6283 9.8784 5 8.2432 5C5.8992 5 4 7.0475 4 9.5675C4 12.0875 5.4536 14.3975 7.332 16.295C9.2104 18.1925 12 20 12 20C12 20 14.6992 18.2225 16.668 16.295C18.768 14.24 20 12.095 20 9.5675C20 7.04 18.1008 5 15.7568 5Z\"/></svg>",
@@ -410,6 +411,20 @@ export const META = {
       3.25,
       19,
       20.75
+    ]
+  },
+  "copy": {
+    "status": "approved",
+    "type": "stroke",
+    "optical": {
+      "dx": 0,
+      "dy": 0
+    },
+    "bounds": [
+      5.5,
+      3.5,
+      18.5,
+      20.5
     ]
   }
 };

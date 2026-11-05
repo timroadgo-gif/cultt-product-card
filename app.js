@@ -1,14 +1,16 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=17f1afa39c2d';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=17f1afa39c2d';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=17f1afa39c2d';
-import { createButton } from './design-system/components/button/button.js?v=17f1afa39c2d';
+import { createIcon } from './design-system/icons/icon.js?v=a0d3fc9cd566';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=a0d3fc9cd566';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=a0d3fc9cd566';
+import { createButton } from './design-system/components/button/button.js?v=a0d3fc9cd566';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
+// data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
 document.querySelectorAll('[data-icon]').forEach(slot => {
+  const presentation = slot.dataset.iconPresentation;
   const size = parseFloat(getComputedStyle(slot).getPropertyValue('--icon-px')) || 24;
-  slot.append(createIcon(slot.dataset.icon, { size }));
+  slot.append(createIcon(slot.dataset.icon, presentation ? { presentation } : { size }));
 });
 
 // Navigation over the photo (functional layer over content): Back = GlassIconButton 44; Share + Cart = one
