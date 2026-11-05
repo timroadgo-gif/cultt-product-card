@@ -1,8 +1,8 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=f4bbe88cf1cc';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=f4bbe88cf1cc';
-import { createButton } from './design-system/components/button/button.js?v=f4bbe88cf1cc';
+import { createIcon } from './design-system/icons/icon.js?v=b54a8754e952';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=b54a8754e952';
+import { createButton } from './design-system/components/button/button.js?v=b54a8754e952';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 document.querySelectorAll('[data-icon]').forEach(slot => {
@@ -103,7 +103,7 @@ const reduceGalleryMotion = matchMedia('(prefers-reduced-motion: reduce)');
 function paintGallery(pos) {
   position = pos;
   rail.style.transform = `translate3d(${-pos * 100}%, 0, 0)`;
-  progressBar.style.transform = `translate3d(${pos * 100}%, 0, 0)`;
+  progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, (pos + 1) / count))})`; // cumulative, left-anchored
 }
 
 function settleGallery(index, duration = 420) {
@@ -191,13 +191,13 @@ document.querySelector('.gallery__topbar button[aria-label="Назад"]').addEv
 });
 
 document.querySelector('.gallery__topbar button[aria-label="Поделиться"]').addEventListener('click', async () => {
-  const shareData = { title: 'Louis Vuitton Noe — THE CULTT', url: location.href };
+  const shareData = { title: 'Loewe Puzzle — THE CULTT', url: location.href };
   if (navigator.share) {
     try { await navigator.share(shareData); } catch { /* user dismissed the share sheet */ }
   } else if (navigator.clipboard) {
     try { await navigator.clipboard.writeText(location.href); showToast('Ссылка скопирована'); }
-    catch { showToast('Louis Vuitton Noe'); }
-  } else showToast('Louis Vuitton Noe');
+    catch { showToast('Loewe Puzzle'); }
+  } else showToast('Loewe Puzzle');
 });
 
 document.querySelector('.gallery__topbar button[aria-label="Корзина"]').addEventListener('click', () => showToast(availabilityIndex === 0 ? 'Товар добавлен в корзину' : 'Корзина'));
