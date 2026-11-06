@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=eec2e025b970';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=eec2e025b970';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=eec2e025b970';
-import { createButton } from './design-system/components/button/button.js?v=eec2e025b970';
+import { createIcon } from './design-system/icons/icon.js?v=3219d2f09640';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=3219d2f09640';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=3219d2f09640';
+import { createButton } from './design-system/components/button/button.js?v=3219d2f09640';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -228,13 +228,27 @@ track.addEventListener('wheel', event => {
 // Decode every photo up front so the first swipe never waits on image decoding.
 slides.forEach(slide => slide.querySelector('img')?.decode?.().catch(() => {}));
 
-document.querySelector('.copy-button').addEventListener('click', async () => {
+// Article: the whole row is one button. The check appears only after the clipboard write succeeds, stays 1.5 s;
+// a repeated tap copies again and restarts the timer. A failed write keeps the copy icon and shows the number in the toast.
+const skuCopy = document.querySelector('.sku-copy');
+const skuStatus = document.getElementById('skuCopyStatus');
+let skuTimer = 0;
+skuCopy.addEventListener('click', async () => {
+  const value = skuCopy.querySelector('.sku-copy__value').textContent.trim();
   try {
-    await navigator.clipboard.writeText('P31838651');
-    showToast('Артикул скопирован');
+    if (!navigator.clipboard?.writeText) throw new Error('clipboard unavailable');
+    await navigator.clipboard.writeText(value);
   } catch {
-    showToast('Артикул: P31838651');
+    clearTimeout(skuTimer);
+    skuCopy.classList.remove('is-copied');
+    showToast(`Не удалось скопировать. Артикул: ${value}`);
+    return;
   }
+  clearTimeout(skuTimer);
+  skuCopy.classList.add('is-copied');
+  skuStatus.textContent = '';
+  requestAnimationFrame(() => { skuStatus.textContent = 'Артикул скопирован'; }); // re-announced on every copy
+  skuTimer = setTimeout(() => { skuCopy.classList.remove('is-copied'); skuStatus.textContent = ''; }, 1500);
 });
 
 document.querySelector('.gallery__topbar button[aria-label="Назад"]').addEventListener('click', () => {

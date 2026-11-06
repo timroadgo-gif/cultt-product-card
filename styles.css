@@ -52,9 +52,18 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .intro-block{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:0}
 .product-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--space-4);align-items:baseline}
 .sku-line{display:flex;align-items:center;gap:6px;color:#767676;font-family:Manrope,Arial,sans-serif;font-size:var(--text-caption-size);line-height:var(--text-caption-line-height);letter-spacing:.02em}
-/* Copy article: approved `copy` icon (two portrait sheets), compact presentation (≈ 11 px, 0.9 px line); 44 px hit area. */
-.copy-button{position:relative;border:0;background:none;padding:0;width:var(--icon-presentation-compact-viewport);height:var(--icon-presentation-compact-viewport);display:grid;place-items:center;color:#767676}
-.copy-button::after{content:"";position:absolute;inset:calc((var(--icon-presentation-compact-viewport) - 44px) / 2)}
+/* Article = one copy button (number + icon). No visible chrome; 44 px tall hit area via ::after without changing layout. */
+.sku-copy{position:relative;margin:0;padding:0;border:0;background:none;text-align:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sku-copy::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
+.sku-copy:active .sku-copy__value{opacity:.6}
+.sku-copy:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
+/* Approved `copy` and `check` icons stacked in one fixed slot: crossfade + 0.95→1 scale, no layout shift. */
+.sku-copy__icon{position:relative;flex:none;width:var(--icon-presentation-compact-viewport);height:var(--icon-presentation-compact-viewport)}
+.sku-copy__glyph{position:absolute;inset:0;display:grid;place-items:center;transition:opacity 200ms cubic-bezier(.2,0,.2,1),transform 200ms cubic-bezier(.2,0,.2,1)}
+.sku-copy__glyph--done{opacity:0;transform:scale(.95)}
+.sku-copy.is-copied .sku-copy__glyph--copy{opacity:0;transform:scale(.95)}
+.sku-copy.is-copied .sku-copy__glyph--done{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.sku-copy__glyph{transition:opacity 120ms linear;transform:none!important}}
 h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .price-block{display:flex;flex-direction:column;gap:var(--space-2)}
 .price{margin:0;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:24px;font-weight:350;letter-spacing:.005em}
