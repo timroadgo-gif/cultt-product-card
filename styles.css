@@ -1,7 +1,7 @@
 @font-face{font-family:Manrope;src:url('./assets/manrope-400.ttf') format('truetype');font-weight:400;font-display:swap}
 @font-face{font-family:Manrope;src:url('./assets/manrope-500.ttf') format('truetype');font-weight:500;font-display:swap}
-/* Light weight for the price only (UI Kit variable Manrope, latin subset: digits, spaces, ₽; OFL — assets/licenses/manrope-OFL.txt) */
-@font-face{font-family:Manrope;src:url('./assets/manrope-latin-wght.woff2') format('woff2');font-weight:300;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F}
+/* Price weight 350 (between light and regular) (UI Kit variable Manrope, latin subset: digits, spaces, ₽; OFL — assets/licenses/manrope-OFL.txt) */
+@font-face{font-family:Manrope;src:url('./assets/manrope-latin-wght.woff2') format('woff2');font-weight:350;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F}
 :root{font-family:Manrope,Arial,sans-serif;color:#070707;background:#fff;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;--ink:#070707;--muted:#828282;--quiet:#f8f8f8;--green:#285141;--line:#d8d8d8;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -57,7 +57,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .copy-button::after{content:"";position:absolute;inset:calc((var(--icon-presentation-compact-viewport) - 44px) / 2)}
 h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .price-block{display:flex;flex-direction:column;gap:var(--space-2)}
-.price{margin:0;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:24px;font-weight:300;letter-spacing:.005em}
+.price{margin:0;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:24px;font-weight:350;letter-spacing:.005em}
 .price-state-trigger{align-self:flex-start;max-width:100%;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .price-state-trigger:active{opacity:.65}
 .price-state-trigger .sold-status{color:#565656;font-size:13px;line-height:19px}
