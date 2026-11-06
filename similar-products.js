@@ -1,19 +1,23 @@
-// Similar products strip (scenario «Карточка товара — похожие товары»): one horizontal row of compact items —
-// square photo, brand + model, price — directly under the gallery, as in the reference. Rendered from data
+// Similar products strip (scenario «Карточка товара — похожие товары»): one horizontal row of compact vertical tiles —
+// 3:4 photo with brand + model and price under it — directly under the gallery. Rendered from data
 // (similar-products.data.js); shown only when the scenario lists the 'similar' section (html[data-sections], styles.css).
 // Items have no destination yet, so they are not links (no fake navigation).
-import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=58ec03b3c686';
+import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=65b601f349eb';
 
 const formatPrice = value => `${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ₽`;
 
 export function renderSimilarProducts(list, products = SIMILAR_PRODUCTS) {
+  // Keyboard: the row is focusable only when it overflows, so arrow keys can scroll it (no tab stop otherwise).
+  new ResizeObserver(() => {
+    if (list.scrollWidth > list.clientWidth + 1) list.tabIndex = 0; else list.removeAttribute('tabindex');
+  }).observe(list);
   list.replaceChildren(...products.map(product => {
     const item = document.createElement('li');
     item.className = 'similar__item';
     item.dataset.id = product.id;
     const media = document.createElement('span');
     media.className = 'similar__media';
-    const img = new Image(144, 144);
+    const img = new Image(252, 336);
     img.src = product.image;
     img.alt = product.alt;
     img.loading = 'lazy';

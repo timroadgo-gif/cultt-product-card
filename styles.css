@@ -215,15 +215,18 @@ html .product-screen.is-frozen{position:fixed;inset:0;z-index:70;overflow:hidden
 html .product-screen.is-frozen .product-page{position:absolute;inset:0;overflow:hidden}
 .hub.is-under{pointer-events:none}
 
-/* Similar products (scenario #/product/similar): one quiet horizontal row right under the gallery, as in the reference —
-   square photo, brand + model, price; no card containers. Bleeds to the screen edges so the third item peeks out. */
+/* Similar products (scenario #/product/similar), redesign 2026-11-06: compact vertical tiles — 3:4 photo (76–96 px wide, ≈3.6 tiles per screen) with
+   the name and price under it (Depop / Vestiaire / Doji pattern: each item is a separate model with its own price, so
+   the info stays on the tile, not in a shared label). Native horizontal scroll with momentum and proximity snap; the row
+   bleeds to the screen edges so an overflowing next tile peeks out. No cards, borders or shadows. */
 html:not([data-sections~="similar"]) .similar{display:none}
-.similar{margin:0 calc(-1 * clamp(16px,4vw,24px)) calc(-1 * var(--space-5))} /* section gap 48 → 24 to the heading */
-.similar__list{display:flex;gap:var(--space-4);margin:0;padding:0 clamp(16px,4vw,24px);list-style:none;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:clamp(16px,4vw,24px);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.similar{--similar-tile:clamp(76px,calc((100vw - 52px) / 3.6),96px);margin:0 calc(-1 * clamp(16px,4vw,24px)) calc(-1 * var(--space-5))} /* tile: ≈3.6 per screen (76–96 px; under 76 the name gets cut), so an overflowing 4th tile always peeks */ /* section gap 48 → 24 to the heading */
+.similar__list{display:flex;gap:var(--space-3);margin:0;padding:0 clamp(16px,4vw,24px);list-style:none;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scroll-snap-type:x proximity;scroll-padding-inline:clamp(16px,4vw,24px);scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .similar__list::-webkit-scrollbar{display:none}
-.similar__item{flex:0 0 auto;display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;column-gap:var(--space-3);width:148px;scroll-snap-align:start}
-.similar__media{width:64px;height:64px;overflow:hidden;border-radius:8px;background:#f8f7f3}
+.similar__list:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.similar__item{flex:0 0 var(--similar-tile);display:flex;flex-direction:column;min-width:0;scroll-snap-align:start}
+.similar__media{display:block;width:100%;aspect-ratio:3 / 4;overflow:hidden;border-radius:4px;background:#f8f7f3}
 .similar__media img{display:block;width:100%;height:100%;object-fit:cover}
-.similar__text{display:flex;flex-direction:column;gap:2px;min-width:0}
-.similar__name{color:var(--ink);font-size:var(--text-body-s-size);font-weight:400;line-height:18px;overflow-wrap:anywhere}
-.similar__price{color:#555;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-body-s-size);font-weight:400;line-height:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.similar__text{display:flex;flex-direction:column;margin-top:var(--space-2);min-width:0}
+.similar__name{overflow:hidden;color:var(--ink);font-size:var(--text-caption-size);font-weight:400;line-height:16px;white-space:nowrap;text-overflow:ellipsis}
+.similar__price{color:#767676;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-caption-size);font-weight:400;line-height:16px;font-variant-numeric:tabular-nums;white-space:nowrap}
