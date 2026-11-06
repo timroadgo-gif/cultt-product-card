@@ -21,6 +21,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__rail{width:100%;height:100%;display:flex;transform:translate3d(0,0,0);will-change:transform}
 .gallery.is-settling .gallery__rail,.gallery.is-settling .gallery__slide img,.gallery.is-settling .gallery__progress-bar{transition:transform var(--gallery-settle) var(--gallery-ease)}
 .gallery__slide{position:relative;flex:0 0 100%;height:100%;margin:0;overflow:clip;background:#f6f5f3}
+.gallery__slide img.is-broken{visibility:hidden}
 .gallery__slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;user-select:none;-webkit-user-drag:none;will-change:transform}
 /* Nav controls: GlassIconButton 44 from the UI Kit (live Liquid Glass); the bar only positions them */
 .gallery__topbar{--nav-inset:clamp(12px,4vw,16px);position:fixed;z-index:40;top:0;left:50%;width:100%;max-width:520px;padding:max(calc(env(safe-area-inset-top,0px) + 8px),16px) var(--nav-inset) 12px;transform:translateX(-50%);pointer-events:none;background:transparent;border-bottom:1px solid transparent;transition:background-color 220ms ease,border-color 220ms ease}

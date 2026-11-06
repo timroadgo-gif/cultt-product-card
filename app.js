@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=de1e8fe30748';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=de1e8fe30748';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=de1e8fe30748';
-import { createButton } from './design-system/components/button/button.js?v=de1e8fe30748';
+import { createIcon } from './design-system/icons/icon.js?v=cfdae749f876';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=cfdae749f876';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=cfdae749f876';
+import { createButton } from './design-system/components/button/button.js?v=cfdae749f876';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -131,6 +131,20 @@ const reduceGalleryMotion = matchMedia('(prefers-reduced-motion: reduce)');
 // moves 1:1, so the edge between them is always a clean cut. Linear in position, so the settle transition keeps it in sync.
 const GALLERY_DRIFT = 0.25;
 const slideImages = [...slides].map(slide => slide.querySelector('img'));
+// A photo that fails to load on a flaky mobile connection must never show Safari's broken-image icon and alt text:
+// hide it (the slide's neutral background stays) and retry with a cache-busting query, also when the network returns.
+slideImages.forEach(img => {
+  const base = img.getAttribute('src');
+  let tries = 0;
+  const retry = () => { if (img.classList.contains('is-broken')) img.src = `${base}${base.includes('?') ? '&' : '?'}retry=${++tries}`; };
+  img.addEventListener('load', () => img.classList.remove('is-broken'));
+  img.addEventListener('error', () => {
+    img.classList.add('is-broken');
+    if (tries < 5) setTimeout(retry, 400 * 2 ** tries);
+  });
+  addEventListener('online', retry);
+  if (img.complete && !img.naturalWidth && img.currentSrc) img.dispatchEvent(new Event('error'));
+});
 
 function paintGallery(pos) {
   position = pos;
