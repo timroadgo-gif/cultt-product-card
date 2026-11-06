@@ -1,8 +1,8 @@
-// Similar products strip (scenario «Карточка товара — похожие товары»): one horizontal row of compact vertical tiles —
-// 3:4 photo with brand + model and price under it — directly under the gallery. Rendered from data
+// Similar products strip (scenario «Карточка товара — похожие товары»): one horizontal row of compact grey cards —
+// 3:4 photo on the left, brand + model and price beside it — directly under the gallery (user's reference). Rendered from data
 // (similar-products.data.js); shown only when the scenario lists the 'similar' section (html[data-sections], styles.css).
 // Items have no destination yet, so they are not links (no fake navigation).
-import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=65b601f349eb';
+import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=ebecba039d83';
 
 const formatPrice = value => `${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ₽`;
 
