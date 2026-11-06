@@ -14,19 +14,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
     <meta name="description" content="Loewe Puzzle — карточка товара THE CULTT" />
     <title>Прототипы — THE CULTT</title>
-    <!-- Route before first paint: the root opens the prototype index, #/product opens the product card directly. -->
-    <script>document.documentElement.dataset.route = location.hash.startsWith('#/product') ? 'product' : 'index';</script>
+    <!-- Route and product state before first paint: root = prototype index, #/product = card, #/product/sold = sold card. -->
+    <script>document.documentElement.dataset.route = location.hash.startsWith('#/product') ? 'product' : 'index'; document.documentElement.dataset.availability = location.hash === '#/product/sold' ? 'sold' : 'available';</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=989f55ba6847" />
-    <link rel="stylesheet" href="./styles.css?v=989f55ba6847" />
-    <meta name="build" content="989f55ba6847" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=3e33dd955106" />
+    <link rel="stylesheet" href="./styles.css?v=3e33dd955106" />
+    <meta name="build" content="3e33dd955106" />
   </head>
   <body>
     <!-- Prototype index: scenarios are rendered from the registry in navigation.js -->
@@ -73,6 +73,7 @@
           </div>
           <div class="price-block">
             <p class="price"><span class="price-value">252&nbsp;000&nbsp;₽</span></p>
+            <p class="price-caption">Цена на момент продажи</p>
             <div class="split-row">
               <span class="split-badge"><img src="./assets/split-badge.png" alt="23 750 ₽" width="248" height="52" /></span>
               <span class="split-copy">× 4 в супер Сплит</span>
@@ -115,7 +116,7 @@
             <li class="capacity-item is-muted"><span class="capacity-item__image"><img src="./assets/related-3.png" loading="lazy" alt="" /></span><span class="capacity-item__name">MacBook 13</span><span class="capacity-status" aria-hidden="true"></span></li>
           </ul>
           <div class="authenticity-card"><span class="authenticity-card__seal" aria-hidden="true"><img src="./assets/authenticity-check.svg" alt="" /></span><span><strong>Гарантия подлинности</strong><small>Каждый товар проходит проверку экспертом</small></span><span class="authenticity-card__arrow" aria-hidden="true" data-icon="chevron-right"></span></div>
-          <details class="accordion"><summary>Оплата<span class="accordion-icon" aria-hidden="true"><span class="accordion-icon__bar accordion-icon__bar--h" data-icon="minus"></span><span class="accordion-icon__bar accordion-icon__bar--v" data-icon="minus"></span></span></summary><div class="accordion__body"><p>Оплатите покупку удобным способом или разделите сумму на четыре платежа в Сплит.</p></div></details>
+          <details class="accordion"><summary>Оплата<span class="accordion-icon" aria-hidden="true"><span class="accordion-icon__bar accordion-icon__bar--h" data-icon="minus"></span><span class="accordion-icon__bar accordion-icon__bar--v" data-icon="minus"></span></span></summary><div class="accordion__body"><p>Оплатите покупку удобным способом<span class="split-only"> или разделите сумму на четыре платежа в Сплит</span>.</p></div></details>
           <details class="accordion"><summary>Возврат<span class="accordion-icon" aria-hidden="true"><span class="accordion-icon__bar accordion-icon__bar--h" data-icon="minus"></span><span class="accordion-icon__bar accordion-icon__bar--v" data-icon="minus"></span></span></summary><div class="accordion__body"><p>Условия возврата доступны до оформления заказа.</p></div></details>
         </section>
 
@@ -127,6 +128,6 @@
     </nav>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=989f55ba6847"></script>
+    <script type="module" src="./app.js?v=3e33dd955106"></script>
   </body>
 </html>

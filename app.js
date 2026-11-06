@@ -1,10 +1,10 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=989f55ba6847';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=989f55ba6847';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=989f55ba6847';
-import { createButton } from './design-system/components/button/button.js?v=989f55ba6847';
-import { goToIndex } from './navigation.js?v=989f55ba6847';
+import { createIcon } from './design-system/icons/icon.js?v=3e33dd955106';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=3e33dd955106';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=3e33dd955106';
+import { createButton } from './design-system/components/button/button.js?v=3e33dd955106';
+import { goToIndex } from './navigation.js?v=3e33dd955106';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -31,6 +31,16 @@ const favorite = createButton({ variant: 'secondary', iconPosition: 'only', icon
 favorite.classList.add('bottom-bar__favorite');
 favorite.setAttribute('aria-pressed', 'false');
 bottomBar.append(bottomAdd, favorite);
+
+// Product state (available | sold) comes from the scenario route (navigation.js → html[data-availability]).
+// Sold: primary action «Заказать» at full width, no wishlist; price caption and hidden Split are pure CSS.
+const isSold = () => document.documentElement.dataset.availability === 'sold';
+function renderAvailability() {
+  bottomAdd.querySelector('.ds-button__label').textContent = isSold() ? 'Заказать' : 'В корзину';
+  favorite.hidden = isSold();
+}
+renderAvailability();
+addEventListener('productstate', renderAvailability);
 
 const track = document.querySelector('#galleryTrack');
 const rail = track.querySelector('.gallery__rail');
@@ -235,7 +245,7 @@ document.querySelector('.gallery__topbar button[aria-label="Поделиться
 });
 
 document.querySelector('.gallery__topbar button[aria-label="Корзина"]').addEventListener('click', () => showToast('Товар добавлен в корзину'));
-bottomAdd.addEventListener('click', () => showToast('Товар добавлен в корзину'));
+bottomAdd.addEventListener('click', () => { if (!isSold()) showToast('Товар добавлен в корзину'); }); // sold: no order flow yet
 document.querySelectorAll('.info-button').forEach(button => button.addEventListener('click', () => {
   showToast(button.getAttribute('aria-label'));
 }));

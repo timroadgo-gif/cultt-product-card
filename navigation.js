@@ -6,11 +6,13 @@
 // Transition: iOS-style push — the card enters from the right over the index, the index drifts 30 % left; pop reverses it.
 // An interrupted transition reverses from where it is. Safari's own swipe-back animation (hasUAVisualTransition) is
 // not doubled, and reduced motion switches screens instantly.
-import { createIcon } from './design-system/icons/icon.js?v=989f55ba6847';
+import { createIcon } from './design-system/icons/icon.js?v=3e33dd955106';
 
 // Scenario registry: add a row here to list another scenario. `screen` is the screen it opens (only the PDP for now).
+// `availability` is the product state the shared PDP renders (available | sold); see app.js renderAvailability().
 export const SCENARIOS = [
-  { id: 'product', title: 'Карточка товара', route: '#/product', screen: 'product', documentTitle: 'Loewe Puzzle — THE CULTT' },
+  { id: 'product', title: 'Карточка товара', route: '#/product', screen: 'product', availability: 'available', documentTitle: 'Loewe Puzzle — THE CULTT' },
+  { id: 'product-sold', title: 'Карточка товара — продан', route: '#/product/sold', screen: 'product', availability: 'sold', documentTitle: 'Loewe Puzzle, продан — THE CULTT' },
 ];
 const INDEX_TITLE = 'Прототипы — THE CULTT';
 
@@ -25,7 +27,7 @@ const productPage = product.querySelector('.product-page');
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 history.scrollRestoration = 'manual';
 
-const scenarioFromHash = () => SCENARIOS.find(s => location.hash === s.route || location.hash.startsWith(`${s.route}/`));
+const scenarioFromHash = () => SCENARIOS.find(s => location.hash === s.route);
 
 const list = document.getElementById('scenarioList');
 for (const scenario of SCENARIOS) {
@@ -44,7 +46,7 @@ for (const scenario of SCENARIOS) {
     if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; // new tab etc.
     event.preventDefault();
     history.pushState({ fromIndex: true }, '', scenario.route);
-    show(scenario.screen);
+    show(scenario.screen, { scenario });
   });
   item.append(link);
   list.append(item);
@@ -63,16 +65,26 @@ export function goToIndex() {
 }
 
 addEventListener('popstate', event => {
-  show(scenarioFromHash()?.screen ?? 'index', { instant: event.hasUAVisualTransition });
+  const scenario = scenarioFromHash();
+  show(scenario?.screen ?? 'index', { scenario, instant: event.hasUAVisualTransition });
 });
+
+// The PDP state is set on <html> (also before first paint, index.html) and announced to app.js. Leaving the card keeps
+// its state, so it slides out unchanged.
+function applyScenario(scenario) {
+  if (!scenario || root.dataset.availability === scenario.availability) return;
+  root.dataset.availability = scenario.availability;
+  dispatchEvent(new CustomEvent('productstate', { detail: scenario.availability }));
+}
 
 // Product position p: 0 = on screen, 1 = off to the right. The index sits at −UNDERLAY_SHIFT · (1 − p).
 const productAt = p => `translate3d(${(p * 100).toFixed(3)}%,0,0)`;
 const hubAt = p => `translate3d(${(-UNDERLAY_SHIFT * (1 - p) * 100).toFixed(3)}%,0,0)`;
 const currentP = () => new DOMMatrixReadOnly(getComputedStyle(product).transform).m41 / (product.offsetWidth || 1);
 
-function show(to, { instant = false } = {}) {
-  if (to === current && !running) return;
+function show(to, { scenario = null, instant = false } = {}) {
+  if (to === 'product') applyScenario(scenario);
+  if (to === current && !running) { applyScreenState(); return; }
   const from = current;
   current = to;
   let p0;
