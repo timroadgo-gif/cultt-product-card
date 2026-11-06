@@ -6,13 +6,15 @@
 // Transition: iOS-style push — the card enters from the right over the index, the index drifts 30 % left; pop reverses it.
 // An interrupted transition reverses from where it is. Safari's own swipe-back animation (hasUAVisualTransition) is
 // not doubled, and reduced motion switches screens instantly.
-import { createIcon } from './design-system/icons/icon.js?v=e3d22d48c81d';
+import { createIcon } from './design-system/icons/icon.js?v=58ec03b3c686';
 
 // Scenario registry: add a row here to list another scenario. `screen` is the screen it opens (only the PDP for now).
 // `availability` is the product state the shared PDP renders (available | sold); see app.js renderAvailability().
+// `sections` lists optional PDP sections the scenario adds (html[data-sections], styles.css): 'similar' = similar products.
 export const SCENARIOS = [
   { id: 'product', title: 'Карточка товара', route: '#/product', screen: 'product', availability: 'available', documentTitle: 'Loewe Puzzle — THE CULTT' },
   { id: 'product-sold', title: 'Карточка товара — продан', route: '#/product/sold', screen: 'product', availability: 'sold', documentTitle: 'Loewe Puzzle, продан — THE CULTT' },
+  { id: 'product-similar', title: 'Карточка товара — похожие товары', route: '#/product/similar', screen: 'product', availability: 'available', sections: ['similar'], documentTitle: 'Loewe Puzzle — THE CULTT' },
 ];
 const INDEX_TITLE = 'Прототипы — THE CULTT';
 
@@ -72,7 +74,9 @@ addEventListener('popstate', event => {
 // The PDP state is set on <html> (also before first paint, index.html) and announced to app.js. Leaving the card keeps
 // its state, so it slides out unchanged.
 function applyScenario(scenario) {
-  if (!scenario || root.dataset.availability === scenario.availability) return;
+  if (!scenario) return;
+  root.dataset.sections = (scenario.sections ?? []).join(' ');
+  if (root.dataset.availability === scenario.availability) return;
   root.dataset.availability = scenario.availability;
   dispatchEvent(new CustomEvent('productstate', { detail: scenario.availability }));
 }

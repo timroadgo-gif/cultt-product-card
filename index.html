@@ -14,19 +14,20 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
     <meta name="description" content="Loewe Puzzle — карточка товара THE CULTT" />
     <title>Прототипы — THE CULTT</title>
-    <!-- Route and product state before first paint: root = prototype index, #/product = card, #/product/sold = sold card. -->
-    <script>document.documentElement.dataset.route = location.hash.startsWith('#/product') ? 'product' : 'index'; document.documentElement.dataset.availability = location.hash === '#/product/sold' ? 'sold' : 'available';</script>
+    <!-- Route and product state before first paint: root = prototype index, #/product = card, #/product/sold = sold card,
+         #/product/similar = card with similar products (mirrors SCENARIOS in navigation.js). -->
+    <script>(function (d, h) { d.dataset.route = h.startsWith('#/product') ? 'product' : 'index'; d.dataset.availability = h === '#/product/sold' ? 'sold' : 'available'; d.dataset.sections = h === '#/product/similar' ? 'similar' : ''; })(document.documentElement, location.hash);</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=e3d22d48c81d" />
-    <link rel="stylesheet" href="./styles.css?v=e3d22d48c81d" />
-    <meta name="build" content="e3d22d48c81d" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=58ec03b3c686" />
+    <link rel="stylesheet" href="./styles.css?v=58ec03b3c686" />
+    <meta name="build" content="58ec03b3c686" />
   </head>
   <body>
     <!-- Prototype index: scenarios are rendered from the registry in navigation.js -->
@@ -61,6 +62,10 @@
       </section>
 
       <div class="product-content">
+        <section class="similar" aria-label="Похожие товары">
+          <ul class="similar__list" id="similarList"></ul>
+        </section>
+
         <section class="intro-block" aria-labelledby="productName">
           <div class="product-heading">
             <a class="product-category" href="#/catalog/bags-with-handles">Сумка с ручками</a>
@@ -128,6 +133,6 @@
     </nav>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=e3d22d48c81d"></script>
+    <script type="module" src="./app.js?v=58ec03b3c686"></script>
   </body>
 </html>
