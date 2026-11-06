@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=7921408f7da4';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=7921408f7da4';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=7921408f7da4';
-import { createButton } from './design-system/components/button/button.js?v=7921408f7da4';
+import { createIcon } from './design-system/icons/icon.js?v=b3ca56ba5011';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=b3ca56ba5011';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=b3ca56ba5011';
+import { createButton } from './design-system/components/button/button.js?v=b3ca56ba5011';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -123,9 +123,19 @@ let position = 0; // current visual position, in slides
 let drag = null;
 const reduceGalleryMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
+// Parallax (Zara-style reference): the photo being left moves at GALLERY_PARALLAX of the finger's speed while the next one
+// slides over it at full speed. The leaving photo's image is shifted inside its own clipped slide, so the incoming
+// slide's edge always reads as a clean cut. Linear in position, so the settle transition keeps both in sync.
+const GALLERY_PARALLAX = 0.3;
+const slideImages = [...slides].map(slide => slide.querySelector('img'));
+
 function paintGallery(pos) {
   position = pos;
   rail.style.transform = `translate3d(${-pos * 100}%, 0, 0)`;
+  slideImages.forEach((img, i) => {
+    const behind = Math.min(1, Math.max(0, pos - i)); // 0 = on screen or ahead, 1 = fully covered
+    img.style.transform = behind ? `translate3d(${(behind * (1 - GALLERY_PARALLAX) * 100).toFixed(3)}%, 0, 0)` : '';
+  });
   progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, (pos + 1) / count))})`; // cumulative, left-anchored
 }
 
