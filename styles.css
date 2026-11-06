@@ -40,11 +40,11 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__progress-bar{position:absolute;inset:0;background:var(--ink);transform-origin:0 50%;transform:scaleX(calc(1 / var(--gallery-count,6)));will-change:transform}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
    so each block reads as a unit. */
-.product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-5) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
-/* Top block, proportioned on the Louis Vuitton mobile PDP: photo → article 28, article → name 8, name → price 4 (≈16 baseline-to-cap, as LV), price → Split 8;
+.product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-4) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
+/* Top block, proportioned on the Louis Vuitton mobile PDP: photo → name 20, article on the name's line at the right edge (as LV / Gucci), name → price 4 (≈16 baseline-to-cap, as LV), price → Split 8;
    the price is quieter than the name (16 vs 20), as there. */
 .intro-block{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:0}
-.product-heading{display:flex;flex-direction:column;gap:var(--space-2)}
+.product-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--space-4);align-items:baseline}
 .sku-line{display:flex;align-items:center;gap:6px;color:#767676;font-family:Manrope,Arial,sans-serif;font-size:var(--text-caption-size);line-height:var(--text-caption-line-height);letter-spacing:.02em}
 /* Copy article: approved `copy` icon (two portrait sheets), compact presentation (≈ 11 px, 0.9 px line); 44 px hit area. */
 .copy-button{position:relative;border:0;background:none;padding:0;width:var(--icon-presentation-compact-viewport);height:var(--icon-presentation-compact-viewport);display:grid;place-items:center;color:#767676}
