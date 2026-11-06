@@ -108,13 +108,21 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .accordion{border:0}
 .accordion summary{list-style:none;min-height:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;font-size:14px;font-weight:400;line-height:20px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .accordion summary::-webkit-details-marker{display:none}
-.accordion-icon{--icon-px:18px;position:relative;display:block;flex:0 0 18px;width:18px;height:18px;color:#555}
-.accordion-icon [data-icon]{position:absolute;inset:0;transition:opacity 180ms ease}
-.accordion-icon [data-icon="minus"],.accordion.is-expanded .accordion-icon [data-icon="plus"],.accordion[open]:not(.is-managed) .accordion-icon [data-icon="plus"]{opacity:0}
-.accordion.is-expanded .accordion-icon [data-icon="minus"],.accordion[open]:not(.is-managed) .accordion-icon [data-icon="minus"]{opacity:1}
-.accordion__body{color:#111;font-size:13px;line-height:20px}
-.accordion__body>*{padding:8px 0 24px}
+/* Plus → minus (LV reference): one icon from two approved `minus` strokes. Closed = the two bars cross (a plus, same
+   geometry as the library `plus`); opening turns the horizontal bar half a turn and the vertical bar a quarter turn, so the
+   plus spins into a single line. CSS transitions reverse from wherever they are on a mid-animation tap. Durations and
+   curves match the height animation in app.js (open 400 ms ease-in-out, close 300 ms ease-out). */
+.accordion{--acc-open:400ms cubic-bezier(.45,0,.2,1);--acc-close:300ms cubic-bezier(.3,0,.2,1)}
+.accordion-icon{--icon-px:18px;position:relative;display:block;flex:0 0 18px;width:18px;height:18px;color:var(--ink)}
+.accordion-icon__bar{position:absolute;inset:0;transition:transform var(--acc-close)}
+.accordion-icon__bar--v{transform:rotate(90deg)}
+.accordion.is-expanded .accordion-icon__bar{transition:transform var(--acc-open)}
+.accordion.is-expanded .accordion-icon__bar--h,.accordion.is-expanded .accordion-icon__bar--v,.accordion[open]:not(.is-managed) .accordion-icon__bar{transform:rotate(180deg)}
+/* Content: secondary grey, 16 px under the heading (the summary's own padding), 20 px before the next row. */
+.accordion__body{color:#555;font-size:var(--text-body-s-size);line-height:20px}
+.accordion__body>*{padding:0 0 20px}
 .accordion__body p{margin:0}
+@media (prefers-reduced-motion:reduce){.accordion-icon__bar,.accordion.is-expanded .accordion-icon__bar{transition:none}}
 /* Specs: label and value stay adjacent and wrap as one line of text */
 .specs{margin:0;display:flex;flex-direction:column;gap:var(--space-2)}
 .specs dt,.specs dd{display:inline}

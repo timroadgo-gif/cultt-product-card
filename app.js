@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=f6b12af61167';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=f6b12af61167';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=f6b12af61167';
-import { createButton } from './design-system/components/button/button.js?v=f6b12af61167';
+import { createIcon } from './design-system/icons/icon.js?v=20cbb0eb99de';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=20cbb0eb99de';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=20cbb0eb99de';
+import { createButton } from './design-system/components/button/button.js?v=20cbb0eb99de';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -258,35 +258,54 @@ document.querySelectorAll('.favorite-button, .bottom-bar__favorite').forEach(but
   showToast(saved ? 'Добавлено в избранное' : 'Удалено из избранного');
 }));
 
-// Accordions: a measured reveal that resumes from its current height on rapid taps.
+// Accordions (LV reference, frame-by-frame): the row first opens empty space — the real height of the body is animated,
+// so every section below moves with the layout — and the content fades in (6 px rise) over the second half. Closing
+// fades the content while the space collapses under it, clipped from the bottom. A tap mid-animation reverses from the
+// current height and opacity. Native <details>/<summary> keep the semantics (expanded state, keyboard).
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const ACC = {
+  open: { duration: 400, easing: 'cubic-bezier(.45,0,.2,1)' },
+  close: { duration: 300, easing: 'cubic-bezier(.3,0,.2,1)' },
+};
 document.querySelectorAll('.accordion').forEach(details => {
   const summary = details.querySelector('summary');
   const body = details.querySelector('.accordion__body');
-  let animation = null;
+  const content = body.firstElementChild;
+  let anims = [];
   details.classList.toggle('is-expanded', details.open);
   details.classList.add('is-managed');
+  summary.setAttribute('aria-expanded', String(details.open));
   details.addEventListener('toggle', () => {
-    if (!animation) details.classList.toggle('is-expanded', details.open);
+    if (!anims.length) details.classList.toggle('is-expanded', details.open);
   });
   summary.addEventListener('click', event => {
     event.preventDefault();
     const expand = !details.classList.contains('is-expanded');
+    // Current state, mid-animation included, before anything is cancelled.
+    const fromH = details.open ? body.getBoundingClientRect().height : 0;
+    const fromO = details.open ? Number(getComputedStyle(content).opacity) : 0;
+    anims.forEach(a => a.cancel());
+    anims = [];
     details.classList.toggle('is-expanded', expand);
-    const from = details.open ? body.getBoundingClientRect().height : 0;
-    if (animation) animation.cancel();
-    animation = null;
-    if (reduceMotion.matches) { body.style.overflow = ''; details.open = expand; return; }
+    summary.setAttribute('aria-expanded', String(expand));
+    if (reduceMotion.matches) { details.open = expand; return; }
     details.open = true;
-    const to = expand ? body.scrollHeight : 0;
+    const toH = expand ? body.scrollHeight : 0;
+    const share = expand ? Math.max(0.3, Math.abs(toH - fromH) / (toH || 1)) : Math.max(0.3, fromH / (body.scrollHeight || 1));
+    const timing = expand ? ACC.open : ACC.close;
+    const duration = Math.round(timing.duration * share); // a reversal travels only the remaining distance
     body.style.overflow = 'hidden';
-    const current = body.animate({ height: [`${from}px`, `${to}px`] }, { duration: expand ? 300 : 240, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' });
-    animation = current;
-    current.onfinish = () => {
-      if (!expand) details.open = false; // close before releasing the held 0px height, so nothing flashes
+    const height = body.animate({ height: [`${fromH}px`, `${toH}px`] }, { duration, easing: timing.easing, fill: 'forwards' });
+    const fade = expand
+      ? content.animate({ opacity: [fromO, 1], transform: [`translateY(${6 * (1 - fromO)}px)`, 'translateY(0)'] }, { duration: Math.round(240 * Math.max(0.4, 1 - fromO)), delay: fromO > 0 ? 0 : Math.round(duration * 0.4), easing: 'cubic-bezier(.2,0,.2,1)', fill: 'both' })
+      : content.animate({ opacity: [fromO, 0] }, { duration: Math.round(duration * 0.8), easing: 'cubic-bezier(.4,0,1,1)', fill: 'both' });
+    anims = [height, fade];
+    height.onfinish = () => {
+      if (anims[0] !== height) return;
+      if (!expand) details.open = false; // close before releasing the held 0 px height, so nothing flashes
       body.style.overflow = '';
-      current.cancel();
-      animation = null;
+      anims.forEach(a => a.cancel());
+      anims = [];
     };
   });
 });
