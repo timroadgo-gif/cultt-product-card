@@ -13,20 +13,30 @@
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
     <meta name="description" content="Loewe Puzzle — карточка товара THE CULTT" />
-    <title>Loewe Puzzle — THE CULTT</title>
+    <title>Прототипы — THE CULTT</title>
+    <!-- Route before first paint: the root opens the prototype index, #/product opens the product card directly. -->
+    <script>document.documentElement.dataset.route = location.hash.startsWith('#/product') ? 'product' : 'index';</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=3219d2f09640" />
-    <link rel="stylesheet" href="./styles.css?v=3219d2f09640" />
-    <meta name="build" content="3219d2f09640" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=61bd6759ace0" />
+    <link rel="stylesheet" href="./styles.css?v=61bd6759ace0" />
+    <meta name="build" content="61bd6759ace0" />
   </head>
   <body>
+    <!-- Prototype index: scenarios are rendered from the registry in navigation.js -->
+    <section class="hub" id="hubScreen" aria-labelledby="hubTitle">
+      <div class="hub__inner">
+        <h1 class="hub__title" id="hubTitle">Прототипы</h1>
+        <ul class="hub__list" id="scenarioList"></ul>
+      </div>
+    </section>
+    <div class="product-screen" id="productScreen">
     <header class="gallery__topbar" aria-label="Навигация по товару" data-glass-source=".gallery">
       <div class="gallery__topbar-actions">
         <div class="gallery__topbar-group" data-slot="nav-leading"></div>
@@ -61,13 +71,10 @@
             <span class="visually-hidden" id="skuCopyStatus" role="status" aria-live="polite"></span>
           </div>
           <div class="price-block">
-            <button class="price price-state-trigger" type="button" aria-label="Статус: в наличии. Показать следующий статус товара" title="Нажмите, чтобы сменить статус товара"><span class="price-value">252&nbsp;000&nbsp;₽</span><span class="sold-status" hidden>Продано</span></button>
-            <p class="sold-caption" hidden>Цена на момент продажи</p>
-            <button class="find-similar" type="button" hidden>Найти похожий</button>
+            <p class="price"><span class="price-value">252&nbsp;000&nbsp;₽</span></p>
             <div class="split-row">
-              <span class="split-badge"><span class="split-badge__logo" aria-hidden="true"></span><span class="split-badge__sum">63&nbsp;000&nbsp;₽</span></span>
+              <span class="split-badge"><img src="./assets/split-badge.png" alt="23 750 ₽" width="248" height="52" /></span>
               <span class="split-copy">× 4 в супер Сплит</span>
-              <button class="info-button" type="button" aria-label="Подробнее о Сплите"><span data-icon="info"></span></button>
             </div>
           </div>
         </section>
@@ -117,7 +124,8 @@
     <nav class="bottom-bar" aria-label="Действия с товаром">
       <!-- Button primary (fill) + Button secondary icon-only, built from the UI Kit in app.js -->
     </nav>
+    </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=3219d2f09640"></script>
+    <script type="module" src="./app.js?v=61bd6759ace0"></script>
   </body>
 </html>

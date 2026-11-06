@@ -1,9 +1,10 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=3219d2f09640';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=3219d2f09640';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=3219d2f09640';
-import { createButton } from './design-system/components/button/button.js?v=3219d2f09640';
+import { createIcon } from './design-system/icons/icon.js?v=61bd6759ace0';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=61bd6759ace0';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=61bd6759ace0';
+import { createButton } from './design-system/components/button/button.js?v=61bd6759ace0';
+import { goToIndex } from './navigation.js?v=61bd6759ace0';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -30,7 +31,6 @@ const favorite = createButton({ variant: 'secondary', iconPosition: 'only', icon
 favorite.classList.add('bottom-bar__favorite');
 favorite.setAttribute('aria-pressed', 'false');
 bottomBar.append(bottomAdd, favorite);
-const setBottomLabel = text => { bottomAdd.querySelector('.ds-button__label').textContent = text; };
 
 const track = document.querySelector('#galleryTrack');
 const rail = track.querySelector('.gallery__rail');
@@ -45,37 +45,7 @@ let toastTimer;
 let galleryIndex = 0;
 let lastWheelSlide = 0;
 const topbar = document.querySelector('.gallery__topbar');
-const availabilityStates = ['available', 'sold_with_price', 'sold_price_hidden'];
-let availabilityIndex = 0;
-const priceTrigger = document.querySelector('.price-state-trigger');
-const priceValue = priceTrigger.querySelector('.price-value');
-const soldStatus = priceTrigger.querySelector('.sold-status');
-const soldCaption = document.querySelector('.sold-caption');
-const findSimilar = document.querySelector('.find-similar');
-const splitRow = document.querySelector('.split-row');
-const deliveryCard = document.querySelector('.delivery-card');
 
-function renderAvailability() {
-  const state = availabilityStates[availabilityIndex];
-  const available = state === 'available';
-  document.body.dataset.availability = state;
-  priceValue.hidden = state === 'sold_price_hidden';
-  soldStatus.hidden = state !== 'sold_price_hidden';
-  soldCaption.hidden = state !== 'sold_with_price';
-  findSimilar.hidden = state !== 'sold_price_hidden';
-  splitRow.hidden = !available;
-  deliveryCard.hidden = !available;
-  setBottomLabel(available ? 'В корзину' : 'Найти похожий');
-  const label = available ? 'в наличии' : state === 'sold_with_price' ? 'продано, цена показана' : 'продано, цена скрыта';
-  priceTrigger.setAttribute('aria-label', `Статус: ${label}. Показать следующий статус товара`);
-}
-
-priceTrigger.addEventListener('click', () => {
-  availabilityIndex = (availabilityIndex + 1) % availabilityStates.length;
-  renderAvailability();
-});
-findSimilar.addEventListener('click', () => showToast('Поиск похожих товаров'));
-renderAvailability();
 
 // The gallery is pinned under the content, so the bar turns solid when the white surface reaches it.
 const productContent = document.querySelector('.product-content');
@@ -251,10 +221,8 @@ skuCopy.addEventListener('click', async () => {
   skuTimer = setTimeout(() => { skuCopy.classList.remove('is-copied'); skuStatus.textContent = ''; }, 1500);
 });
 
-document.querySelector('.gallery__topbar button[aria-label="Назад"]').addEventListener('click', () => {
-  if (history.length > 1) history.back();
-  else showToast('Карточка товара');
-});
+// Back always returns to the prototype index (reverse push), also when the card was opened by a direct link.
+document.querySelector('.gallery__topbar button[aria-label="Назад"]').addEventListener('click', goToIndex);
 
 document.querySelector('.gallery__topbar button[aria-label="Поделиться"]').addEventListener('click', async () => {
   const shareData = { title: 'Loewe Puzzle — THE CULTT', url: location.href };
@@ -266,8 +234,8 @@ document.querySelector('.gallery__topbar button[aria-label="Поделиться
   } else showToast('Loewe Puzzle');
 });
 
-document.querySelector('.gallery__topbar button[aria-label="Корзина"]').addEventListener('click', () => showToast(availabilityIndex === 0 ? 'Товар добавлен в корзину' : 'Корзина'));
-bottomAdd.addEventListener('click', () => showToast(availabilityIndex === 0 ? 'Товар добавлен в корзину' : 'Поиск похожих товаров'));
+document.querySelector('.gallery__topbar button[aria-label="Корзина"]').addEventListener('click', () => showToast('Товар добавлен в корзину'));
+bottomAdd.addEventListener('click', () => showToast('Товар добавлен в корзину'));
 document.querySelectorAll('.info-button').forEach(button => button.addEventListener('click', () => {
   showToast(button.getAttribute('aria-label'));
 }));
