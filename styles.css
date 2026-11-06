@@ -73,7 +73,9 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .delivery-option{display:flex;flex-direction:column;gap:var(--space-2)}
 .delivery-option__title{display:flex;align-items:center;gap:var(--space-2);margin:0;font-size:var(--text-body-size);font-weight:400;line-height:var(--text-body-line-height)}
 .delivery-option__icon{--icon-px:20px;flex:none;display:grid;place-items:center;width:20px;height:20px;color:var(--ink)}
-.delivery-option p{margin:0;color:var(--ink);font-size:var(--text-body-s-size);line-height:var(--text-body-s-line-height)}
+/* Hierarchy by contrast, not weight: title 14/20 ink, description 13/19 #555 (the page's secondary grey, 7.5:1 on white);
+   the green manager link keeps its colour and underline. */
+.delivery-option p{margin:0;color:#555;font-size:var(--text-body-s-size);line-height:19px}
 .delivery-manager{color:var(--green);font-weight:400;text-decoration:underline;text-decoration-thickness:1px;text-decoration-color:rgba(40,81,65,.35);text-underline-offset:3px;-webkit-tap-highlight-color:transparent}
 .delivery-manager:active{text-decoration-color:currentColor}
 .delivery-time{align-self:center;margin:0;text-align:right;white-space:nowrap;font-size:12px;font-weight:500;line-height:1.2}
