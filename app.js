@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=20cbb0eb99de';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=20cbb0eb99de';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=20cbb0eb99de';
-import { createButton } from './design-system/components/button/button.js?v=20cbb0eb99de';
+import { createIcon } from './design-system/icons/icon.js?v=de1e8fe30748';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=de1e8fe30748';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=de1e8fe30748';
+import { createButton } from './design-system/components/button/button.js?v=de1e8fe30748';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -38,6 +38,8 @@ const slides = rail.querySelectorAll('.gallery__slide');
 const progress = document.querySelector('#galleryProgress');
 const progressBar = progress.querySelector('.gallery__progress-bar');
 const galleryEl = track.closest('.gallery');
+const counterCurrent = galleryEl.querySelector('.gallery__counter-current');
+galleryEl.querySelector('.gallery__counter-total').textContent = String(galleryEl.querySelectorAll('.gallery__slide').length);
 const toast = document.querySelector('#toast');
 let toastTimer;
 let galleryIndex = 0;
@@ -138,6 +140,7 @@ function paintGallery(pos) {
     const shift = d > 0 ? -d : -d * (1 - GALLERY_DRIFT); // incoming: hold still on screen; covered: drift slowly
     img.style.transform = d ? `translate3d(${(shift * 100).toFixed(3)}%, 0, 0)` : '';
   });
+  counterCurrent.textContent = String(Math.min(count, Math.max(1, Math.round(pos) + 1))); // the photo that covers most of the frame
   progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, (pos + 1) / count))})`; // cumulative, left-anchored
 }
 

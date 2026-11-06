@@ -36,6 +36,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 @media (display-mode:standalone) and (max-width:520px){.gallery__topbar{padding-top:max(calc(env(safe-area-inset-top,0px) + 22px),16px)}}
 /* Progress: Louis Vuitton-style cumulative hairline at the bottom edge — light track, ink fill anchored to the left that
    covers (photo + 1) / count of the width (1 of 6 → 1/6, 6 of 6 → 100%). scaleX keeps it on the compositor. */
+/* Photo counter (Gucci reference): a small quiet pill in the bottom-right corner, above the progress line — translucent
+   neutral grey, white 11/14 medium with tabular figures so «1 / 6» never changes width. Not interactive, not glass. */
+.gallery__counter{position:absolute;right:var(--space-3);bottom:calc(var(--space-3) + 2px);z-index:2;display:inline-flex;align-items:center;height:20px;padding:0 var(--space-2);border-radius:10px;background:rgba(7,7,7,.32);color:#fff;font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none;user-select:none}
 .gallery__progress{position:absolute;left:0;right:0;bottom:0;z-index:2;height:2px;background:rgba(7,7,7,.1);pointer-events:none}
 .gallery__progress-bar{position:absolute;inset:0;background:var(--ink);transform-origin:0 50%;transform:scaleX(calc(1 / var(--gallery-count,6)));will-change:transform}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
