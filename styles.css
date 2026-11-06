@@ -135,12 +135,15 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .capacity-item.is-muted .capacity-item__image img{filter:grayscale(1) brightness(1.08);opacity:.3}
 .capacity-item.is-muted .capacity-item__name{color:#8a8a8a}
 
-.authenticity-card{min-height:96px;display:grid;grid-template-columns:32px minmax(0,1fr) 28px;align-items:center;gap:var(--space-4);margin:var(--space-5) 0 var(--space-4);padding:var(--space-4);border-radius:18px;background:#f0f0ec;text-decoration:none}
-.authenticity-card__seal{width:32px;height:32px;display:grid;place-items:center}
-.authenticity-card__seal img{display:block;width:32px;height:32px}
-.authenticity-card strong{display:block;font-size:14px;font-weight:400;line-height:20px}
-.authenticity-card small{display:block;margin-top:var(--space-1);color:#555;font-size:13px;line-height:18px}
-.authenticity-card__arrow{--icon-px:28px;color:var(--ink)}
+/* Authenticity: a quiet supporting row, not a banner — neutral grey-1 (#f8f8f8, token color.grey-1), radius 12 like the
+   other informational notes, 12/16 padding, 20 px shield (Lucide shield-check at library weight 1, as the delivery icons),
+   16 px library chevron. Title 14/20 ink, description caption 12/16 #555. */
+.authenticity-card{display:grid;grid-template-columns:20px minmax(0,1fr) 16px;align-items:center;gap:var(--space-3);margin:var(--space-5) 0 var(--space-4);padding:var(--space-3) var(--space-4);border-radius:12px;background:#f8f8f8;text-decoration:none}
+.authenticity-card__seal{width:20px;height:20px;display:grid;place-items:center}
+.authenticity-card__seal img{display:block;width:20px;height:20px}
+.authenticity-card strong{display:block;font-size:var(--text-body-size);font-weight:400;line-height:var(--text-body-line-height)}
+.authenticity-card small{display:block;margin-top:2px;color:#555;font-size:var(--text-caption-size);line-height:var(--text-caption-line-height)}
+.authenticity-card__arrow{--icon-px:16px;display:grid;place-items:center;color:var(--ink)}
 .recommendation-section{display:flex;flex-direction:column;gap:16px}
 .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 8px}
 .recommendation-card{min-width:0;display:flex;flex-direction:column;gap:6px}
