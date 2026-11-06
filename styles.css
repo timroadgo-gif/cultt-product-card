@@ -65,8 +65,11 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .sku-copy.is-copied .sku-copy__glyph--done{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.sku-copy__glyph{transition:opacity 120ms linear;transform:none!important}}
 h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
-/* Category: secondary metadata under the name (left column of the heading grid), caption 12/16 in the article grey. */
-.product-category{grid-column:1;margin:0;color:#767676;font-size:var(--text-caption-size);font-weight:400;line-height:var(--text-caption-line-height);letter-spacing:.01em}
+/* Category: link to the catalogue above the name (breadcrumb position), caption 12/16 in the article grey; 8 px to the
+   name; the 44 px tap zone comes from ::after, so the visible spacing stays as drawn. */
+.product-category{position:relative;grid-column:1 / -1;justify-self:start;margin:0 0 var(--space-2);color:#767676;font-size:var(--text-caption-size);font-weight:400;line-height:var(--text-caption-line-height);letter-spacing:.01em;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.product-category::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
+.product-category:active{opacity:.6}
 .price-block{display:flex;flex-direction:column;gap:var(--space-2)}
 .price{margin:0;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:24px;font-weight:350;letter-spacing:.005em}
 .split-row{min-height:16px;display:flex;align-items:center;gap:5px;white-space:nowrap}
