@@ -1,8 +1,8 @@
 // GlassIconButtonGroup: two or three independent icon actions on ONE shared Liquid Glass capsule (e.g. [Share | Cart]).
 // The group owns layout and the shared surface (applyGlass, shape "pill" → live lens from the shared engine); every item
 // is its own <button> with its own 44 × 44 target, label and handler. No glass CSS here.
-import { createIcon } from "../../icons/icon.js?v=61bd6759ace0";
-import { applyGlass } from "../../glass/glass.js?v=61bd6759ace0";
+import { createIcon } from "../../icons/icon.js?v=b911f6d323be";
+import { applyGlass } from "../../glass/glass.js?v=b911f6d323be";
 
 const ICON_SIZES = ["standard", "large"];
 

@@ -6,7 +6,7 @@
 // Transition: iOS-style push — the card enters from the right over the index, the index drifts 30 % left; pop reverses it.
 // An interrupted transition reverses from where it is. Safari's own swipe-back animation (hasUAVisualTransition) is
 // not doubled, and reduced motion switches screens instantly.
-import { createIcon } from './design-system/icons/icon.js?v=61bd6759ace0';
+import { createIcon } from './design-system/icons/icon.js?v=b911f6d323be';
 
 // Scenario registry: add a row here to list another scenario. `screen` is the screen it opens (only the PDP for now).
 export const SCENARIOS = [

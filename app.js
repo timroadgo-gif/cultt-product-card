@@ -1,10 +1,10 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=61bd6759ace0';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=61bd6759ace0';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=61bd6759ace0';
-import { createButton } from './design-system/components/button/button.js?v=61bd6759ace0';
-import { goToIndex } from './navigation.js?v=61bd6759ace0';
+import { createIcon } from './design-system/icons/icon.js?v=b911f6d323be';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=b911f6d323be';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=b911f6d323be';
+import { createButton } from './design-system/components/button/button.js?v=b911f6d323be';
+import { goToIndex } from './navigation.js?v=b911f6d323be';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
