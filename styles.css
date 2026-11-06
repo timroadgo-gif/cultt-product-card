@@ -1,5 +1,7 @@
 @font-face{font-family:Manrope;src:url('./assets/manrope-400.ttf') format('truetype');font-weight:400;font-display:swap}
 @font-face{font-family:Manrope;src:url('./assets/manrope-500.ttf') format('truetype');font-weight:500;font-display:swap}
+/* Light weight for the price only (UI Kit variable Manrope, latin subset: digits, spaces, ₽; OFL — assets/licenses/manrope-OFL.txt) */
+@font-face{font-family:Manrope;src:url('./assets/manrope-latin-wght.woff2') format('woff2');font-weight:300;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F}
 :root{font-family:Manrope,Arial,sans-serif;color:#070707;background:#fff;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;--ink:#070707;--muted:#828282;--quiet:#f8f8f8;--green:#285141;--line:#d8d8d8;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -55,15 +57,16 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .copy-button::after{content:"";position:absolute;inset:calc((var(--icon-presentation-compact-viewport) - 44px) / 2)}
 h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .price-block{display:flex;flex-direction:column;gap:var(--space-2)}
-.price{margin:0;font-size:var(--text-heading-s-size);line-height:var(--text-heading-s-line-height);font-weight:400}
+.price{margin:0;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:24px;font-weight:300;letter-spacing:.005em}
 .price-state-trigger{align-self:flex-start;max-width:100%;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .price-state-trigger:active{opacity:.65}
 .price-state-trigger .sold-status{color:#565656;font-size:13px;line-height:19px}
 .sold-caption{margin:0;color:#808080;font-size:11px;line-height:15px}
 .find-similar{align-self:flex-start;margin-top:2px;padding:0;border:0;background:transparent;color:#565656;font-size:12px;line-height:17px;text-decoration:underline;text-underline-offset:3px}
 .split-row{min-height:16px;display:flex;align-items:center;gap:5px;white-space:nowrap}
-.split-badge{flex:0 0 60px;width:60px;height:12.6px;display:block}
-.split-badge img{display:block;width:60px;height:12.6px}
+.split-badge{flex:none;display:inline-flex;align-items:center;gap:3px;height:13px;padding:0 4px 0 1px;border-radius:7px;background:#000;color:#fff;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:10px;font-weight:500;line-height:13px;font-variant-numeric:tabular-nums}
+/* Split logo = left part of the original badge raster (assets/split-badge.png), the amount is live text */
+.split-badge__logo{width:11px;height:11px;border-radius:50%;background:url('./assets/split-badge.png') 0 50%/auto 13px no-repeat}
 .split-copy{color:#555;font-family:Manrope,Arial,sans-serif;font-size:var(--text-caption-size);line-height:var(--text-caption-line-height)}
 .info-button{flex:0 0 auto;display:grid;place-items:center;width:16px;height:16px;border:0;background:transparent;padding:0}
 .info-button{--icon-px:16px;color:var(--ink)}

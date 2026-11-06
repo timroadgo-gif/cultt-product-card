@@ -4,8 +4,8 @@
 // <button> keeps the 44 × 44 hit area around it. The surface refracts through the shared Liquid Glass engine
 // (glass/engine.js); refraction: false keeps the CSS material only (e.g. a control that is not painted until focused).
 // This file never styles glass or resizes icon geometry itself.
-import { createIcon } from "../../icons/icon.js?v=cfdae749f876";
-import { applyGlass } from "../../glass/glass.js?v=cfdae749f876";
+import { createIcon } from "../../icons/icon.js?v=50e762cac2a1";
+import { applyGlass } from "../../glass/glass.js?v=50e762cac2a1";
 
 const MATERIALS = ["glass-light"]; // IconButton / Glass / Light / 44 is the only approved variant
 
