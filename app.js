@@ -1,9 +1,9 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=8dc784a2f119';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=8dc784a2f119';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=8dc784a2f119';
-import { createButton } from './design-system/components/button/button.js?v=8dc784a2f119';
+import { createIcon } from './design-system/icons/icon.js?v=eec2e025b970';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=eec2e025b970';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=eec2e025b970';
+import { createButton } from './design-system/components/button/button.js?v=eec2e025b970';
 
 // Static icon slots: <span data-icon="name"> gets the registry icon; size comes from the slot's CSS (--icon-px).
 // data-icon-presentation="compact" fits a small icon by its optical bounds with a legible 0.9 px line (UI Kit presentation).
@@ -281,8 +281,9 @@ document.querySelectorAll('.favorite-button, .bottom-bar__favorite').forEach(but
 // current height and opacity. Native <details>/<summary> keep the semantics (expanded state, keyboard).
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const ACC = {
-  open: { duration: 400, easing: 'cubic-bezier(.45,0,.2,1)' },
-  close: { duration: 300, easing: 'cubic-bezier(.3,0,.2,1)' },
+  // Responsive start (the panel moves from the first frame after the tap), short soft finish, no overshoot.
+  open: { duration: 300, easing: 'cubic-bezier(.2,.3,.25,1)' },
+  close: { duration: 250, easing: 'cubic-bezier(.3,.2,.3,1)' },
 };
 document.querySelectorAll('.accordion').forEach(details => {
   const summary = details.querySelector('summary');
@@ -314,8 +315,8 @@ document.querySelectorAll('.accordion').forEach(details => {
     body.style.overflow = 'hidden';
     const height = body.animate({ height: [`${fromH}px`, `${toH}px`] }, { duration, easing: timing.easing, fill: 'forwards' });
     const fade = expand
-      ? content.animate({ opacity: [fromO, 1], transform: [`translateY(${6 * (1 - fromO)}px)`, 'translateY(0)'] }, { duration: Math.round(240 * Math.max(0.4, 1 - fromO)), delay: fromO > 0 ? 0 : Math.round(duration * 0.4), easing: 'cubic-bezier(.2,0,.2,1)', fill: 'both' })
-      : content.animate({ opacity: [fromO, 0] }, { duration: Math.round(duration * 0.8), easing: 'cubic-bezier(.4,0,1,1)', fill: 'both' });
+      ? content.animate({ opacity: [fromO, 1], transform: [`translateY(${6 * (1 - fromO)}px)`, 'translateY(0)'] }, { duration: Math.round(200 * Math.max(0.4, 1 - fromO)), delay: fromO > 0 ? 0 : Math.round(duration * 0.25), easing: 'cubic-bezier(.2,0,.2,1)', fill: 'both' })
+      : content.animate({ opacity: [fromO, 0] }, { duration: Math.round(duration * 0.7), easing: 'cubic-bezier(.4,0,1,1)', fill: 'both' });
     anims = [height, fade];
     height.onfinish = () => {
       if (anims[0] !== height) return;
