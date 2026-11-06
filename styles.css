@@ -75,7 +75,7 @@ h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .price-block{display:flex;flex-direction:column;gap:var(--space-2)}
 .price{margin:0;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:18px;line-height:24px;font-weight:350;letter-spacing:.005em}
 /* Product state (html[data-availability]): sold = caption under the price, no Split. */
-.price-caption{display:none;margin:-6px 0 0;color:#767676;font-size:var(--text-caption-size);font-weight:400;line-height:var(--text-caption-line-height)}
+.price-caption{display:none;margin:-2px 0 0;color:#767676;font-size:var(--text-caption-size);font-weight:400;line-height:var(--text-caption-line-height)}
 html[data-availability="sold"] .price-caption{display:block}
 html[data-availability="sold"] .split-row,html[data-availability="sold"] .split-only,html[data-availability="sold"] .delivery-card{display:none}
 .split-row{min-height:16px;display:flex;align-items:center;gap:5px;white-space:nowrap}
