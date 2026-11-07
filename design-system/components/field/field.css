@@ -1,4 +1,6 @@
-/* Field (Figma «Input Form»). Kinds: text (label + input) and select (label + value + chevron).
+/* Field (Figma «Input Form», refined 2026-11-07). Kinds: text (label + input) and select (label + value + chevron).
+   One visual language for every input: subtle solid surface, no border at rest, regular secondary label above a
+   regular value. States change only colour and the inset outline (box-shadow), never size or position.
    Corners: shared continuous geometry (.ds-corner); the component only sets its semantic radius. */
 .ds-field {
   box-sizing: border-box;
@@ -6,8 +8,9 @@
   align-items: center;
   gap: var(--field-icon-gap);
   width: 100%;
+  min-height: var(--field-min-height);
   margin: 0;
-  padding: var(--field-padding);
+  padding: var(--field-padding-block) var(--field-padding-inline);
   border: 0;
   --corner-radius: var(--field-radius);
   background: var(--field-background);
@@ -15,11 +18,51 @@
   font: inherit;
   text-align: left;
   cursor: text;
+  transition: background-color var(--field-transition-duration) var(--motion-easing-standard),
+    box-shadow var(--field-transition-duration) var(--motion-easing-standard),
+    color var(--field-transition-duration) var(--motion-easing-standard);
 }
 .ds-field[data-kind="select"] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .ds-field__content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--field-gap); }
-.ds-field__input { width: 100%; margin: 0; padding: 0; border: 0; outline: 0; background: none; color: var(--field-foreground); }
+.ds-field__label { color: var(--field-label); }
+.ds-field__input { width: 100%; min-width: 0; margin: 0; padding: 0; border: 0; border-radius: 0; outline: 0; background: none; color: var(--field-foreground); -webkit-appearance: none; appearance: none; }
+textarea.ds-field__input { display: block; resize: none; field-sizing: content; }
+.ds-field__value { overflow: hidden; color: var(--field-foreground); text-overflow: ellipsis; white-space: nowrap; }
 .ds-field__input::placeholder, .ds-field__value[data-empty] { color: var(--field-placeholder); opacity: 1; }
-.ds-field__chevron { flex: none; display: flex; }
+.ds-field__chevron { flex: none; display: flex; color: var(--field-icon); }
 .ds-field__chevron .ds-icon { width: var(--field-chevron-size); height: var(--field-chevron-size); }
+
+/* Focus: one inset hairline in the foreground colour; nothing moves. */
 .ds-field:focus-within, .ds-field:focus-visible { outline: 0; box-shadow: inset 0 0 0 var(--field-focus-ring-width) var(--field-foreground); }
+/* Pressed (select opens a list or sheet). */
+.ds-field[data-kind="select"]:active:not(:disabled) { background: var(--field-background-pressed); }
+
+/* Error: outline and message in the error colour; label and value keep their colours. */
+.ds-field[data-state="error"], .ds-field:has([aria-invalid="true"]),
+.ds-field[data-state="error"]:focus-within, .ds-field:has([aria-invalid="true"]):focus-within {
+  box-shadow: inset 0 0 0 var(--field-focus-ring-width) var(--field-error-color);
+}
+
+/* Read-only: value stays at full contrast and selectable; no fill, hairline outline. */
+.ds-field[data-readonly], .ds-field:has(.ds-field__input[readonly]) {
+  background: var(--field-readonly-background);
+  box-shadow: inset 0 0 0 var(--field-focus-ring-width) var(--field-readonly-border);
+  cursor: default;
+}
+.ds-field:has(.ds-field__input[readonly]):focus-within { box-shadow: inset 0 0 0 var(--field-focus-ring-width) var(--field-foreground); }
+.ds-field__input[readonly] { cursor: text; }
+
+/* Disabled: same surface, muted text, no interaction. */
+.ds-field:disabled, .ds-field[aria-disabled="true"], .ds-field:has(.ds-field__input:disabled) { cursor: default; box-shadow: none; }
+:is(.ds-field:disabled, .ds-field[aria-disabled="true"], .ds-field:has(.ds-field__input:disabled)) :is(.ds-field__value:not([data-empty]), .ds-field__input) {
+  color: var(--field-disabled-foreground);
+  -webkit-text-fill-color: var(--field-disabled-foreground);
+}
+:is(.ds-field:disabled, .ds-field[aria-disabled="true"], .ds-field:has(.ds-field__input:disabled)) :is(.ds-field__label, .ds-field__chevron, .ds-field__value[data-empty]) { color: var(--field-disabled-label); }
+.ds-field__input:disabled::placeholder { color: var(--field-disabled-label); -webkit-text-fill-color: var(--field-disabled-label); }
+
+/* Helper or error text under a field (caption style). */
+.ds-field-message { margin: var(--field-message-gap) 0 0; color: var(--field-label); }
+.ds-field-message[data-state="error"] { color: var(--field-error-color); }
+
+@media (prefers-reduced-motion: reduce) { .ds-field { transition: none; } }

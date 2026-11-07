@@ -19,15 +19,17 @@
     <script>(function (d, h) { d.dataset.route = h.startsWith('#/product') ? 'product' : 'index'; d.dataset.availability = h === '#/product/sold' ? 'sold' : 'available'; d.dataset.sections = h === '#/product/similar' ? 'similar' : ''; })(document.documentElement, location.hash);</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=66c018297ea6" />
-    <link rel="stylesheet" href="./styles.css?v=66c018297ea6" />
-    <meta name="build" content="66c018297ea6" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=e12220ae6340" />
+    <link rel="stylesheet" href="./styles.css?v=e12220ae6340" />
+    <meta name="build" content="e12220ae6340" />
+  <meta name="app-build" content="e12220ae6340" />
+  <script>(()=>{const m=document.querySelector('meta[name="app-build"]');if(!m||!window.fetch)return;const cur=m.content;const url=new URL('version.json',document.baseURI);const check=()=>fetch(url+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(v=>{if(!v||!v.build||v.build===cur)return;const k='app-build-reload:'+v.build;try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}const u=new URL(location.href);u.searchParams.set('v',v.build);location.replace(u.href)}).catch(()=>{});check();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});addEventListener('pageshow',e=>{if(e.persisted)check()})})();</script>
   </head>
   <body>
     <!-- Prototype index: scenarios are rendered from the registry in navigation.js -->
@@ -133,6 +135,6 @@
     </nav>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=66c018297ea6"></script>
+    <script type="module" src="./app.js?v=e12220ae6340"></script>
   </body>
 </html>
