@@ -275,20 +275,17 @@ html.is-popup-open,html.is-popup-open body{overflow:hidden}
 .support-contact__label{color:var(--ink)}
 .support-contact__chevron{display:grid;place-items:center;width:16px;height:16px;color:#767676}
 
-/* Cost per wear (scenario #/product/support, cost-per-wear.js). One button row under Yandex Split, built on the Split
-   row's scale so the two read as one secondary group under the 18 px price: row 16 high (= .split-row), 8 between rows
-   (price-block gap). Chip 14 high (Split badge 12.6), padding 0 4, wallet (Tabler, stroke 1.5) 10 px, 3 to the amount;
-   amount 12/14 regular green-7; 5 to «за 1 выход» 12/16 #555 — exactly the Split copy. Chip surface = green-1 lightened
-   halfway to white (quieter than plain green-1). Whole row is the target: 44 tall hit area via ::after. */
+/* Cost per wear (scenario #/product/support, cost-per-wear.js), 2026-11-09 v3 — option A: plain underlined text link,
+   no badge, icon or fill, so Yandex Split stays the only branded element under the price. «2 520 ₽ за один выход»
+   12/16 regular #555 (= the Split copy), underline in this page's link style (.city-link / .delivery-manager: 1 px,
+   35 % of the text colour, offset 3). 8 below the Split row (price-block gap), 16 high. Whole row is the target: 44 tall
+   hit area via ::after; pressed = full-colour underline + slight fade. */
 html:not([data-sections~="cost-per-wear"]) .cpw-row,html[data-availability="sold"] .cpw-row{display:none}
-.cpw-row{position:relative;display:inline-flex;align-items:center;align-self:flex-start;gap:5px;min-height:16px;margin:0;padding:0;border:0;background:none;color:#555;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity 120ms ease}
+.cpw-row{position:relative;align-self:flex-start;margin:0;padding:0;border:0;background:none;color:#555;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-caption-size);font-weight:400;line-height:var(--text-caption-line-height);text-align:left;white-space:nowrap;text-decoration:underline;text-decoration-thickness:1px;text-decoration-color:rgba(85,85,85,.35);text-underline-offset:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity 120ms ease,text-decoration-color 120ms ease}
 .cpw-row::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
-.cpw-row:active{opacity:.6}
-.cpw-row:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
-.cpw-row__chip{display:inline-flex;align-items:center;gap:3px;height:14px;padding:0 4px;--corner-radius:4px;background:color-mix(in srgb,var(--color-green-1) 50%,#fff);color:var(--color-green-7)}
-.cpw-row__icon{display:block;flex:none;width:10px;height:10px;background:currentColor;-webkit-mask:url("./assets/cost-per-wear-wallet.svg") center / contain no-repeat;mask:url("./assets/cost-per-wear-wallet.svg") center / contain no-repeat}
-.cpw-row__amount{font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-caption-size);font-weight:400;line-height:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.cpw-row__text{font-family:Manrope,Arial,sans-serif;font-size:var(--text-caption-size);line-height:var(--text-caption-line-height);white-space:nowrap}
+.cpw-row:active{opacity:.7;text-decoration-color:currentColor}
+.cpw-row:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:2px}
+.cpw-row__amount{font-variant-numeric:tabular-nums}
 /* Calculator sheet content: field (UI Kit Field) after the description (24, Popup System), result 24 below the field:
    «1 выход =» 16/24 regular ink + amount green-7 medium — the sheet's conclusion, no card around it. */
 .ps .cpw-result{margin:var(--spacing-standard-block) 0 0;color:var(--ink)} /* .ps scope: sheet.css resets .ps p margins */
