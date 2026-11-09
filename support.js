@@ -3,11 +3,10 @@
 // System (IOS:UI Agent/playground: host = backdrop, motion, focus trap, inert page, swipe, Escape; content blocks
 // sheet/head/body). The popup links to the playground's js/ (./popup → playground/js) so it shares this page's UI Kit
 // modules (one glass engine).
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=bd3874153913';
-import { createIcon } from './design-system/icons/icon.js?v=bd3874153913';
-import { createHost } from './popup/popup-host.js?v=bd3874153913';
-import { sheet, body, node } from './popup/ui/sheet.js?v=bd3874153913';
-import { SUPPORT_CONTACTS } from './support-contacts.js?v=bd3874153913';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=3041b72df4cc';
+import { createIcon } from './design-system/icons/icon.js?v=3041b72df4cc';
+import { sheet, body, node } from './popup/ui/sheet.js?v=3041b72df4cc';
+import { SUPPORT_CONTACTS } from './support-contacts.js?v=3041b72df4cc';
 
 const HEADING = 'Связаться с нами';
 const SCHEDULE = 'Ежедневно с 11:00 до 22:00'; // support hours for every channel (user 2026-11-09)
@@ -48,11 +47,7 @@ function contactRow(contact, { close, notify }) {
   return node('li', null, [row]);
 }
 
-export function initSupport({ screen, notify }) {
-  const layer = node('div', 'popup-layer support-popup-layer');
-  document.body.append(layer);
-  const host = createHost({ layer, background: [screen] });
-  const root = document.documentElement;
+export function initSupport({ screen, popups, notify }) {
 
   const popup = {
     id: 'contact-support',
@@ -70,12 +65,10 @@ export function initSupport({ screen, notify }) {
       s.classList.add('support-sheet');
       return s;
     },
-    onOpen: () => root.classList.add('is-popup-open'), // page scroll locked while the popup is open
-    onClose: () => root.classList.remove('is-popup-open'),
   };
 
   const fab = node('div', 'support-fab');
-  const button = createIconButton({ icon: 'message', ariaLabel: 'Связаться с поддержкой', onClick: () => host.open(popup, button) });
+  const button = createIconButton({ icon: 'message', ariaLabel: 'Связаться с поддержкой', onClick: () => popups.open(popup, button) });
   fab.append(button);
   screen.append(fab);
 }

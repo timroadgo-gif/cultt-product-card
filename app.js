@@ -1,12 +1,14 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=bd3874153913';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=bd3874153913';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=bd3874153913';
-import { createButton } from './design-system/components/button/button.js?v=bd3874153913';
-import { goToIndex } from './navigation.js?v=bd3874153913';
-import { renderSimilarProducts } from './similar-products.js?v=bd3874153913';
-import { initSupport } from './support.js?v=bd3874153913';
+import { createIcon } from './design-system/icons/icon.js?v=3041b72df4cc';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=3041b72df4cc';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=3041b72df4cc';
+import { createButton } from './design-system/components/button/button.js?v=3041b72df4cc';
+import { goToIndex } from './navigation.js?v=3041b72df4cc';
+import { renderSimilarProducts } from './similar-products.js?v=3041b72df4cc';
+import { initSupport } from './support.js?v=3041b72df4cc';
+import { initCostPerWear } from './cost-per-wear.js?v=3041b72df4cc';
+import { createPagePopups } from './popups.js?v=3041b72df4cc';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -100,7 +102,9 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
 }
 
-initSupport({ screen: document.getElementById('productScreen'), notify: showToast });
+const popups = createPagePopups(document.getElementById('productScreen'));
+initSupport({ screen: document.getElementById('productScreen'), popups, notify: showToast });
+initCostPerWear({ popups });
 
 // Gallery: one position value (in slides, fractional while dragging) drives the rail and the progress bar together.
 // Pointer events track the finger 1:1; the browser keeps vertical scrolling (touch-action: pan-y on the track), and a

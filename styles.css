@@ -274,3 +274,21 @@ html.is-popup-open,html.is-popup-open body{overflow:hidden}
 .support-contact__text{display:flex;flex-direction:column;min-width:0}
 .support-contact__label{color:var(--ink)}
 .support-contact__chevron{display:grid;place-items:center;width:16px;height:16px;color:#767676}
+
+/* Cost per wear (scenario #/product/support, cost-per-wear.js). One button row under Yandex Split (price-block gap 8):
+   a quiet green-1 chip with the Tabler wallet (stroke 1.5, 14 px) and the amount in green-7 (12/16 medium), then
+   «за 1 выход» 12/16 regular ink — the Split row's type size, subordinate to the 18 px price. Whole row is the target:
+   44 tall hit area via ::after, pressed = opacity. */
+html:not([data-sections~="cost-per-wear"]) .cpw-row,html[data-availability="sold"] .cpw-row{display:none}
+.cpw-row{position:relative;display:inline-flex;align-items:center;align-self:flex-start;gap:6px;margin:0;padding:0;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity 120ms ease}
+.cpw-row::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
+.cpw-row:active{opacity:.6}
+.cpw-row:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
+.cpw-row__chip{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 6px 0 5px;--corner-radius:6px;background:var(--color-green-1);color:var(--color-green-7)}
+.cpw-row__icon{display:block;width:14px;height:14px;background:currentColor;-webkit-mask:url("./assets/cost-per-wear-wallet.svg") center / contain no-repeat;mask:url("./assets/cost-per-wear-wallet.svg") center / contain no-repeat}
+.cpw-row__amount{font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-caption-size);font-weight:500;line-height:var(--text-caption-line-height);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cpw-row__text{font-size:var(--text-caption-size);line-height:var(--text-caption-line-height);white-space:nowrap}
+/* Calculator sheet content: field (UI Kit Field) after the description (24, Popup System), result 24 below the field:
+   «1 выход =» 16/24 regular ink + amount green-7 medium — the sheet's conclusion, no card around it. */
+.ps .cpw-result{margin:var(--spacing-standard-block) 0 0;color:var(--ink)} /* .ps scope: sheet.css resets .ps p margins */
+.cpw-result__amount{color:var(--color-green-7);font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-weight:500;font-variant-numeric:tabular-nums}
