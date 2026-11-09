@@ -2,7 +2,7 @@
 // 3:4 photo on the left, brand + model and price beside it — directly under the gallery (user's reference). Rendered from data
 // (similar-products.data.js); shown only when the scenario lists the 'similar' section (html[data-sections], styles.css).
 // Items have no destination yet, so they are not links (no fake navigation).
-import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=977059df38f0';
+import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=0c0a4ea2f08a';
 
 const formatPrice = value => `${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ₽`;
 

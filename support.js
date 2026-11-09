@@ -3,11 +3,11 @@
 // System (IOS:UI Agent/playground: host = backdrop, motion, focus trap, inert page, swipe, Escape; content blocks
 // sheet/head/body). The popup links to the playground's js/ (./popup → playground/js) so it shares this page's UI Kit
 // modules (one glass engine).
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=977059df38f0';
-import { createIcon } from './design-system/icons/icon.js?v=977059df38f0';
-import { createHost } from './popup/popup-host.js?v=977059df38f0';
-import { sheet, body, node } from './popup/ui/sheet.js?v=977059df38f0';
-import { SUPPORT_CONTACTS } from './support-contacts.js?v=977059df38f0';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=0c0a4ea2f08a';
+import { createIcon } from './design-system/icons/icon.js?v=0c0a4ea2f08a';
+import { createHost } from './popup/popup-host.js?v=0c0a4ea2f08a';
+import { sheet, body, node } from './popup/ui/sheet.js?v=0c0a4ea2f08a';
+import { SUPPORT_CONTACTS } from './support-contacts.js?v=0c0a4ea2f08a';
 
 const HEADING = 'Связаться с нами';
 
@@ -15,7 +15,7 @@ const HEADING = 'Связаться с нами';
 // glass X in the same row at the top-trailing corner ([data-close-slot]). This departs from the Popup System header
 // (X in its own row above a left-aligned heading) at the user's explicit request.
 function header() {
-  const title = node('h2', 'ps__title ds-text-popup-heading support-head__title', [HEADING]);
+  const title = node('h2', 'ps__title ds-text-body support-head__title', [HEADING]); // 14/20 regular: as light as the LV title
   const slot = node('div', 'support-head__close');
   slot.dataset.closeSlot = '';
   return node('div', 'support-head', [node('span', 'support-head__spacer'), title, slot]);
@@ -38,7 +38,7 @@ function contactRow(contact, { close, notify }) {
   icon.className = `support-contact__icon support-contact__icon--${contact.id}`;
   const text = node('span', 'support-contact__text', [
     node('span', 'support-contact__label ds-text-body', [contact.label]),
-    node('span', 'support-contact__description ds-text-caption', [contact.description]),
+    contact.description ? node('span', 'support-contact__description ds-text-caption', [contact.description]) : null,
   ]);
   const chevron = node('span', 'support-contact__chevron', [createIcon('chevron-right', { presentation: 'compact' })]);
   chevron.setAttribute('aria-hidden', 'true');
@@ -60,6 +60,7 @@ export function initSupport({ screen, notify }) {
     // Escape still close it as in every simple popup.
     dismiss: { closeButton: true, indicator: false },
     title: HEADING,
+    presentation: 'compact', // always the floating island (LV reference); scrolls inside on short screens
     render: (ctx) => {
       const cards = body([node('ul', 'support-contacts', SUPPORT_CONTACTS.map(c => contactRow(c, { close: ctx.close, notify })))]);
       cards.dataset.popupScroll = ''; // split layout: header stays, only the cards scroll when the sheet is short
