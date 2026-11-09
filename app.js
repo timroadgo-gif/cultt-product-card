@@ -1,11 +1,11 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=e12220ae6340';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=e12220ae6340';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=e12220ae6340';
-import { createButton } from './design-system/components/button/button.js?v=e12220ae6340';
-import { goToIndex } from './navigation.js?v=e12220ae6340';
-import { renderSimilarProducts } from './similar-products.js?v=e12220ae6340';
+import { createIcon } from './design-system/icons/icon.js?v=8d19374da742';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=8d19374da742';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=8d19374da742';
+import { createButton } from './design-system/components/button/button.js?v=8d19374da742';
+import { goToIndex } from './navigation.js?v=8d19374da742';
+import { renderSimilarProducts } from './similar-products.js?v=8d19374da742';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -35,7 +35,7 @@ favorite.classList.add('bottom-bar__favorite');
 favorite.setAttribute('aria-pressed', 'false');
 bottomBar.append(bottomAdd, favorite);
 
-// Product state (available | sold) comes from the scenario route (navigation.js → html[data-availability]).
+// Product state comes from the scenario route (navigation.js PRODUCT_STATES → html[data-availability]: available | sold).
 // Sold: primary action «Заказать» at full width, no wishlist; price caption and hidden Split are pure CSS.
 const isSold = () => document.documentElement.dataset.availability === 'sold';
 function renderAvailability() {

@@ -6,15 +6,22 @@
 // Transition: iOS-style push — the card enters from the right over the index, the index drifts 30 % left; pop reverses it.
 // An interrupted transition reverses from where it is. Safari's own swipe-back animation (hasUAVisualTransition) is
 // not doubled, and reduced motion switches screens instantly.
-import { createIcon } from './design-system/icons/icon.js?v=e12220ae6340';
+import { createIcon } from './design-system/icons/icon.js?v=8d19374da742';
 
 // Scenario registry: add a row here to list another scenario. `screen` is the screen it opens (only the PDP for now).
-// `availability` is the product state the shared PDP renders (available | sold); see app.js renderAvailability().
+// `state` is the product state the shared PDP renders (PRODUCT_STATES below → html[data-availability] + html[data-price];
+// see app.js renderAvailability() and the «Product state» rules in styles.css).
 // `sections` lists optional PDP sections the scenario adds (html[data-sections], styles.css): 'similar' = similar products.
+export const PRODUCT_STATES = {
+  available: { availability: 'available', price: 'current' }, // price + Split, «В корзину» + wishlist
+  sold: { availability: 'sold', price: 'at-sale' }, // price + «Цена на момент продажи», «Заказать», no wishlist/Split
+  soldOverThreeMonths: { availability: 'sold', price: 'hidden' }, // as sold, but no price at all: «Нет в наличии»
+};
 export const SCENARIOS = [
-  { id: 'product', title: 'Карточка товара', route: '#/product', screen: 'product', availability: 'available', documentTitle: 'Loewe Puzzle — THE CULTT' },
-  { id: 'product-sold', title: 'Карточка товара — продан', route: '#/product/sold', screen: 'product', availability: 'sold', documentTitle: 'Loewe Puzzle, продан — THE CULTT' },
-  { id: 'product-similar', title: 'Карточка товара — похожие товары', route: '#/product/similar', screen: 'product', availability: 'available', sections: ['similar'], documentTitle: 'Loewe Puzzle — THE CULTT' },
+  { id: 'product', title: 'Карточка товара', route: '#/product', screen: 'product', state: 'available', documentTitle: 'Loewe Puzzle — THE CULTT' },
+  { id: 'product-sold', title: 'Карточка товара — продан', route: '#/product/sold', screen: 'product', state: 'sold', documentTitle: 'Loewe Puzzle, продан — THE CULTT' },
+  { id: 'product-similar', title: 'Карточка товара — похожие товары', route: '#/product/similar', screen: 'product', state: 'available', sections: ['similar'], documentTitle: 'Loewe Puzzle — THE CULTT' },
+  { id: 'product-sold-3m', title: 'Продан более 3 месяцев назад', route: '#/product/sold-3m', screen: 'product', state: 'soldOverThreeMonths', documentTitle: 'Loewe Puzzle, нет в наличии — THE CULTT' },
 ];
 const INDEX_TITLE = 'Прототипы — THE CULTT';
 
@@ -76,9 +83,10 @@ addEventListener('popstate', event => {
 function applyScenario(scenario) {
   if (!scenario) return;
   root.dataset.sections = (scenario.sections ?? []).join(' ');
-  if (root.dataset.availability === scenario.availability) return;
-  root.dataset.availability = scenario.availability;
-  dispatchEvent(new CustomEvent('productstate', { detail: scenario.availability }));
+  const { availability, price } = PRODUCT_STATES[scenario.state];
+  if (root.dataset.state === scenario.state) return;
+  Object.assign(root.dataset, { state: scenario.state, availability, price });
+  dispatchEvent(new CustomEvent('productstate', { detail: scenario.state }));
 }
 
 // Product position p: 0 = on screen, 1 = off to the right. The index sits at −UNDERLAY_SHIFT · (1 − p).
