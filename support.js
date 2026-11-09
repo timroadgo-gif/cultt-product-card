@@ -3,11 +3,11 @@
 // System (IOS:UI Agent/playground: host = backdrop, motion, focus trap, inert page, swipe, Escape; content blocks
 // sheet/head/body). The popup links to the playground's js/ (./popup → playground/js) so it shares this page's UI Kit
 // modules (one glass engine).
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=b04ce9364faf';
-import { createIcon } from './design-system/icons/icon.js?v=b04ce9364faf';
-import { createHost } from './popup/popup-host.js?v=b04ce9364faf';
-import { sheet, body, node } from './popup/ui/sheet.js?v=b04ce9364faf';
-import { SUPPORT_CONTACTS } from './support-contacts.js?v=b04ce9364faf';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=1ec4a84d9e89';
+import { createIcon } from './design-system/icons/icon.js?v=1ec4a84d9e89';
+import { createHost } from './popup/popup-host.js?v=1ec4a84d9e89';
+import { sheet, body, node } from './popup/ui/sheet.js?v=1ec4a84d9e89';
+import { SUPPORT_CONTACTS } from './support-contacts.js?v=1ec4a84d9e89';
 
 const HEADING = 'Связаться с нами';
 
