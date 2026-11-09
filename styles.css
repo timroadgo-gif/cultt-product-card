@@ -262,15 +262,15 @@ html.is-popup-open,html.is-popup-open body{overflow:hidden}
 .support-contact{display:grid;grid-template-columns:20px minmax(0,1fr) 16px;align-items:center;column-gap:var(--space-3);width:100%;padding:14px;border:1px solid rgba(17,17,17,.1);--corner-radius:8px;background:#fff;color:var(--ink);text-align:left;text-decoration:none;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color 120ms ease}
 .support-contact:active{background:var(--quiet)}
 .support-contact:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-/* Icons: the SVG is a mask over the muted ink token --ink-2 (#5c5c5c, Popup System app token) — softer than the
-   near-black labels, still clearly legible. Optical normalisation (measured visible silhouette in a 20 box: Max 16.5,
-   Telegram 17.5 solid disc with 52 % ink, WhatsApp 17.5, phone 15.2 off-centre): Max 20 · WhatsApp 19 (→ 16.6) ·
-   phone 20 × 1.05 (→ 16) nudged to its optical centre · Telegram 18 (→ 15.8: a solid disc reads larger) in grey-7, one step
-   lighter, so its filled area weighs like the outlines. Proportions are never changed. */
-.support-contact__icon{display:block;justify-self:center;width:20px;height:20px;background:var(--ink-2);-webkit-mask:var(--icon) center / contain no-repeat;mask:var(--icon) center / contain no-repeat}
-.support-contact__icon--whatsapp{width:19px;height:19px}
-.support-contact__icon--phone{transform:translate(.5px,-.4px) scale(1.05)} /* ≈21 visually, layout box stays 20 so the card stays 48 */
-.support-contact__icon--telegram{width:18px;height:18px;background:var(--color-grey-7)}
+/* Icons: one 20 × 20 layout box for every icon (same text start in every card); the SVG is a mask over one charcoal
+   colour, a 50/50 mix of the UI Kit tokens color.ink (#111) and color.grey-7 (#6f6f6f) = #404040 — darker than the
+   former #5c5c5c, softer than the near-black labels. Optical size by scale only (proportions untouched), from the
+   measured silhouettes: Max (24 grid, stroke 1.25, bubble fills 82 % of its box) × 0.95; Telegram (16 grid, solid disc,
+   87.5 %) × 0.95; WhatsApp (24 grid, stroke 1 — the thinnest line, 87.5 %) × 1; phone (24 grid, stroke 1.25, 76 % and
+   off-centre) × 1.05, nudged to its optical centre. */
+.support-contact__icon{display:block;justify-self:center;width:20px;height:20px;background:color-mix(in srgb,var(--color-ink) 50%,var(--color-grey-7));-webkit-mask:var(--icon) center / contain no-repeat;mask:var(--icon) center / contain no-repeat}
+.support-contact__icon--max,.support-contact__icon--telegram{transform:scale(.95)}
+.support-contact__icon--phone{transform:translate(.5px,-.4px) scale(1.05)}
 .support-contact__text{display:flex;flex-direction:column;min-width:0}
 .support-contact__label{color:var(--ink)}
 .support-contact__chevron{display:grid;place-items:center;width:16px;height:16px;color:#767676}
