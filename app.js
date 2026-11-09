@@ -1,12 +1,12 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=1ec4a84d9e89';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=1ec4a84d9e89';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=1ec4a84d9e89';
-import { createButton } from './design-system/components/button/button.js?v=1ec4a84d9e89';
-import { goToIndex } from './navigation.js?v=1ec4a84d9e89';
-import { renderSimilarProducts } from './similar-products.js?v=1ec4a84d9e89';
-import { initSupport } from './support.js?v=1ec4a84d9e89';
+import { createIcon } from './design-system/icons/icon.js?v=84218ce99b61';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=84218ce99b61';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=84218ce99b61';
+import { createButton } from './design-system/components/button/button.js?v=84218ce99b61';
+import { goToIndex } from './navigation.js?v=84218ce99b61';
+import { renderSimilarProducts } from './similar-products.js?v=84218ce99b61';
+import { initSupport } from './support.js?v=84218ce99b61';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
