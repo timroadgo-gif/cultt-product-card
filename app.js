@@ -1,11 +1,12 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=9ceb707d5ca2';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=9ceb707d5ca2';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=9ceb707d5ca2';
-import { createButton } from './design-system/components/button/button.js?v=9ceb707d5ca2';
-import { goToIndex } from './navigation.js?v=9ceb707d5ca2';
-import { renderSimilarProducts } from './similar-products.js?v=9ceb707d5ca2';
+import { createIcon } from './design-system/icons/icon.js?v=35372c7d51bc';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=35372c7d51bc';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=35372c7d51bc';
+import { createButton } from './design-system/components/button/button.js?v=35372c7d51bc';
+import { goToIndex } from './navigation.js?v=35372c7d51bc';
+import { renderSimilarProducts } from './similar-products.js?v=35372c7d51bc';
+import { initSupport } from './support.js?v=35372c7d51bc';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -98,6 +99,8 @@ function showToast(message) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
 }
+
+initSupport({ screen: document.getElementById('productScreen'), notify: showToast });
 
 // Gallery: one position value (in slides, fractional while dragging) drives the rail and the progress bar together.
 // Pointer events track the finger 1:1; the browser keeps vertical scrolling (touch-action: pan-y on the track), and a

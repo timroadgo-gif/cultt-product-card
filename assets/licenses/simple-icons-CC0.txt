@@ -1,0 +1,2 @@
+Telegram and WhatsApp marks (assets/contact-telegram.svg, contact-whatsapp.svg): Simple Icons 13.21.0, https://simpleicons.org — icon data released under CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/). The marks themselves are trademarks of their owners; used to identify the services.
+MAX mark (assets/contact-max.svg): silhouette of the official favicon https://max.ru/favicon.svg, trademark of its owner; used to identify the service.

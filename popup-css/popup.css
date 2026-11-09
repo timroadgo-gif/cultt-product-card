@@ -1,0 +1,80 @@
+/* Popup primitives. Host owns backdrop, panel, motion and dismissal; variants own content only. */
+.popup-layer { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+.popup { position: absolute; inset: 0; pointer-events: auto; }
+
+/* Backdrop: design-system ModalBackdrop (css/backdrop.css), created by the host. */
+
+.popup__panel { position: absolute; outline: none; touch-action: none; background: var(--surface); }
+/* The panel clips its content to its own shape: scrolled content (an opaque sticky bar, an image) can never paint
+   over the rounded top corners and make the sheet look rectangular. clip (not hidden) creates no scroll container,
+   so focus or scrollIntoView can never scroll the shell itself. */
+.popup__panel { overflow: hidden; overflow: clip; }
+
+/* kind: sheet — floating, inset from display edges, concentric radius, opaque container */
+.popup--sheet .popup__panel {
+  left: var(--sheet-inset);
+  right: var(--sheet-inset);
+  bottom: var(--sheet-inset);
+  max-height: calc(100% - var(--safe-top) - var(--spacing-spacious-group)); /* keep the presenting screen visible above the sheet */
+  display: flex;
+  flex-direction: column;
+  --corner-radius: var(--sheet-r); /* concentric with the display; geometry from design-system ds-corner */
+  transform: translateY(calc(100% + var(--sheet-inset) + 24px));
+  transition: transform 0.55s var(--ease-sheet);
+}
+.popup--sheet.is-open .popup__panel { transform: translateY(0); }
+.popup--sheet.is-closing .popup__panel { transform: translateY(calc(100% + var(--sheet-inset) + 24px)); transition-duration: 0.38s; }
+.popup--sheet .popup__panel.is-dragging { transition: none; }
+/* Presentation full (a form control, or natural height > 50 % of the screen, js/popup-host.js): full width, attached to the bottom edge,
+   top corners only (data-corner-edges="top"); the bottom safe area is padding inside the sheet (css/sheet.css). */
+.popup--sheet.popup--full .popup__panel { left: 0; right: 0; bottom: 0; }
+@supports (corner-shape: superellipse(2)) { /* the shadow must follow the continuous shape */
+  .popup--sheet .popup__panel { box-shadow: 0 0 36px rgba(0, 0, 0, 0.1); }
+}
+
+.popup__scroll { overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: none; }
+.popup__scroll::-webkit-scrollbar { display: none; }
+/* Split layout (js/popup-host.js): the shell does not scroll; header regions stay fixed and each
+   [data-popup-scroll] region scrolls on its own (iOS momentum, no scroll chaining into the page or the sheet).
+   The region pads its end by the sheet's bottom padding, the home indicator and an open keyboard. */
+.popup__scroll--split { display: flex; flex: 1 1 auto; flex-direction: column; overflow: hidden; }
+.popup__scroll--split > * { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+.popup__scroll--split .ps { flex: 1 1 auto; min-height: 0; padding-bottom: 0; }
+[data-popup-scroll] {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding-bottom: calc(var(--ps-pad-bottom, 0px) + var(--ps-safe-bottom, 0px) + var(--popup-keyboard, 0px));
+  scrollbar-width: none;
+}
+[data-popup-scroll]::-webkit-scrollbar { display: none; }
+/* Whole-content scrolling: an open keyboard adds room at the end, so the last field can scroll above it. */
+.popup__scroll:not(.popup__scroll--split) { padding-bottom: var(--popup-keyboard, 0px); }
+
+
+/* Close control without a header row: glass X at the close inset from the top and trailing edges. In simple popups
+   it is focus-only — clipped away (no visible button, no layout space) until it receives keyboard focus, so
+   keyboard and screen-reader users can still close a popup that has no actions of its own. */
+.popup__toolbar { position: absolute; top: var(--popup-sheet-close-inset); right: var(--popup-sheet-close-inset); z-index: 2; }
+.popup__toolbar--focus-only:not(:focus-within) { clip-path: inset(50%); pointer-events: none; }
+
+/* Drag indicator (design-system DragIndicator), simple popups only: centred, fixed at the top while content scrolls,
+   inside the 32 top padding — no extra header height. */
+.popup__grabber { position: absolute; top: var(--drag-indicator-inset); left: 50%; transform: translateX(-50%); z-index: 1; }
+
+/* Discard confirmation (design-system Alert) centred over the sheet; its nested backdrop adds no dimming and ignores taps. */
+.popup__alert { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; }
+.popup__alert .ds-alert { position: relative; opacity: 0; transform: scale(1.06); transition: opacity 0.2s, transform 0.25s var(--ease-sheet); }
+.popup__alert.is-open .ds-alert { opacity: 1; transform: none; }
+@supports (corner-shape: superellipse(2)) {
+  .popup__alert .ds-alert { box-shadow: 0 0 36px rgba(0, 0, 0, 0.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup--sheet .popup__panel, .popup--sheet.is-closing .popup__panel { transform: none; opacity: 0; transition: opacity 0.2s; }
+  .popup--sheet.is-open .popup__panel { opacity: 1; }
+  .popup__alert .ds-alert { transform: none; transition: opacity 0.15s; }
+}

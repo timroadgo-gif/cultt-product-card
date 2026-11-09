@@ -1,0 +1,60 @@
+/* Popup content skeleton (js/ui/sheet.js). One primary heading per standard popup. Two categories (js/patterns.js):
+   simple — no X row, equal top and bottom padding (32) around the content;
+   form — X control row (top-trailing) → heading → description, all full width — text never shares a row with the X.
+   Type: heading 16/22 Regular (≤16) · description 12/17 Regular · meta 12/16 (text.popup-*).
+   Rhythm: X (visible 32) at 16 from top/trailing · X region → heading 12 · heading → description 12 · icon → heading 12 · description → content 24 ·
+   fields 16 · consents 12 · message → actions 24 · form → actions 32 · primary → text action 8 · sides 24 · form: bottom 56 below the final element (Figma 510:2838). */
+.ps {
+  --ps-pad-top: var(--spacing-standard-block);
+  --ps-pad-bottom: var(--popup-sheet-padding-bottom);
+  --ps-safe-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--ps-pad-top) var(--popup-sheet-padding-inline) calc(var(--ps-pad-bottom) + var(--ps-safe-bottom));
+  color: var(--color-black-3);
+}
+.popup--simple .ps { --ps-pad-top: var(--popup-sheet-simple-padding-block); --ps-pad-bottom: var(--popup-sheet-simple-padding-block); }
+.popup--full .ps { --ps-safe-bottom: var(--safe-bottom); } /* full sheet reaches the screen edge: content clears the home indicator */
+.ps p { margin: 0; }
+.ps > * + .ps__body { margin-top: var(--spacing-standard-block); }
+.ps > * + .ps__actions { margin-top: var(--popup-sheet-form-action); }       /* message: description → actions 24 */
+.ps > .ps__body + .ps__actions { margin-top: var(--spacing-spacious-group); } /* form: fields → actions 32 */
+
+/* Header: three stacked regions (Airbnb-style sheet, Mobbin e4fabac4…): the compact glass X (visible 32, hit 44;
+   its layout footprint is the visible circle) in its own top-trailing
+   control row, then the heading, then the description. The X sits at the close inset from the top and trailing
+   edges (negative margins pull it out of the content padding); the heading starts one gap below the X region on
+   the left content edge and uses the full width — no column is reserved for the X, nothing is centred on it, and
+   the text group's height simply follows the rendered text. Without an X the row is removed and the heading
+   starts at the top padding. */
+.ps__head { display: flex; flex-direction: column; gap: var(--popup-sheet-heading-description); }
+.ps__header { display: flex; flex-direction: column; gap: var(--popup-sheet-close-heading); }
+.ps__title { margin: 0; color: var(--color-black-3); } /* type: ds-text-popup-heading (≤16) */
+.ps__close {
+  align-self: flex-end;
+  display: flex;
+  margin-top: calc(var(--popup-sheet-close-inset) - var(--ps-pad-top));
+  margin-inline-end: calc(var(--popup-sheet-close-inset) - var(--popup-sheet-padding-inline));
+}
+.ps__text { display: flex; flex-direction: column; gap: var(--spacing-compact-inline); color: var(--color-black-3); } /* Figma: black-3 */
+
+/* Icon-led variant (sign-in gates): centred icon → heading → description. In a form popup it sits one
+   close→heading gap below the X row; in a simple popup it starts at the top padding. */
+.ps__head--centered { display: flex; flex-direction: column; align-items: center; gap: var(--popup-sheet-heading-description); text-align: center; }
+.ps__head--centered > .ps__close { margin-bottom: calc(var(--popup-sheet-close-heading) - var(--popup-sheet-heading-description)); }
+.ps__icon { position: relative; display: flex; margin-bottom: calc(var(--popup-sheet-icon-heading) - var(--popup-sheet-heading-description)); color: var(--color-black-3); }
+.ps__badge { position: absolute; top: -3.38px; left: 23.63px; width: 18px; height: 18px; display: grid; place-items: center; --corner-radius: 50%; background: rgba(255, 255, 255, 0.8); }
+
+.ps__body { display: flex; flex-direction: column; gap: var(--popup-sheet-field-gap); }
+.ps__body--compact { gap: var(--spacing-standard-text-group); } /* consent rows */
+.ps__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hairline); }
+.ps__list li { display: flex; gap: var(--spacing-standard-control); align-items: baseline; padding: var(--spacing-standard-control) 0; border-bottom: 1px solid var(--hairline); }
+.ps__list li > span { width: 24px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+.ps__actions { display: flex; flex-direction: column; gap: var(--spacing-compact-inline); }
+/* Bottom padding is measured from the last *visible* edge: a Button's fill, or a TextAction's text line. A trailing
+   TextAction's 44 hit area extends (44 − 20) / 2 = 12 below its text; that invisible half overlaps the bottom padding
+   instead of adding to it (the hit area itself is unchanged). */
+.ps > .ps__actions:last-child > .ds-text-action:last-child {
+  margin-bottom: calc((var(--text-body-line-height) - var(--text-action-min-height)) / 2);
+}
