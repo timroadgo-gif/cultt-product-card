@@ -2,19 +2,21 @@
 // 3:4 photo on the left, brand + model and price beside it — directly under the gallery (user's reference). Rendered from data
 // (similar-products.data.js); shown only when the scenario lists the 'similar' section (html[data-sections], styles.css).
 // Items have no destination yet, so they are not links (no fake navigation).
-import { SIMILAR_PRODUCTS } from './similar-products.data.js?v=5feea1812484';
+import { SIMILAR_CAROUSEL } from './similar-products.data.js?v=05167ac94a7a';
+import { createIcon } from './design-system/icons/icon.js?v=05167ac94a7a';
 
 const formatPrice = value => `${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ₽`;
 
-export function renderSimilarProducts(list, products = SIMILAR_PRODUCTS) {
+export function renderSimilarProducts(list, products = SIMILAR_CAROUSEL) {
   // Keyboard: the row is focusable only when it overflows, so arrow keys can scroll it (no tab stop otherwise).
   new ResizeObserver(() => {
     if (list.scrollWidth > list.clientWidth + 1) list.tabIndex = 0; else list.removeAttribute('tabindex');
   }).observe(list);
-  list.replaceChildren(...products.map(product => {
+  const items = products.map((product, index) => {
     const item = document.createElement('li');
     item.className = 'similar__item';
     item.dataset.id = product.id;
+    item.dataset.position = String(index + 1);
     const media = document.createElement('span');
     media.className = 'similar__media';
     const img = new Image(252, 336);
@@ -34,5 +36,26 @@ export function renderSimilarProducts(list, products = SIMILAR_PRODUCTS) {
     text.append(name, price);
     item.append(media, text);
     return item;
-  }));
+  });
+  list.replaceChildren(...items, createViewAllItem());
+}
+
+// Last tile of the row: «Посмотреть всё» on the same quiet card surface and height as the products, text + small arrow.
+// No catalogue destination exists in the prototype, so the button deliberately does nothing (no invented URL, page or sheet).
+function createViewAllItem() {
+  const item = document.createElement('li');
+  item.className = 'similar__item similar__item--all';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'similar__all';
+  button.setAttribute('aria-label', 'Посмотреть все похожие товары');
+  const label = document.createElement('span');
+  label.className = 'similar__all-label';
+  label.textContent = 'Посмотреть всё';
+  const icon = createIcon('arrow-right', { presentation: 'compact' });
+  icon.classList.add('similar__all-icon');
+  icon.setAttribute('aria-hidden', 'true');
+  button.append(label, icon);
+  item.append(button);
+  return item;
 }

@@ -246,74 +246,13 @@ html:not([data-sections~="similar"]) .similar{display:none}
 .similar__text{display:flex;flex-direction:column;gap:2px;min-width:0;padding-right:var(--space-3)}
 .similar__name{overflow:hidden;color:var(--ink);font-size:var(--text-body-s-size);font-weight:400;line-height:18px;white-space:nowrap;text-overflow:ellipsis}
 .similar__price{color:#555;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-body-s-size);font-weight:400;line-height:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
-
-/* Contact support (scenario #/product/support, support.js). Floating GlassIconButton 44: fixed to the viewport, centred
-   over the bottom bar's wishlist button column, one 12 gap above the bar (bar = 12 top padding + 50 button + bottom
-   max(36, safe area)), kept inside the 520 page column on wide screens. Above content and the bar, below the top bar,
-   toast and popup layer. */
-html:not([data-sections~="support"]) .support-fab{display:none}
-.support-fab{--fab-inset:calc(clamp(12px,4vw,20px) + 6px);/* (56 wishlist button − 44) / 2: centred on its column */position:fixed;z-index:25;right:max(var(--fab-inset),calc((100vw - 520px) / 2 + var(--fab-inset)));bottom:calc(12px + var(--button-size-large-height) + max(36px,env(safe-area-inset-bottom)) + var(--space-3))}
-/* Popup layer: the Popup System host's layer, fixed over the whole screen (page column on wide screens), device safe areas. */
-.support-popup-layer{position:fixed;inset:0 auto 0 50%;z-index:50;width:min(100%,520px);transform:translateX(-50%);--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
-html.is-popup-open,html.is-popup-open body{overflow:hidden}
-/* Contact sheet after the Louis Vuitton «Contact Us» reference (2026-11-09): always the floating island (host
-   presentation "compact"). Sides 16. Header row: a centred text group — title 14/20 regular, 2 below it the schedule
-   12/16 caption grey-7 — geometrically centred on the sheet (a 32 spacer mirrors the visible glass X, 32 at the close
-   inset 16 from top and trailing edge, centred on the group). Header → cards 32. Cards: title only, white, 1 px neutral
-   hairline, radius 8, padding 14, icon box 20 → 12 → label → 12 → chevron 16, all vertically centred, 48 high;
-   12 between cards.
-   Bottom padding lives only on the cards region ([data-popup-scroll] pads its end by --ps-pad-bottom): the host
-   measures before it switches on the split layout, so padding on both would count 32 twice. */
-.support-sheet{--popup-sheet-padding-inline:var(--space-4);padding-bottom:0}
-.support-sheet > * + .ps__body{margin-top:var(--spacing-spacious-group)}
-.support-head{display:grid;grid-template-columns:32px minmax(0,1fr) 32px;align-items:center;column-gap:var(--space-2);min-height:32px;margin:calc(var(--popup-sheet-close-inset) - var(--ps-pad-top)) calc(var(--popup-sheet-close-inset) - var(--popup-sheet-padding-inline)) 0}
-.support-head__text{grid-column:2;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
-.support-head__schedule{margin:0;color:var(--color-grey-7)}
-.support-head__close{grid-column:3;display:flex;justify-content:flex-end}
-.support-contacts{display:flex;flex-direction:column;gap:var(--space-3);margin:0;padding:0;list-style:none}
-.support-contact{display:grid;grid-template-columns:20px minmax(0,1fr) 16px;align-items:center;column-gap:var(--space-3);width:100%;padding:14px;border:1px solid rgba(17,17,17,.1);--corner-radius:8px;background:#fff;color:var(--ink);text-align:left;text-decoration:none;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color 120ms ease}
-.support-contact:active{background:var(--quiet)}
-.support-contact:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-/* Icons: one 20 × 20 layout box for every icon (same text start in every card); the SVG is a mask over one charcoal
-   colour, a 50/50 mix of the UI Kit tokens color.ink (#111) and color.grey-7 (#6f6f6f) = #404040 — darker than the
-   former #5c5c5c, softer than the near-black labels. Optical size by scale only (proportions untouched), from the
-   measured silhouettes: Max (24 grid, stroke 1.25, bubble fills 82 % of its box) × 0.95; Telegram (16 grid, solid disc,
-   87.5 %) × 0.95; WhatsApp (24 grid, stroke 1 — the thinnest line, 87.5 %) × 1; phone (24 grid, stroke 1.25, 76 % and
-   off-centre) × 1.05, nudged to its optical centre. */
-.support-contact__icon{display:block;justify-self:center;width:20px;height:20px;background:color-mix(in srgb,var(--color-ink) 50%,var(--color-grey-7));-webkit-mask:var(--icon) center / contain no-repeat;mask:var(--icon) center / contain no-repeat}
-.support-contact__icon--max,.support-contact__icon--telegram{transform:scale(.95)}
-.support-contact__icon--phone{transform:translate(.5px,-.4px) scale(1.05)}
-.support-contact__text{display:flex;flex-direction:column;min-width:0}
-.support-contact__label{color:var(--ink)}
-.support-contact__chevron{display:grid;place-items:center;width:16px;height:16px;color:#767676}
-
-/* Cost per wear (scenario #/product/support, cost-per-wear.js), 2026-11-09 v3 — option A: plain underlined text link,
-   no badge, icon or fill, so Yandex Split stays the only branded element under the price. «2 520 ₽ за один выход»
-   12/16 regular #555 (= the Split copy), underline in this page's link style (.city-link / .delivery-manager: 1 px,
-   35 % of the text colour, offset 3). 8 below the Split row (price-block gap), 16 high. Whole row is the target: 44 tall
-   hit area via ::after; pressed = full-colour underline + slight fade. */
-html:not([data-sections~="cost-per-wear"]) .cpw-row,html[data-availability="sold"] .cpw-row{display:none}
-.cpw-row{position:relative;align-self:flex-start;margin:0;padding:0;border:0;background:none;color:#555;font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:var(--text-caption-size);font-weight:400;line-height:var(--text-caption-line-height);text-align:left;white-space:nowrap;text-decoration:underline;text-decoration-thickness:1px;text-decoration-color:rgba(85,85,85,.35);text-underline-offset:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity 120ms ease,text-decoration-color 120ms ease}
-.cpw-row::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
-.cpw-row:active{opacity:.7;text-decoration-color:currentColor}
-.cpw-row:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:2px}
-.cpw-row__amount{font-variant-numeric:tabular-nums}
-/* Calculator sheet content: field (UI Kit Field) after the description (24, Popup System), result 24 below the field:
-   «1 выход =» 16/24 regular ink + amount green-7 medium — the sheet's conclusion, no card around it. */
-.ps .cpw-result{margin:var(--spacing-standard-block) 0 0;color:var(--ink)} /* .ps scope: sheet.css resets .ps p margins */
-.cpw-result__amount{color:var(--color-green-7);font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-weight:500;font-variant-numeric:tabular-nums}
-
-/* Wishlist heart (2026-11-10 refinement, app.js): outline and filled hearts stacked in one slot; state change is a
-   compositor-only cross-fade. Save: filled grows .82 → 1 with a soft settle (240 ms, cubic-bezier(.2,.9,.3,1.25) —
-   a 3 % overshoot, no bounce), outline fades out. Remove: filled fades and shrinks to .9 (160 ms), outline returns.
-   Press: the whole slot dips to .92 (UI Kit button keeps its own pressed fill). Reduced motion: opacity only. */
-.fav-hearts{position:relative;display:grid;place-items:center}
-.fav-hearts > .fav-heart{grid-area:1 / 1;transition:opacity 160ms ease,transform 160ms ease}
-.fav-heart--filled{opacity:0;transform:scale(.9) scale(1.0625)}
-.bottom-bar__favorite.is-saved .fav-heart--outline{opacity:0;transform:scale(.9)}
-.bottom-bar__favorite.is-saved .fav-heart--filled{opacity:1;transform:scale(1.0625);transition:opacity 120ms ease,transform 240ms cubic-bezier(.2,.9,.3,1.25)}
-.bottom-bar__favorite.is-saved .fav-heart--filled{animation:fav-in 240ms cubic-bezier(.2,.9,.3,1.25)}
-@keyframes fav-in{from{transform:scale(.82) scale(1.0625)}to{transform:scale(1.0625)}}
-.bottom-bar__favorite .fav-hearts{transition:transform 120ms ease}
-.bottom-bar__favorite:active .fav-hearts{transform:scale(.92)}
-@media (prefers-reduced-motion:reduce){.fav-hearts > .fav-heart,.bottom-bar__favorite .fav-hearts{transition:opacity 120ms ease!important;transform:none!important;animation:none!important}.fav-hearts > .fav-heart--filled{transform:scale(1.0625)!important}}
+/* «Посмотреть всё» end tile (2026-11-10): same 72 px height, radius and --quiet surface as the cards, so it reads as the row's
+   last stop; quiet ink label + compact arrow-right, no shadow, no accent. The whole tile is the hit area; press = slightly
+   deeper surface + arrow nudge (opacity only under reduced motion). Not a link: no destination in the prototype. */
+.similar__item--all{flex:0 0 auto;display:block;padding:0;background:none}
+.similar__all{display:flex;align-items:center;justify-content:center;gap:6px;height:100%;min-width:132px;margin:0;padding:0 var(--space-4);border:0;border-radius:inherit;background:var(--quiet);color:var(--ink);font:inherit;font-size:var(--text-body-s-size);font-weight:400;line-height:18px;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color 160ms cubic-bezier(.2,.8,.2,1)}
+.similar__all-icon{flex:none;width:16px;height:16px;color:#555;transition:transform 200ms cubic-bezier(.2,.8,.2,1)}
+.similar__all:active{background:#efefef}
+.similar__all:active .similar__all-icon{transform:translate3d(2px,0,0)}
+.similar__all:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+@media (prefers-reduced-motion:reduce){.similar__all-icon{transition:none}.similar__all:active .similar__all-icon{transform:none}}
