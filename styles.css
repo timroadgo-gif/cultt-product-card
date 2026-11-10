@@ -41,7 +41,10 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
    covers (photo + 1) / count of the width (1 of 6 → 1/6, 6 of 6 → 100%). scaleX keeps it on the compositor. */
 /* Photo counter (Gucci reference): a small quiet pill in the bottom-right corner, above the progress line — translucent
    neutral grey, white 11/14 medium with tabular figures so «1 / 6» never changes width. Not interactive, not glass. */
-.gallery__counter{position:absolute;right:var(--space-3);bottom:calc(var(--space-3) + 2px);z-index:2;display:inline-flex;align-items:center;height:20px;padding:0 var(--space-2);border-radius:10px;background:rgba(7,7,7,.32);color:#fff;font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none;user-select:none}
+/* Counter (2026-11-10 refinement): white 72 % pill + ink figures instead of white on 32 % black — on the light photo
+   backdrop the old pill read as a grey blob with ~2.3:1 contrast; now ~19:1 on light and ~13:1 on dark leather, and
+   the pill melts into the photo so only the quiet figures remain. Geometry unchanged. */
+.gallery__counter{position:absolute;right:var(--space-3);bottom:calc(var(--space-3) + 2px);z-index:2;display:inline-flex;align-items:center;height:20px;padding:0 var(--space-2);border-radius:10px;background:rgba(255,255,255,.72);color:var(--ink);font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none;user-select:none}
 .gallery__progress{position:absolute;left:0;right:0;bottom:0;z-index:2;height:2px;background:rgba(7,7,7,.1);pointer-events:none}
 .gallery__progress-bar{position:absolute;inset:0;background:var(--ink);transform-origin:0 50%;transform:scaleX(calc(1 / var(--gallery-count,6)));will-change:transform}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
@@ -55,15 +58,24 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 /* Article = one copy button (number + icon). No visible chrome; 44 px tall hit area via ::after without changing layout. */
 .sku-copy{position:relative;margin:0;padding:0;border:0;background:none;text-align:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sku-copy::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
-.sku-copy:active .sku-copy__value{opacity:.6}
+.sku-copy:not(.is-copied):active .sku-copy__layer--idle{opacity:.6}
 .sku-copy:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
 /* Approved `copy` and `check` icons stacked in one fixed slot: crossfade + 0.95→1 scale, no layout shift. */
-.sku-copy__icon{position:relative;flex:none;width:var(--icon-presentation-compact-viewport);height:var(--icon-presentation-compact-viewport)}
-.sku-copy__glyph{position:absolute;inset:0;display:grid;place-items:center;transition:opacity 200ms cubic-bezier(.2,0,.2,1),transform 200ms cubic-bezier(.2,0,.2,1)}
-.sku-copy__glyph--done{opacity:0;transform:scale(.95)}
-.sku-copy.is-copied .sku-copy__glyph--copy{opacity:0;transform:scale(.95)}
-.sku-copy.is-copied .sku-copy__glyph--done{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.sku-copy__glyph{transition:opacity 120ms linear;transform:none!important}}
+/* Article copy (2026-11-10 refinement): one component, two stacked layers in one grid cell — «P31838651 + copy» and
+   «Скопировано + check»; text and icon of a layer always move together. One shared timeline: both layers start on the
+   same frame; the leaving layer fades in 150 ms, the arriving one in 220 ms, so the two never read as doubled text;
+   both travel 3 px (leave upward, arrive from below) over 220 ms, ease-out cubic-bezier(.2,.8,.2,1). The same values
+   run in reverse on return. Confirmation holds 1.8 s (app.js). The button keeps the width of the wider layer,
+   right-aligned, so nothing around it shifts. Reduced motion: opacity only. */
+.sku-copy{display:grid;justify-items:end;align-items:center;gap:0}
+.sku-copy__layer{grid-area:1 / 1;display:flex;align-items:center;gap:6px;transition:opacity 150ms cubic-bezier(.2,.8,.2,1),transform 220ms cubic-bezier(.2,.8,.2,1)}
+.sku-copy__layer--idle,.sku-copy.is-copied .sku-copy__layer--done{transition-duration:220ms,220ms} /* the arriving layer */
+.sku-copy.is-copied .sku-copy__layer--idle{transition-duration:150ms,220ms} /* the leaving layer */
+.sku-copy__layer--done{opacity:0;transform:translate3d(0,3px,0)}
+.sku-copy.is-copied .sku-copy__layer--idle{opacity:0;transform:translate3d(0,-3px,0)}
+.sku-copy.is-copied .sku-copy__layer--done{opacity:1;transform:none}
+.sku-copy__icon{flex:none;display:grid;place-items:center;width:var(--icon-presentation-compact-viewport);height:var(--icon-presentation-compact-viewport)}
+@media (prefers-reduced-motion:reduce){.sku-copy__layer{transition:opacity 120ms linear;transform:none!important}}
 h1{margin:0;font-size:20px;font-weight:400;line-height:26px}
 .product-heading h1{grid-column:1 / -1;grid-row:2}
 .product-heading .sku-copy{grid-column:2;grid-row:1;margin-bottom:var(--space-2)}
@@ -82,7 +94,7 @@ html[data-price="at-sale"] .price-caption{display:block}
 html[data-price="hidden"] .price{display:none}
 html[data-price="hidden"] .stock-status{display:block}
 html[data-availability="sold"] .split-row,html[data-availability="sold"] .split-only,html[data-availability="sold"] .delivery-card{display:none}
-.split-row{min-height:16px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.split-row{min-height:16px;display:flex;align-items:center;gap:5px;margin-top:var(--space-1);white-space:nowrap} /* price → Split 12 (8 gap + 4): name + price read as one group, Split + cost per wear as the quieter one below (2026-11-10) */
 .split-badge{flex:0 0 60px;width:60px;height:12.6px;display:block}
 .split-badge img{display:block;width:60px;height:12.6px}
 .split-copy{color:#555;font-family:Manrope,Arial,sans-serif;font-size:var(--text-caption-size);line-height:var(--text-caption-line-height)}
@@ -290,3 +302,18 @@ html:not([data-sections~="cost-per-wear"]) .cpw-row,html[data-availability="sold
    «1 выход =» 16/24 regular ink + amount green-7 medium — the sheet's conclusion, no card around it. */
 .ps .cpw-result{margin:var(--spacing-standard-block) 0 0;color:var(--ink)} /* .ps scope: sheet.css resets .ps p margins */
 .cpw-result__amount{color:var(--color-green-7);font-family:Manrope,-apple-system,"Helvetica Neue",Arial,sans-serif;font-weight:500;font-variant-numeric:tabular-nums}
+
+/* Wishlist heart (2026-11-10 refinement, app.js): outline and filled hearts stacked in one slot; state change is a
+   compositor-only cross-fade. Save: filled grows .82 → 1 with a soft settle (240 ms, cubic-bezier(.2,.9,.3,1.25) —
+   a 3 % overshoot, no bounce), outline fades out. Remove: filled fades and shrinks to .9 (160 ms), outline returns.
+   Press: the whole slot dips to .92 (UI Kit button keeps its own pressed fill). Reduced motion: opacity only. */
+.fav-hearts{position:relative;display:grid;place-items:center}
+.fav-hearts > .fav-heart{grid-area:1 / 1;transition:opacity 160ms ease,transform 160ms ease}
+.fav-heart--filled{opacity:0;transform:scale(.9) scale(1.0625)}
+.bottom-bar__favorite.is-saved .fav-heart--outline{opacity:0;transform:scale(.9)}
+.bottom-bar__favorite.is-saved .fav-heart--filled{opacity:1;transform:scale(1.0625);transition:opacity 120ms ease,transform 240ms cubic-bezier(.2,.9,.3,1.25)}
+.bottom-bar__favorite.is-saved .fav-heart--filled{animation:fav-in 240ms cubic-bezier(.2,.9,.3,1.25)}
+@keyframes fav-in{from{transform:scale(.82) scale(1.0625)}to{transform:scale(1.0625)}}
+.bottom-bar__favorite .fav-hearts{transition:transform 120ms ease}
+.bottom-bar__favorite:active .fav-hearts{transform:scale(.92)}
+@media (prefers-reduced-motion:reduce){.fav-hearts > .fav-heart,.bottom-bar__favorite .fav-hearts{transition:opacity 120ms ease!important;transform:none!important;animation:none!important}.fav-hearts > .fav-heart--filled{transform:scale(1.0625)!important}}

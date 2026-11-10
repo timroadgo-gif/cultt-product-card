@@ -1,14 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon } from './design-system/icons/icon.js?v=3f600cc80bc5';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=3f600cc80bc5';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=3f600cc80bc5';
-import { createButton } from './design-system/components/button/button.js?v=3f600cc80bc5';
-import { goToIndex } from './navigation.js?v=3f600cc80bc5';
-import { renderSimilarProducts } from './similar-products.js?v=3f600cc80bc5';
-import { initSupport } from './support.js?v=3f600cc80bc5';
-import { initCostPerWear } from './cost-per-wear.js?v=3f600cc80bc5';
-import { createPagePopups } from './popups.js?v=3f600cc80bc5';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=0a264ca0c9bd';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=0a264ca0c9bd';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=0a264ca0c9bd';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=0a264ca0c9bd';
+import { createButton } from './design-system/components/button/button.js?v=0a264ca0c9bd';
+import { goToIndex } from './navigation.js?v=0a264ca0c9bd';
+import { renderSimilarProducts } from './similar-products.js?v=0a264ca0c9bd';
+import { initSupport } from './support.js?v=0a264ca0c9bd';
+import { initCostPerWear } from './cost-per-wear.js?v=0a264ca0c9bd';
+import { createPagePopups } from './popups.js?v=0a264ca0c9bd';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -22,7 +23,13 @@ document.querySelectorAll('[data-icon]').forEach(slot => {
 
 // Navigation over the photo (functional layer over content): Back = GlassIconButton 44; Share + Cart = one
 // GlassIconButtonGroup capsule with two independent actions. Both with the large icon presentation (≈ 20 px, 1.25 px line).
-document.querySelector('[data-slot="nav-leading"]').append(createIconButton({ icon: 'arrow-left', ariaLabel: 'Назад', iconSize: 'large' }));
+const backButton = createIconButton({ icon: 'arrow-left', ariaLabel: 'Назад', iconSize: 'large' });
+// Optical balance (2026-11-10 refinement): the registry's ×1.15 arrow correction is meant for the compact presentation
+// (a thin arrow next to chevrons). In the large top-bar presentation it made Back 16.2 px wide next to Share 14.1 and
+// Cart 11.6 × 14.9, so it read larger. Re-fit the same UI Kit icon with the same presentation, without that factor:
+// ≈ 14.2 px wide, line unchanged (0.9 px). Paths and the UI Kit registry stay untouched.
+applyPresentation(backButton.querySelector('svg'), { ...ICON_META['arrow-left'], compact: { ...ICON_META['arrow-left'].compact, scale: 1 } }, 'large');
+document.querySelector('[data-slot="nav-leading"]').append(backButton);
 document.querySelector('[data-slot="nav-trailing"]').append(createIconButtonGroup({
   ariaLabel: 'Действия с товаром',
   iconSize: 'large',
@@ -238,7 +245,7 @@ skuCopy.addEventListener('click', async () => {
   skuCopy.classList.add('is-copied');
   skuStatus.textContent = '';
   requestAnimationFrame(() => { skuStatus.textContent = 'Артикул скопирован'; }); // re-announced on every copy
-  skuTimer = setTimeout(() => { skuCopy.classList.remove('is-copied'); skuStatus.textContent = ''; }, 1500);
+  skuTimer = setTimeout(() => { skuCopy.classList.remove('is-copied'); skuStatus.textContent = ''; }, 1800); // confirmation hold
 });
 
 // Back always returns to the prototype index (reverse push), also when the card was opened by a direct link.
@@ -274,9 +281,21 @@ document.querySelector('.delivery-options .text-link').addEventListener('click',
   showToast('Примерка в бутике и самовывоз');
 });
 document.querySelectorAll('.capacity-item__image img').forEach(img => img.addEventListener('error', () => { img.hidden = true; }));
+// Wishlist heart (2026-11-10 refinement): both approved icons stay stacked in the button's icon slot and cross-fade on
+// the compositor (opacity + transform, styles.css → .fav-heart), instead of swapping the DOM node. The filled heart's
+// optical bounds are 16 grid units vs 17 for the outline (incl. its line), so it is drawn at 17/16 to keep the same
+// size in both states.
+document.querySelectorAll('.bottom-bar__favorite').forEach(button => {
+  const slot = button.querySelector('.ds-button__icon');
+  if (!slot) return;
+  const outline = createIcon('heart'); outline.classList.add('fav-heart', 'fav-heart--outline');
+  const filled = createIcon('heart-filled'); filled.classList.add('fav-heart', 'fav-heart--filled');
+  slot.replaceChildren(outline, filled);
+  slot.classList.add('fav-hearts');
+});
 document.querySelectorAll('.favorite-button, .bottom-bar__favorite').forEach(button => button.addEventListener('click', () => {
   const saved = button.classList.toggle('is-saved');
-  button.querySelector('.ds-button__icon')?.replaceChildren(createIcon(saved ? 'heart-filled' : 'heart'));
+  if (!button.querySelector('.fav-hearts')) button.querySelector('.ds-button__icon')?.replaceChildren(createIcon(saved ? 'heart-filled' : 'heart'));
   button.setAttribute('aria-pressed', String(saved));
   button.setAttribute('aria-label', saved ? 'Убрать из избранного' : 'Добавить в избранное');
   showToast(saved ? 'Добавлено в избранное' : 'Удалено из избранного');
