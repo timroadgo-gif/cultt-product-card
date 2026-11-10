@@ -2,8 +2,8 @@
 // 3:4 photo on the left, brand + model and price beside it — directly under the gallery (user's reference). Rendered from data
 // (similar-products.data.js); shown only when the scenario lists the 'similar' section (html[data-sections], styles.css).
 // Items have no destination yet, so they are not links (no fake navigation).
-import { SIMILAR_CAROUSEL } from './similar-products.data.js?v=05167ac94a7a';
-import { createIcon } from './design-system/icons/icon.js?v=05167ac94a7a';
+import { SIMILAR_CAROUSEL } from './similar-products.data.js?v=d36924884021';
+import { createIcon } from './design-system/icons/icon.js?v=d36924884021';
 
 const formatPrice = value => `${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ₽`;
 
@@ -40,7 +40,7 @@ export function renderSimilarProducts(list, products = SIMILAR_CAROUSEL) {
   list.replaceChildren(...items, createViewAllItem());
 }
 
-// Last tile of the row: «Посмотреть всё» on the same quiet card surface and height as the products, text + small arrow.
+// Last tile of the row: «Посмотреть все» on the same quiet card surface and height as the products, text + small arrow.
 // No catalogue destination exists in the prototype, so the button deliberately does nothing (no invented URL, page or sheet).
 function createViewAllItem() {
   const item = document.createElement('li');
@@ -51,7 +51,7 @@ function createViewAllItem() {
   button.setAttribute('aria-label', 'Посмотреть все похожие товары');
   const label = document.createElement('span');
   label.className = 'similar__all-label';
-  label.textContent = 'Посмотреть всё';
+  label.textContent = 'Посмотреть все';
   const icon = createIcon('arrow-right', { presentation: 'compact' });
   icon.classList.add('similar__all-icon');
   icon.setAttribute('aria-hidden', 'true');

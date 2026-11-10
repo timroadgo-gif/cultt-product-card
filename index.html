@@ -20,26 +20,26 @@
     <script>(function (d, h) { var s = { '#/product/sold': ['sold', 'sold', 'at-sale'], '#/product/sold-3m': ['soldOverThreeMonths', 'sold', 'hidden'] }[h] || ['available', 'available', 'current']; d.dataset.route = h.startsWith('#/product') ? 'product' : 'index'; d.dataset.state = s[0]; d.dataset.availability = s[1]; d.dataset.price = s[2]; d.dataset.sections = { '#/product/similar': 'similar', '#/product/support': 'support cost-per-wear' }[h] || ''; })(document.documentElement, location.hash);</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=05167ac94a7a" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=d36924884021" />
     <!-- Popup System (IOS:UI Agent/playground, linked as popup-css/ and popup/) for the contact-support popup;
          app tokens first so this page's own :root values in styles.css win. -->
-    <link rel="stylesheet" href="./popup-css/tokens.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/css/typography.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/css/backdrop.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/components/alert/alert.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/components/drag-indicator/drag-indicator.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./design-system/components/field/field.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./popup-css/popup.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./popup-css/sheet.css?v=05167ac94a7a" />
-    <link rel="stylesheet" href="./styles.css?v=05167ac94a7a" />
-    <meta name="build" content="05167ac94a7a" />
-  <meta name="app-build" content="05167ac94a7a" />
+    <link rel="stylesheet" href="./popup-css/tokens.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/css/typography.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/css/backdrop.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/components/alert/alert.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/components/drag-indicator/drag-indicator.css?v=d36924884021" />
+    <link rel="stylesheet" href="./design-system/components/field/field.css?v=d36924884021" />
+    <link rel="stylesheet" href="./popup-css/popup.css?v=d36924884021" />
+    <link rel="stylesheet" href="./popup-css/sheet.css?v=d36924884021" />
+    <link rel="stylesheet" href="./styles.css?v=d36924884021" />
+    <meta name="build" content="d36924884021" />
+  <meta name="app-build" content="d36924884021" />
   <script>(()=>{const m=document.querySelector('meta[name="app-build"]');if(!m||!window.fetch)return;const cur=m.content;const url=new URL('version.json',document.baseURI);const check=()=>fetch(url+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(v=>{if(!v||!v.build||v.build===cur)return;const k='app-build-reload:'+v.build;try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}const u=new URL(location.href);u.searchParams.set('v',v.build);location.replace(u.href)}).catch(()=>{});check();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});addEventListener('pageshow',e=>{if(e.persisted)check()})})();</script>
   </head>
   <body>
@@ -148,6 +148,6 @@
     </nav>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=05167ac94a7a"></script>
+    <script type="module" src="./app.js?v=d36924884021"></script>
   </body>
 </html>

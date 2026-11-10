@@ -8,5 +8,5 @@ export const SIMILAR_PRODUCTS = [
 ];
 
 // Carousel sequence for the prototype (user, 2026-11-10): five cards — the three lots, then the first two repeated on purpose
-// to give the row enough length — followed by the «Посмотреть всё» tile (similar-products.js). Same data and photos, no new lots.
+// to give the row enough length — followed by the «Посмотреть все» tile (similar-products.js). Same data and photos, no new lots.
 export const SIMILAR_CAROUSEL = [...SIMILAR_PRODUCTS, ...SIMILAR_PRODUCTS.slice(0, 2)];
