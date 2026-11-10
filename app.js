@@ -1,15 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=d36924884021';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=d36924884021';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=d36924884021';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=d36924884021';
-import { createButton } from './design-system/components/button/button.js?v=d36924884021';
-import { goToIndex } from './navigation.js?v=d36924884021';
-import { renderSimilarProducts } from './similar-products.js?v=d36924884021';
-import { initSupport } from './support.js?v=d36924884021';
-import { initCostPerWear } from './cost-per-wear.js?v=d36924884021';
-import { createPagePopups } from './popups.js?v=d36924884021';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=ec6bb1c5b912';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=ec6bb1c5b912';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=ec6bb1c5b912';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=ec6bb1c5b912';
+import { createButton } from './design-system/components/button/button.js?v=ec6bb1c5b912';
+import { goToIndex } from './navigation.js?v=ec6bb1c5b912';
+import { renderSimilarProducts } from './similar-products.js?v=ec6bb1c5b912';
+import { initSupport } from './support.js?v=ec6bb1c5b912';
+import { initCostPerWear } from './cost-per-wear.js?v=ec6bb1c5b912';
+import { createPagePopups } from './popups.js?v=ec6bb1c5b912';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -120,6 +120,7 @@ const count = slides.length;
 galleryEl.style.setProperty('--gallery-count', count);
 let position = 0; // current visual position, in slides
 let drag = null;
+let settleTimer = 0;
 const reduceGalleryMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 // Reveal transition (Zara-style video ref): the incoming photo does not travel — it stays where it will rest and is
@@ -160,6 +161,9 @@ function settleGallery(index, duration = 420) {
   galleryEl.style.setProperty('--gallery-settle', `${reduceGalleryMotion.matches ? 0 : Math.round(duration)}ms`);
   galleryEl.classList.add('is-settling');
   paintGallery(galleryIndex);
+  // transitionend does not fire when nothing moved or the transition was interrupted; clear the state regardless.
+  clearTimeout(settleTimer);
+  settleTimer = setTimeout(() => galleryEl.classList.remove('is-settling'), (reduceGalleryMotion.matches ? 0 : Math.round(duration)) + 80);
   progress.setAttribute('aria-label', `Фото ${galleryIndex + 1} из ${count}`);
 }
 const showGallerySlide = index => settleGallery(index);
@@ -179,6 +183,9 @@ track.addEventListener('pointerdown', event => {
 
 track.addEventListener('pointermove', event => {
   if (!drag || event.pointerId !== drag.id) return;
+  // A press whose release never reached us (released outside the frame before the gesture was claimed, system gesture)
+  // must not keep steering the rail from a hovering pointer: end it and snap.
+  if (event.pointerType === 'mouse' && event.buttons === 0) { endDrag(event); return; }
   const dx = event.clientX - drag.x0, dy = event.clientY - drag.y0;
   if (!drag.axis) {
     if (Math.hypot(dx, dy) < 6) return;
@@ -190,21 +197,21 @@ track.addEventListener('pointermove', event => {
   }
   drag.samples.push([event.timeStamp, event.clientX]);
   if (drag.samples.length > 6) drag.samples.shift();
-  let pos = drag.start - dx / drag.width;
-  if (pos < 0) pos *= 0.35; // soft edges instead of a hard stop; no looping
-  else if (pos > count - 1) pos = count - 1 + (pos - (count - 1)) * 0.35;
-  paintGallery(pos);
+  // Hard edges (2026-11-10 fix): the rail never travels before photo 1 or past the last one. The old soft edge moved the
+  // rail out of range while the reveal effect held the edge photo still, so an empty band opened beside it.
+  paintGallery(Math.max(0, Math.min(count - 1, drag.start - dx / drag.width)));
 });
 
 function endDrag(event) {
   if (!drag || event.pointerId !== drag.id) return;
   const d = drag; drag = null;
-  if (d.axis !== 'x') return;
+  if (d.axis !== 'x') { if (!Number.isInteger(position)) settleGallery(Math.round(position)); return; }
   const [t0, x0] = d.samples[0], [t1, x1] = d.samples[d.samples.length - 1];
   const velocity = (x1 - x0) / Math.max(16, t1 - t0); // px per ms, positive = finger moving right
   let target = Math.round(position);
   if (Math.abs(velocity) > 0.3) target = velocity < 0 ? Math.ceil(position - 0.02) : Math.floor(position + 0.02); // a flick goes one photo in its direction
   target = Math.max(d.start - 1, Math.min(d.start + 1, target)); // one photo per gesture
+  if (event.type !== 'pointerup') target = Math.round(d.start); // cancelled / interrupted gesture: back to the photo it started on
   const remaining = Math.abs(target - position) * d.width;
   // Settle as fast as the finger was moving (ease-out starts at ~2.4× average speed), never jumpier than 220 ms or slower than 420.
   const duration = Math.abs(velocity) > 0.05 ? Math.min(420, Math.max(220, (remaining / Math.abs(velocity)) * 1.6)) : 420;
@@ -212,6 +219,11 @@ function endDrag(event) {
 }
 track.addEventListener('pointerup', endDrag);
 track.addEventListener('pointercancel', endDrag);
+addEventListener('pointerup', endDrag); // released outside the frame before the gesture was claimed
+// Leaving the page mid-gesture (app switch, Safari edge-swipe back) never leaves the photo between two slides.
+const abortGalleryDrag = () => { if (drag) endDrag({ pointerId: drag.id, type: 'pointercancel' }); else if (!Number.isInteger(position)) settleGallery(Math.round(position)); };
+addEventListener('blur', abortGalleryDrag);
+document.addEventListener('visibilitychange', () => { if (document.hidden) abortGalleryDrag(); });
 track.addEventListener('dragstart', event => event.preventDefault());
 
 track.addEventListener('wheel', event => {
