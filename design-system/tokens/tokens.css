@@ -258,4 +258,10 @@
   --drag-indicator-height: 4px;
   --drag-indicator-inset: var(--spacing-compact-inline);
   --drag-indicator-color: rgba(17, 17, 17, 0.16);
+  --gallery-pager-height: 2px;
+  --gallery-pager-segment-width: 12px;
+  --gallery-pager-segment-active-width: 18px;
+  --gallery-pager-gap: 6px;
+  --gallery-pager-color-idle: rgba(7, 7, 7, 0.16);
+  --gallery-pager-color-active: #070707;
 }

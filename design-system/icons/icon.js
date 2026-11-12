@@ -1,6 +1,6 @@
 // Shared Icon component. createIcon(name, { size, label, presentation }) → <svg class="ds-icon">. Colour is inherited (currentColor).
-import { ICONS, META } from "./icons.generated.js?v=d703284559d1";
-import { PRESENTATIONS, compactFit } from "./presentation.js?v=d703284559d1";
+import { ICONS, META } from "./icons.generated.js?v=5bf09ffef2c3";
+import { PRESENTATIONS, compactFit } from "./presentation.js?v=5bf09ffef2c3";
 
 export const ICON_SIZES = [16, 20, 24, 32, 48]; // documented set; any px value renders proportionally
 

@@ -1,0 +1,17 @@
+/* GalleryPager: one thin flat line per photo. Each segment's weight --w (0…1, set by setProgress) interpolates length and
+   colour; no transform, no overlay, fixed height — the line stays pixel-snapped. The host positions the row. */
+.ds-gallery-pager {
+  display: flex;
+  gap: var(--gallery-pager-gap);
+  height: var(--gallery-pager-height);
+  pointer-events: none;
+  contain: layout paint;
+}
+.ds-gallery-pager[hidden] { display: none; }
+.ds-gallery-pager__segment {
+  --w: 0;
+  flex: none;
+  width: calc(var(--gallery-pager-segment-width) + (var(--gallery-pager-segment-active-width) - var(--gallery-pager-segment-width)) * var(--w));
+  height: var(--gallery-pager-height);
+  background: color-mix(in srgb, var(--gallery-pager-color-active) calc(var(--w) * 100%), var(--gallery-pager-color-idle));
+}

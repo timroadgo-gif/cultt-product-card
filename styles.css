@@ -46,11 +46,8 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__counter{position:absolute;right:var(--space-3);bottom:calc(var(--space-3) + 2px);z-index:2;display:inline-flex;align-items:center;height:20px;padding:0 var(--space-2);border-radius:10px;background:rgba(255,255,255,.72);color:var(--ink);font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none;user-select:none}
 /* Pagination (2026-11-12, user's reference): one short flat line per unique photo, bottom-left on the content inset,
    vertically centred on the counter pill. Active = ink and slightly longer, inactive = light grey; follows the scroll. */
-.gallery__pager{position:absolute;left:clamp(16px,4vw,24px);bottom:calc(var(--space-3) + 11px);z-index:2;display:flex;gap:6px;height:2px;pointer-events:none;contain:layout paint}
-.gallery__pager[hidden]{display:none}
-/* v4: the segments morph in place (app.js paintPager) — width 12 ↔ 18 and grey ↔ ink follow the scroll; no overlay, no
-   transform, fixed 2 px height. */
-.gallery__pager-segment{flex:none;width:12px;height:2px;background:rgba(7,7,7,.16)}
+.gallery__pager{position:absolute;left:clamp(16px,4vw,24px);bottom:calc(var(--space-3) + 11px);z-index:2}
+/* Segments, sizes, colours and motion: UI Kit GalleryPager (design-system/components/gallery-pager, tokens gallery-pager.*). */
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
    so each block reads as a unit. */
 .product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-4) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}

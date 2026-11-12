@@ -1,15 +1,16 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=d703284559d1';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=d703284559d1';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=d703284559d1';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=d703284559d1';
-import { createButton } from './design-system/components/button/button.js?v=d703284559d1';
-import { goToIndex } from './navigation.js?v=d703284559d1';
-import { renderSimilarProducts } from './similar-products.js?v=d703284559d1';
-import { initSupport } from './support.js?v=d703284559d1';
-import { initCostPerWear } from './cost-per-wear.js?v=d703284559d1';
-import { createPagePopups } from './popups.js?v=d703284559d1';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=5bf09ffef2c3';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=5bf09ffef2c3';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=5bf09ffef2c3';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=5bf09ffef2c3';
+import { createButton } from './design-system/components/button/button.js?v=5bf09ffef2c3';
+import { createGalleryPager } from './design-system/components/gallery-pager/gallery-pager.js?v=5bf09ffef2c3';
+import { goToIndex } from './navigation.js?v=5bf09ffef2c3';
+import { renderSimilarProducts } from './similar-products.js?v=5bf09ffef2c3';
+import { initSupport } from './support.js?v=5bf09ffef2c3';
+import { initCostPerWear } from './cost-per-wear.js?v=5bf09ffef2c3';
+import { createPagePopups } from './popups.js?v=5bf09ffef2c3';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -149,34 +150,18 @@ allImages.forEach(img => {
   if (img.complete && !img.naturalWidth && img.currentSrc) img.dispatchEvent(new Event('error'));
 });
 
-// Pagination (2026-11-12 v4, from the user's screen recording): no overlay. The segments themselves morph. Measured in the
-// reference (60 fps frames): between neighbours A → B, A's left edge and B's right edge stay put, A shortens from its right
-// edge while B lengthens with its left edge, so the boundary between them slides in the swipe direction; at the same time
-// A fades back to grey and B darkens. Nothing else moves, the height never changes. Here: idle 12 px, active 18 px, gap 6;
-// A + B always add up to 30 px, so the row's length is constant. Driven only by the gallery's scroll position p (photos),
-// linear in the fraction f — as in the reference — so it reverses with the finger and lands with the snap. Widths are
-// laid out (no transforms, no compositing layer), so the 2 px line stays pixel-snapped and never blurs thicker.
-const SEG = { idle: 12, active: 18, gap: 6, alphaIdle: .16 };
-const segments = slides.map(() => { const s = document.createElement('span'); s.className = 'gallery__pager-segment'; return s; });
-pager.replaceChildren(...segments);
-pager.hidden = !looping;
-pager.style.width = `${(count - 1) * (SEG.idle + SEG.gap) + SEG.active}px`;
-
-function paintPager(progress) { // 0 = photo 1, count − 1 = last; −1 / count = the loop clones (same pixels → same state)
-  const i0 = Math.floor(progress), f = progress - i0;
-  const a = ((i0 % count) + count) % count, b = (a + 1) % count;
-  segments.forEach((seg, i) => {
-    const w = i === a ? 1 - f : i === b ? f : 0;
-    seg.style.width = `${(SEG.idle + (SEG.active - SEG.idle) * w).toFixed(2)}px`;
-    seg.style.backgroundColor = `rgba(7,7,7,${(SEG.alphaIdle + (1 - SEG.alphaIdle) * w).toFixed(3)})`;
-  });
-}
+// Pagination: UI Kit GalleryPager (design-system/components/gallery-pager — approved motion, spec.md). This page only
+// positions it (.gallery__pager) and feeds it the scroll position; segments, morph and accessible name live in the kit.
+const galleryPager = createGalleryPager({ count });
+galleryPager.classList.add('gallery__pager');
+galleryPager.id = 'galleryPager';
+pager.replaceWith(galleryPager);
+const paintPager = progress => galleryPager.setProgress(progress);
 
 let galleryIndex = 0;
-function setActive(index) { // settled photo: counter + accessible label (the segments are painted from scroll)
+function setActive(index) { // settled photo: counter (the pager paints itself from the scroll position)
   galleryIndex = index;
   counterCurrent.textContent = String(index + 1);
-  pager.setAttribute('aria-label', `Фото ${index + 1} из ${count}`);
 }
 
 const slideWidth = () => track.clientWidth || 1;
