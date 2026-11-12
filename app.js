@@ -1,15 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=ec6bb1c5b912';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=ec6bb1c5b912';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=ec6bb1c5b912';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=ec6bb1c5b912';
-import { createButton } from './design-system/components/button/button.js?v=ec6bb1c5b912';
-import { goToIndex } from './navigation.js?v=ec6bb1c5b912';
-import { renderSimilarProducts } from './similar-products.js?v=ec6bb1c5b912';
-import { initSupport } from './support.js?v=ec6bb1c5b912';
-import { initCostPerWear } from './cost-per-wear.js?v=ec6bb1c5b912';
-import { createPagePopups } from './popups.js?v=ec6bb1c5b912';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=581a59eabc45';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=581a59eabc45';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=581a59eabc45';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=581a59eabc45';
+import { createButton } from './design-system/components/button/button.js?v=581a59eabc45';
+import { goToIndex } from './navigation.js?v=581a59eabc45';
+import { renderSimilarProducts } from './similar-products.js?v=581a59eabc45';
+import { initSupport } from './support.js?v=581a59eabc45';
+import { initCostPerWear } from './cost-per-wear.js?v=581a59eabc45';
+import { createPagePopups } from './popups.js?v=581a59eabc45';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -57,16 +57,13 @@ addEventListener('productstate', renderAvailability);
 
 const track = document.querySelector('#galleryTrack');
 const rail = track.querySelector('.gallery__rail');
-const slides = rail.querySelectorAll('.gallery__slide');
-const progress = document.querySelector('#galleryProgress');
-const progressBar = progress.querySelector('.gallery__progress-bar');
+const slides = [...rail.querySelectorAll('.gallery__slide')]; // the unique photos (loop clones are added later)
+const pager = document.querySelector('#galleryPager');
 const galleryEl = track.closest('.gallery');
 const counterCurrent = galleryEl.querySelector('.gallery__counter-current');
-galleryEl.querySelector('.gallery__counter-total').textContent = String(galleryEl.querySelectorAll('.gallery__slide').length);
+galleryEl.querySelector('.gallery__counter-total').textContent = String(slides.length);
 const toast = document.querySelector('#toast');
 let toastTimer;
-let galleryIndex = 0;
-let lastWheelSlide = 0;
 const topbar = document.querySelector('.gallery__topbar');
 
 
@@ -113,25 +110,33 @@ const popups = createPagePopups(document.getElementById('productScreen'));
 initSupport({ screen: document.getElementById('productScreen'), popups, notify: showToast });
 initCostPerWear({ popups });
 
-// Gallery: one position value (in slides, fractional while dragging) drives the rail and the progress bar together.
-// Pointer events track the finger 1:1; the browser keeps vertical scrolling (touch-action: pan-y on the track), and a
-// gesture is claimed only once it is clearly horizontal. Release settles with a duration matched to the finger's speed.
+// Gallery (2026-11-12): native horizontal scrolling with CSS scroll snapping — the photos move with the finger and the
+// browser's own momentum settles on a photo (scroll-snap-stop: always → one photo per swipe, velocity-aware). No custom
+// animation. Infinite loop: one clone of the last photo before the first and one of the first after the last; when the
+// scroll settles on a clone, scrollLeft jumps to the identical real photo (same pixels, so the jump is invisible).
+// The DOM never grows. One photo: no clones, no paging. Pagination = one flat segment per unique photo.
 const count = slides.length;
 galleryEl.style.setProperty('--gallery-count', count);
-let position = 0; // current visual position, in slides
-let drag = null;
-let settleTimer = 0;
-const reduceGalleryMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const looping = count > 1;
+if (looping) {
+  const clone = (slide, where) => {
+    const c = slide.cloneNode(true);
+    c.classList.add('gallery__slide--clone');
+    c.setAttribute('aria-hidden', 'true');
+    c.querySelector('img')?.setAttribute('alt', '');
+    c.querySelector('img')?.removeAttribute('decoding');
+    rail[where](c);
+  };
+  clone(slides[count - 1], 'prepend');
+  clone(slides[0], 'append');
+}
+galleryEl.classList.toggle('is-single', !looping);
+const offset = looping ? 1 : 0; // DOM position of photo 0
+const allImages = [...rail.querySelectorAll('img')];
 
-// Reveal transition (Zara-style video ref): the incoming photo does not travel — it stays where it will rest and is
-// uncovered by its own leading edge, so it seems to pull out from the side over the current one. The photo being covered
-// drifts away at GALLERY_DRIFT of the finger's speed. Each image is shifted inside its own clipped slide while the rail
-// moves 1:1, so the edge between them is always a clean cut. Linear in position, so the settle transition keeps it in sync.
-const GALLERY_DRIFT = 0.25;
-const slideImages = [...slides].map(slide => slide.querySelector('img'));
 // A photo that fails to load on a flaky mobile connection must never show Safari's broken-image icon and alt text:
 // hide it (the slide's neutral background stays) and retry with a cache-busting query, also when the network returns.
-slideImages.forEach(img => {
+allImages.forEach(img => {
   const base = img.getAttribute('src');
   let tries = 0;
   const retry = () => { if (img.classList.contains('is-broken')) img.src = `${base}${base.includes('?') ? '&' : '?'}retry=${++tries}`; };
@@ -144,98 +149,84 @@ slideImages.forEach(img => {
   if (img.complete && !img.naturalWidth && img.currentSrc) img.dispatchEvent(new Event('error'));
 });
 
-function paintGallery(pos) {
-  position = pos;
-  rail.style.transform = `translate3d(${-pos * 100}%, 0, 0)`;
-  slideImages.forEach((img, i) => {
-    const d = Math.min(1, Math.max(-1, i - pos)); // >0 coming in, <0 being covered, 0 at rest
-    const shift = d > 0 ? -d : -d * (1 - GALLERY_DRIFT); // incoming: hold still on screen; covered: drift slowly
-    img.style.transform = d ? `translate3d(${(shift * 100).toFixed(3)}%, 0, 0)` : '';
-  });
-  counterCurrent.textContent = String(Math.min(count, Math.max(1, Math.round(pos) + 1))); // the photo that covers most of the frame
-  progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, (pos + 1) / count))})`; // cumulative, left-anchored
+// Pagination: equal flat segments; only the active state changes (no fill, no width animation).
+const segments = slides.map(() => { const s = document.createElement('span'); s.className = 'gallery__pager-segment'; return s; });
+pager.replaceChildren(...segments);
+pager.hidden = !looping;
+
+let galleryIndex = 0;
+function setActive(index) {
+  galleryIndex = index;
+  segments.forEach((s, i) => s.classList.toggle('is-active', i === index));
+  counterCurrent.textContent = String(index + 1);
+  pager.setAttribute('aria-label', `Фото ${index + 1} из ${count}`);
 }
 
-function settleGallery(index, duration = 420) {
-  galleryIndex = Math.max(0, Math.min(index, count - 1));
-  galleryEl.style.setProperty('--gallery-settle', `${reduceGalleryMotion.matches ? 0 : Math.round(duration)}ms`);
-  galleryEl.classList.add('is-settling');
-  paintGallery(galleryIndex);
-  // transitionend does not fire when nothing moved or the transition was interrupted; clear the state regardless.
-  clearTimeout(settleTimer);
-  settleTimer = setTimeout(() => galleryEl.classList.remove('is-settling'), (reduceGalleryMotion.matches ? 0 : Math.round(duration)) + 80);
-  progress.setAttribute('aria-label', `Фото ${galleryIndex + 1} из ${count}`);
-}
-const showGallerySlide = index => settleGallery(index);
-rail.addEventListener('transitionend', event => { if (event.target === rail) galleryEl.classList.remove('is-settling'); });
+const slideWidth = () => track.clientWidth || 1;
+const jumpTo = domIndex => {
+  // Instant, snap-aligned jump (no smooth behaviour inherited from CSS).
+  track.style.scrollBehavior = 'auto';
+  track.scrollLeft = domIndex * slideWidth();
+  track.style.scrollBehavior = '';
+};
+jumpTo(offset);
+setActive(0);
 
-// Where the rail is right now (mid-settle included), so grabbing a moving photo continues from where it is.
-function currentPosition() {
-  const m = new DOMMatrixReadOnly(getComputedStyle(rail).transform);
-  return -m.m41 / (track.clientWidth || 1);
+// Settled: map the DOM position to a photo, wrap off the clones, refresh the glass lenses' snapshot of the photo.
+let touching = false;
+function onSettled() {
+  if (touching) return; // still under the finger: wait for the release
+  const dom = Math.round(track.scrollLeft / slideWidth());
+  if (Math.abs(track.scrollLeft - dom * slideWidth()) > 1) return; // not aligned yet (snap still running)
+  let index = dom - offset;
+  if (looping && index < 0) { index = count - 1; jumpTo(count - 1 + offset); }
+  else if (looping && index > count - 1) { index = 0; jumpTo(offset); }
+  if (index !== galleryIndex) setActive(index);
+  // The glass engine re-captures on transitionend; native scrolling fires none, so announce the settled frame.
+  galleryEl.dispatchEvent(new Event('transitionend', { bubbles: true }));
 }
+let settleTimer = 0;
+const scheduleSettle = () => { clearTimeout(settleTimer); settleTimer = setTimeout(onSettled, 140); };
+track.addEventListener('scroll', scheduleSettle, { passive: true }); // fallback where scrollend is missing
+track.addEventListener('scrollend', () => { clearTimeout(settleTimer); onSettled(); });
+track.addEventListener('touchstart', () => { touching = true; }, { passive: true });
+const release = () => { touching = false; scheduleSettle(); };
+track.addEventListener('touchend', release, { passive: true });
+track.addEventListener('touchcancel', release, { passive: true });
+// Keep the current photo aligned when the frame changes width (rotation, desktop resize).
+new ResizeObserver(() => jumpTo(galleryIndex + offset)).observe(track);
 
+// Desktop mouse: drag the photos like a finger (native scrolling has no mouse drag); release snaps to the nearest
+// photo in the drag direction with the browser's smooth scroll. Touch and trackpad use pure native scrolling.
+let mouseDrag = null;
 track.addEventListener('pointerdown', event => {
-  if (event.button > 0 || drag) return;
-  const pos = galleryEl.classList.contains('is-settling') ? currentPosition() : position;
-  drag = { id: event.pointerId, x0: event.clientX, y0: event.clientY, start: pos, width: track.clientWidth, axis: null, samples: [[event.timeStamp, event.clientX]] };
+  if (event.pointerType !== 'mouse' || event.button !== 0 || !looping) return;
+  mouseDrag = { x: event.clientX, left: track.scrollLeft, moved: false };
+  track.setPointerCapture(event.pointerId);
 });
-
 track.addEventListener('pointermove', event => {
-  if (!drag || event.pointerId !== drag.id) return;
-  // A press whose release never reached us (released outside the frame before the gesture was claimed, system gesture)
-  // must not keep steering the rail from a hovering pointer: end it and snap.
-  if (event.pointerType === 'mouse' && event.buttons === 0) { endDrag(event); return; }
-  const dx = event.clientX - drag.x0, dy = event.clientY - drag.y0;
-  if (!drag.axis) {
-    if (Math.hypot(dx, dy) < 6) return;
-    drag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-    if (drag.axis === 'y') { drag = null; return; } // vertical: leave it to page scrolling
-    track.setPointerCapture(event.pointerId);
-    galleryEl.classList.remove('is-settling');
-    paintGallery(drag.start);
-  }
-  drag.samples.push([event.timeStamp, event.clientX]);
-  if (drag.samples.length > 6) drag.samples.shift();
-  // Hard edges (2026-11-10 fix): the rail never travels before photo 1 or past the last one. The old soft edge moved the
-  // rail out of range while the reveal effect held the edge photo still, so an empty band opened beside it.
-  paintGallery(Math.max(0, Math.min(count - 1, drag.start - dx / drag.width)));
+  if (!mouseDrag) return;
+  if (event.buttons === 0) { endMouseDrag(event); return; }
+  const dx = event.clientX - mouseDrag.x;
+  if (!mouseDrag.moved && Math.abs(dx) < 4) return;
+  if (!mouseDrag.moved) { mouseDrag.moved = true; galleryEl.classList.add('is-mouse-dragging'); }
+  track.scrollLeft = mouseDrag.left - dx;
 });
-
-function endDrag(event) {
-  if (!drag || event.pointerId !== drag.id) return;
-  const d = drag; drag = null;
-  if (d.axis !== 'x') { if (!Number.isInteger(position)) settleGallery(Math.round(position)); return; }
-  const [t0, x0] = d.samples[0], [t1, x1] = d.samples[d.samples.length - 1];
-  const velocity = (x1 - x0) / Math.max(16, t1 - t0); // px per ms, positive = finger moving right
-  let target = Math.round(position);
-  if (Math.abs(velocity) > 0.3) target = velocity < 0 ? Math.ceil(position - 0.02) : Math.floor(position + 0.02); // a flick goes one photo in its direction
-  target = Math.max(d.start - 1, Math.min(d.start + 1, target)); // one photo per gesture
-  if (event.type !== 'pointerup') target = Math.round(d.start); // cancelled / interrupted gesture: back to the photo it started on
-  const remaining = Math.abs(target - position) * d.width;
-  // Settle as fast as the finger was moving (ease-out starts at ~2.4× average speed), never jumpier than 220 ms or slower than 420.
-  const duration = Math.abs(velocity) > 0.05 ? Math.min(420, Math.max(220, (remaining / Math.abs(velocity)) * 1.6)) : 420;
-  settleGallery(Math.round(target), event.type === 'pointercancel' ? 300 : duration);
+function endMouseDrag(event) {
+  if (!mouseDrag) return;
+  const d = mouseDrag; mouseDrag = null;
+  galleryEl.classList.remove('is-mouse-dragging');
+  if (!d.moved) return;
+  const start = Math.round(d.left / slideWidth()), dx = event.clientX - d.x;
+  const target = Math.abs(dx) > slideWidth() * 0.15 ? start + (dx < 0 ? 1 : -1) : start;
+  track.scrollTo({ left: target * slideWidth(), behavior: 'smooth' });
 }
-track.addEventListener('pointerup', endDrag);
-track.addEventListener('pointercancel', endDrag);
-addEventListener('pointerup', endDrag); // released outside the frame before the gesture was claimed
-// Leaving the page mid-gesture (app switch, Safari edge-swipe back) never leaves the photo between two slides.
-const abortGalleryDrag = () => { if (drag) endDrag({ pointerId: drag.id, type: 'pointercancel' }); else if (!Number.isInteger(position)) settleGallery(Math.round(position)); };
-addEventListener('blur', abortGalleryDrag);
-document.addEventListener('visibilitychange', () => { if (document.hidden) abortGalleryDrag(); });
+track.addEventListener('pointerup', endMouseDrag);
+track.addEventListener('pointercancel', endMouseDrag);
 track.addEventListener('dragstart', event => event.preventDefault());
 
-track.addEventListener('wheel', event => {
-  if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
-  event.preventDefault();
-  if (Date.now() - lastWheelSlide < 450 || Math.abs(event.deltaX) < 15) return;
-  showGallerySlide(galleryIndex + (event.deltaX > 0 ? 1 : -1));
-  lastWheelSlide = Date.now();
-}, { passive: false });
-
 // Decode every photo up front so the first swipe never waits on image decoding.
-slides.forEach(slide => slide.querySelector('img')?.decode?.().catch(() => {}));
+allImages.forEach(img => img.decode?.().catch(() => {}));
 
 // Article: the whole row is one button. The check appears only after the clipboard write succeeds, stays 1.5 s;
 // a repeated tap copies again and restarts the timer. A failed write keeps the copy icon and shows the number in the toast.

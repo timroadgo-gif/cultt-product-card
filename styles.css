@@ -15,16 +15,17 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 /* Scroll-driven overlap: the gallery is pinned (sticky, native scrolling, no JS), the white information surface is the
    next layer and slides over it with the finger; scrolling up reveals the photo again. No shadow, radius or transform. */
 .gallery{position:sticky;top:0;z-index:0;aspect-ratio:3/4;background:#f6f5f3;overflow:clip}
-.gallery__track{position:absolute;inset:0;overflow:clip;touch-action:pan-y}
-/* Gallery motion: the rail follows the finger 1:1 (no transition while dragging); on release it settles with a
-   velocity-matched ease-out (--gallery-settle, 220–420 ms, set from JS); taps / keys / wheel use 420 ms. The progress bar
-   gets the same transform timing, so both move as one. */
-.gallery{--gallery-ease:cubic-bezier(.22,.61,.36,1);--gallery-settle:420ms}
-.gallery__rail{width:100%;height:100%;display:flex;transform:translate3d(0,0,0);will-change:transform}
-.gallery.is-settling .gallery__rail,.gallery.is-settling .gallery__slide img,.gallery.is-settling .gallery__progress-bar{transition:transform var(--gallery-settle) var(--gallery-ease)}
-.gallery__slide{position:relative;flex:0 0 100%;height:100%;margin:0;overflow:clip;background:#f6f5f3}
+/* Gallery motion (2026-11-12): native horizontal scrolling + mandatory scroll snapping — photos follow the finger, the
+   browser's momentum settles on a photo, scroll-snap-stop:always = one photo per swipe. Loop clones and the invisible
+   wrap-around live in app.js. Vertical page scrolling stays native (horizontal-only scroller). */
+.gallery__track{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.gallery__track::-webkit-scrollbar{display:none}
+.gallery.is-single .gallery__track{overflow-x:hidden}
+.gallery.is-mouse-dragging .gallery__track{scroll-snap-type:none;cursor:grabbing}
+.gallery__rail{width:100%;height:100%;display:flex}
+.gallery__slide{position:relative;flex:0 0 100%;height:100%;margin:0;overflow:clip;background:#f6f5f3;scroll-snap-align:start;scroll-snap-stop:always}
 .gallery__slide img.is-broken{visibility:hidden}
-.gallery__slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;user-select:none;-webkit-user-drag:none;will-change:transform}
+.gallery__slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;user-select:none;-webkit-user-drag:none}
 /* Nav controls: GlassIconButton 44 from the UI Kit (live Liquid Glass); the bar only positions them */
 .gallery__topbar{--nav-inset:clamp(12px,4vw,16px);position:fixed;z-index:40;top:0;left:50%;width:100%;max-width:520px;padding:max(calc(env(safe-area-inset-top,0px) + 8px),16px) var(--nav-inset) 12px;transform:translateX(-50%);pointer-events:none;background:transparent;border-bottom:1px solid transparent;transition:background-color 220ms ease,border-color 220ms ease}
 .gallery__topbar-actions{position:relative;display:flex;justify-content:space-between;align-items:center}
@@ -37,16 +38,18 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__topbar .ds-icon-button,.gallery__topbar .ds-icon-button-group{pointer-events:auto}
 .gallery__topbar.is-scrolled{background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(20px) saturate(145%);backdrop-filter:blur(20px) saturate(145%);border-bottom-color:rgba(7,7,7,.09)}
 @media (display-mode:standalone) and (max-width:520px){.gallery__topbar{padding-top:max(calc(env(safe-area-inset-top,0px) + 22px),16px)}}
-/* Progress: Louis Vuitton-style cumulative hairline at the bottom edge — light track, ink fill anchored to the left that
-   covers (photo + 1) / count of the width (1 of 6 → 1/6, 6 of 6 → 100%). scaleX keeps it on the compositor. */
-/* Photo counter (Gucci reference): a small quiet pill in the bottom-right corner, above the progress line — translucent
+/* Photo counter (Gucci reference): a small quiet pill in the bottom-right corner — translucent
    neutral grey, white 11/14 medium with tabular figures so «1 / 6» never changes width. Not interactive, not glass. */
 /* Counter (2026-11-10 refinement): white 72 % pill + ink figures instead of white on 32 % black — on the light photo
    backdrop the old pill read as a grey blob with ~2.3:1 contrast; now ~19:1 on light and ~13:1 on dark leather, and
    the pill melts into the photo so only the quiet figures remain. Geometry unchanged. */
 .gallery__counter{position:absolute;right:var(--space-3);bottom:calc(var(--space-3) + 2px);z-index:2;display:inline-flex;align-items:center;height:20px;padding:0 var(--space-2);border-radius:10px;background:rgba(255,255,255,.72);color:var(--ink);font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none;user-select:none}
-.gallery__progress{position:absolute;left:0;right:0;bottom:0;z-index:2;height:2px;background:rgba(7,7,7,.1);pointer-events:none}
-.gallery__progress-bar{position:absolute;inset:0;background:var(--ink);transform-origin:0 50%;transform:scaleX(calc(1 / var(--gallery-count,6)));will-change:transform}
+/* Pagination (2026-11-12, user's reference): one short flat line per unique photo, bottom-left on the content inset,
+   vertically centred on the counter pill. Active = ink, inactive = light grey; only the state changes, no fill motion. */
+.gallery__pager{position:absolute;left:clamp(16px,4vw,24px);bottom:calc(var(--space-3) + 11px);z-index:2;display:flex;gap:4px;pointer-events:none}
+.gallery__pager[hidden]{display:none}
+.gallery__pager-segment{width:12px;height:2px;background:rgba(7,7,7,.16)}
+.gallery__pager-segment.is-active{background:var(--ink)}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
    so each block reads as a unit. */
 .product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-4) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}
