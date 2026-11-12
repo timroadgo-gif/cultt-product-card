@@ -6,6 +6,8 @@
 // neighbour being scrolled to fills with black from the side facing it (forward: from its left edge, back: from its
 // right edge), in proportion to the scroll fraction. Reversing mid-gesture keeps the roles, so it simply runs back. Pure function of p: drive it from the scroller every frame (finger, momentum, snap);
 // no timers, no transitions; across the loop seam the fill leaves the last line on the right and enters the first.
+const FILL_END = 0.55, FADE_END = 0.4; // fraction of the scroll at which the fill / fade is complete
+
 export function createGalleryPager({ count = 1 } = {}) {
   if (!Number.isInteger(count) || count < 1) throw new Error(`GalleryPager: count must be a positive integer, got ${count}`);
   const el = Object.assign(document.createElement("div"), { className: "ds-gallery-pager" });
@@ -22,10 +24,14 @@ export function createGalleryPager({ count = 1 } = {}) {
     // Outgoing line (the settled one) keeps its full fill and fades it out — no black tail. The incoming line fills
     // from the side facing the outgoing one: B (right) from its left edge, A (left) from its right edge.
     const back = settled === b && a !== b; // moving from B back to A
+    // Paced ahead of the photo (user: «быстрее»): t = share of the way to the incoming photo; the new line is full at
+    // t = FILL_END and the old one grey at t = FADE_END, then both hold while the photo finishes its snap.
+    const t = back ? 1 - f : f;
+    const fill = Math.min(1, t / FILL_END), fade = 1 - Math.min(1, t / FADE_END);
     segments.forEach((seg, i) => {
       let from = 0, to = 0, alpha = 0;
-      if (count > 1 && i === a) [from, to, alpha] = back ? [f, 1, 1] : [0, 1, 1 - f];
-      else if (count > 1 && i === b) [from, to, alpha] = back ? [0, 1, f] : [0, f, 1];
+      if (count > 1 && i === a) [from, to, alpha] = back ? [1 - fill, 1, 1] : [0, 1, fade];
+      else if (count > 1 && i === b) [from, to, alpha] = back ? [0, 1, fade] : [0, fill, 1];
       else if (i === a) [from, to, alpha] = [0, 1, 1];
       seg.style.setProperty("--from", from.toFixed(4));
       seg.style.setProperty("--to", to.toFixed(4));
