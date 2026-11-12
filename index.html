@@ -20,26 +20,26 @@
     <script>(function (d, h) { var s = { '#/product/sold': ['sold', 'sold', 'at-sale'], '#/product/sold-3m': ['soldOverThreeMonths', 'sold', 'hidden'] }[h] || ['available', 'available', 'current']; d.dataset.route = h.startsWith('#/product') ? 'product' : 'index'; d.dataset.state = s[0]; d.dataset.availability = s[1]; d.dataset.price = s[2]; d.dataset.sections = { '#/product/similar': 'similar', '#/product/support': 'support cost-per-wear', '#/product/delivery': 'delivery-accordion' }[h] || ''; })(document.documentElement, location.hash);</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=a89007497661" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=d272179ae69d" />
     <!-- Popup System (IOS:UI Agent/playground, linked as popup-css/ and popup/) for the contact-support popup;
          app tokens first so this page's own :root values in styles.css win. -->
-    <link rel="stylesheet" href="./popup-css/tokens.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/css/typography.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/css/backdrop.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/components/alert/alert.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/components/drag-indicator/drag-indicator.css?v=a89007497661" />
-    <link rel="stylesheet" href="./design-system/components/field/field.css?v=a89007497661" />
-    <link rel="stylesheet" href="./popup-css/popup.css?v=a89007497661" />
-    <link rel="stylesheet" href="./popup-css/sheet.css?v=a89007497661" />
-    <link rel="stylesheet" href="./styles.css?v=a89007497661" />
-    <meta name="build" content="a89007497661" />
-  <meta name="app-build" content="a89007497661" />
+    <link rel="stylesheet" href="./popup-css/tokens.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/css/typography.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/css/backdrop.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/components/alert/alert.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/components/drag-indicator/drag-indicator.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./design-system/components/field/field.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./popup-css/popup.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./popup-css/sheet.css?v=d272179ae69d" />
+    <link rel="stylesheet" href="./styles.css?v=d272179ae69d" />
+    <meta name="build" content="d272179ae69d" />
+  <meta name="app-build" content="d272179ae69d" />
   <script>(()=>{const m=document.querySelector('meta[name="app-build"]');if(!m||!window.fetch)return;const cur=m.content;const url=new URL('version.json',document.baseURI);const check=()=>fetch(url+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(v=>{if(!v||!v.build||v.build===cur)return;const k='app-build-reload:'+v.build;try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}const u=new URL(location.href);u.searchParams.set('v',v.build);location.replace(u.href)}).catch(()=>{});check();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});addEventListener('pageshow',e=>{if(e.persisted)check()})})();</script>
   </head>
   <body>
@@ -130,7 +130,6 @@
               <p>Будет готово к выдаче после оплаты заказа. Адрес: Петровский б-р, 1с1</p>
             </article>
           </div>
-          <div class="delivery-accordion__action" data-slot="delivery-continue"></div>
         </div></div></details>
 
         <section class="condition-section" aria-labelledby="conditionTitle">
@@ -165,6 +164,6 @@
     </nav>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=a89007497661"></script>
+    <script type="module" src="./app.js?v=d272179ae69d"></script>
   </body>
 </html>

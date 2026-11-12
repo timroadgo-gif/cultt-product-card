@@ -2,11 +2,11 @@
 // backdrop, motion, focus, inert background, swipe-to-dismiss and state reset (DOM is rebuilt per open).
 // Guarded patterns (form): X / swipe / backdrop / Escape on a changed form open the discard Alert instead of closing.
 
-import { createIconButton } from "../design-system/components/icon-button/icon-button.js?v=a89007497661";
-import { createModalBackdrop, openBackdrop, closeBackdrop } from "../design-system/backdrop/backdrop.js?v=a89007497661";
-import { createAlert } from "../design-system/components/alert/alert.js?v=a89007497661";
-import { createDragIndicator } from "../design-system/components/drag-indicator/drag-indicator.js?v=a89007497661";
-import { dismissPolicy, DISCARD_ALERT } from "./patterns.js?v=a89007497661";
+import { createIconButton } from "../design-system/components/icon-button/icon-button.js?v=d272179ae69d";
+import { createModalBackdrop, openBackdrop, closeBackdrop } from "../design-system/backdrop/backdrop.js?v=d272179ae69d";
+import { createAlert } from "../design-system/components/alert/alert.js?v=d272179ae69d";
+import { createDragIndicator } from "../design-system/components/drag-indicator/drag-indicator.js?v=d272179ae69d";
+import { dismissPolicy, DISCARD_ALERT } from "./patterns.js?v=d272179ae69d";
 
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
 const FOCUSABLE = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';

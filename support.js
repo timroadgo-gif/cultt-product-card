@@ -3,10 +3,10 @@
 // System (IOS:UI Agent/playground: host = backdrop, motion, focus trap, inert page, swipe, Escape; content blocks
 // sheet/head/body). The popup links to the playground's js/ (./popup → playground/js) so it shares this page's UI Kit
 // modules (one glass engine).
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=a89007497661';
-import { createIcon } from './design-system/icons/icon.js?v=a89007497661';
-import { sheet, body, node } from './popup/ui/sheet.js?v=a89007497661';
-import { SUPPORT_CONTACTS } from './support-contacts.js?v=a89007497661';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=d272179ae69d';
+import { createIcon } from './design-system/icons/icon.js?v=d272179ae69d';
+import { sheet, body, node } from './popup/ui/sheet.js?v=d272179ae69d';
+import { SUPPORT_CONTACTS } from './support-contacts.js?v=d272179ae69d';
 
 const HEADING = 'Связаться с нами';
 const SCHEDULE = 'Ежедневно с 11:00 до 22:00'; // support hours for every channel (user 2026-11-09)

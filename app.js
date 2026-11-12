@@ -1,15 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=a89007497661';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=a89007497661';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=a89007497661';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=a89007497661';
-import { createButton } from './design-system/components/button/button.js?v=a89007497661';
-import { goToIndex } from './navigation.js?v=a89007497661';
-import { renderSimilarProducts } from './similar-products.js?v=a89007497661';
-import { initSupport } from './support.js?v=a89007497661';
-import { initCostPerWear } from './cost-per-wear.js?v=a89007497661';
-import { createPagePopups } from './popups.js?v=a89007497661';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=d272179ae69d';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=d272179ae69d';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=d272179ae69d';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=d272179ae69d';
+import { createButton } from './design-system/components/button/button.js?v=d272179ae69d';
+import { goToIndex } from './navigation.js?v=d272179ae69d';
+import { renderSimilarProducts } from './similar-products.js?v=d272179ae69d';
+import { initSupport } from './support.js?v=d272179ae69d';
+import { initCostPerWear } from './cost-per-wear.js?v=d272179ae69d';
+import { createPagePopups } from './popups.js?v=d272179ae69d';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -44,11 +44,6 @@ const favorite = createButton({ variant: 'secondary', iconPosition: 'only', icon
 favorite.classList.add('bottom-bar__favorite');
 favorite.setAttribute('aria-pressed', 'false');
 bottomBar.append(bottomAdd, favorite);
-// «Доставка и примерка» experiment: «Продолжить» ends the expanded block. The prototype has no fulfilment step behind it
-// yet, so it says so instead of inventing a flow (same pattern as the unconfigured support contacts).
-const deliveryContinue = createButton({ label: 'Продолжить', variant: 'secondary', width: 'fill' });
-deliveryContinue.addEventListener('click', () => showToast('Продолжить: шаг оформления доставки еще не подключен'));
-document.querySelector('[data-slot="delivery-continue"]')?.append(deliveryContinue);
 
 // Product state comes from the scenario route (navigation.js PRODUCT_STATES → html[data-availability]: available | sold).
 // Sold: primary action «Заказать» at full width, no wishlist; price caption and hidden Split are pure CSS.
