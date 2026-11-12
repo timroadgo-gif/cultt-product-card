@@ -1,15 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=ceabc4725d83';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=ceabc4725d83';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=ceabc4725d83';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=ceabc4725d83';
-import { createButton } from './design-system/components/button/button.js?v=ceabc4725d83';
-import { goToIndex } from './navigation.js?v=ceabc4725d83';
-import { renderSimilarProducts } from './similar-products.js?v=ceabc4725d83';
-import { initSupport } from './support.js?v=ceabc4725d83';
-import { initCostPerWear } from './cost-per-wear.js?v=ceabc4725d83';
-import { createPagePopups } from './popups.js?v=ceabc4725d83';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=a89007497661';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=a89007497661';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=a89007497661';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=a89007497661';
+import { createButton } from './design-system/components/button/button.js?v=a89007497661';
+import { goToIndex } from './navigation.js?v=a89007497661';
+import { renderSimilarProducts } from './similar-products.js?v=a89007497661';
+import { initSupport } from './support.js?v=a89007497661';
+import { initCostPerWear } from './cost-per-wear.js?v=a89007497661';
+import { createPagePopups } from './popups.js?v=a89007497661';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -154,15 +154,33 @@ allImages.forEach(img => {
   if (img.complete && !img.naturalWidth && img.currentSrc) img.dispatchEvent(new Event('error'));
 });
 
-// Pagination: equal flat segments; only the active state changes (no fill, no width animation).
+// Pagination (2026-11-12 v2): flat segments, the active one slightly longer (12 → 18 px). Driven continuously by the
+// gallery's real scroll position — no timers, no transitions: between photos a and b at progress f, a has weight 1 − f
+// and b has f; length (12 + 6·w) and ink alpha (.16 + .84·w) follow the weight. The two weights always sum to 1, so the
+// row's total length is constant and the indicator never drifts. Segments are absolutely placed and moved with
+// transform (translateX + scaleX of an 18 px bar), so scrolling repaints/composites only — no layout.
+const SEG = { base: 12, active: 18, gap: 4, alphaIdle: .16 };
 const segments = slides.map(() => { const s = document.createElement('span'); s.className = 'gallery__pager-segment'; return s; });
 pager.replaceChildren(...segments);
 pager.hidden = !looping;
+pager.style.width = `${(count - 1) * (SEG.base + SEG.gap) + SEG.active}px`;
+
+function paintPager(progress) { // progress in photos: 0 = photo 1, count − 1 = last, −1 / count = loop clones
+  const i0 = Math.floor(progress), f = progress - i0;
+  const a = ((i0 % count) + count) % count, b = (a + 1) % count; // clones map onto the real photos → seamless wrap
+  let x = 0;
+  segments.forEach((seg, i) => {
+    const w = i === a ? 1 - f : i === b ? f : 0;
+    const len = SEG.base + (SEG.active - SEG.base) * w;
+    seg.style.transform = `translate3d(${x.toFixed(2)}px,0,0) scaleX(${(len / SEG.active).toFixed(4)})`;
+    seg.style.backgroundColor = `rgba(7,7,7,${(SEG.alphaIdle + (1 - SEG.alphaIdle) * w).toFixed(3)})`;
+    x += len + SEG.gap;
+  });
+}
 
 let galleryIndex = 0;
-function setActive(index) {
+function setActive(index) { // settled photo: counter + accessible label (the segments are painted from scroll)
   galleryIndex = index;
-  segments.forEach((s, i) => s.classList.toggle('is-active', i === index));
   counterCurrent.textContent = String(index + 1);
   pager.setAttribute('aria-label', `Фото ${index + 1} из ${count}`);
 }
@@ -193,6 +211,13 @@ function onSettled() {
 let settleTimer = 0;
 const scheduleSettle = () => { clearTimeout(settleTimer); settleTimer = setTimeout(onSettled, 140); };
 track.addEventListener('scroll', scheduleSettle, { passive: true }); // fallback where scrollend is missing
+// Pagination follows the scroll every frame (finger, momentum, snap and the invisible loop jump alike).
+let pagerFrame = 0;
+const pagerFromScroll = () => { pagerFrame = 0; paintPager(track.scrollLeft / slideWidth() - offset); };
+if (looping) {
+  track.addEventListener('scroll', () => { if (!pagerFrame) pagerFrame = requestAnimationFrame(pagerFromScroll); }, { passive: true });
+  pagerFromScroll();
+}
 track.addEventListener('scrollend', () => { clearTimeout(settleTimer); onSettled(); });
 track.addEventListener('touchstart', () => { touching = true; }, { passive: true });
 const release = () => { touching = false; scheduleSettle(); };
