@@ -1,9 +1,9 @@
 // GalleryPager factory: segmented pagination for a swipeable photo gallery (spec.md).
 // createGalleryPager({ count }) → <div> with setProgress(p): p is the gallery's scroll position in photos
 // (0 = first, fractional while moving; values outside 0…count−1 wrap, so loop clones map onto real photos).
-// Between photos A and B at fraction f, A's weight is 1 − f and B's is f; CSS turns the weight (--w) into length
-// (idle → active width) and colour (idle → active). A + B always add up to the same length, so A's left edge and B's
-// right edge stay put while the boundary between them slides with the swipe; nothing else moves, the height never changes.
+// Between photos A and B at fraction f, A's weight is 1 − f and B's is f; CSS turns the weight (--w) into length and
+// colour. Segments sit in fixed slots; each line is anchored to its slot's left edge and extends to the right with its
+// weight, so the incoming line grows left → right and the outgoing one shortens back; nothing moves, height is constant.
 // Pure function of p: drive it from the scroller every frame (finger, momentum, snap); no timers, no transitions.
 export function createGalleryPager({ count = 1 } = {}) {
   if (!Number.isInteger(count) || count < 1) throw new Error(`GalleryPager: count must be a positive integer, got ${count}`);
