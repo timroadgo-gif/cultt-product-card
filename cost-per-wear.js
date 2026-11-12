@@ -3,8 +3,8 @@
 // holds a form control (UI Kit Field), so the host always presents it as the full-width bottom sheet.
 // amount = product price (read from the page's price, .price-value) / number of wears, rounded to whole roubles.
 // The number of wears lives in this module: kept while the page is open, reset on reload, never shared with other products.
-import { createField, setFieldError } from './design-system/components/field/field.js?v=90a9a768b5a1';
-import { sheet, head, body, node } from './popup/ui/sheet.js?v=90a9a768b5a1';
+import { createField, setFieldError } from './design-system/components/field/field.js?v=bc9d5f215e6c';
+import { sheet, head, body, node } from './popup/ui/sheet.js?v=bc9d5f215e6c';
 
 const DEFAULT_WEARS = 100;
 const MAX_DIGITS = 5; // up to 99 999 wears

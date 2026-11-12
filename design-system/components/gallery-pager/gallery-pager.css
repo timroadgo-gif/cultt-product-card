@@ -1,26 +1,29 @@
-/* GalleryPager: one thin flat line per photo in fixed slots (segment.width + gap) — slots never move. Each segment's line
-   (::before) starts at the slot's left edge; its weight --w (0…1, set by setProgress) extends it to the right into the
-   gap (idle → active width) and darkens it (idle → active colour). No transform, no overlay, fixed height. The host
-   positions the row. */
+/* GalleryPager: fixed slots, each as wide as the active line (segment.active-width) — slots never move or resize.
+   Inside its slot the visible line (::before) is pinned to the left edge: its weight --w (0…1, set by setProgress)
+   changes only its width (segment.width → segment.active-width, the right edge moves) and its opacity (idle alpha → 1).
+   Height comes from the fixed row/slot height and is never animated: no transform, no scale, no border. */
 .ds-gallery-pager {
   display: flex;
   gap: var(--gallery-pager-gap);
   height: var(--gallery-pager-height);
   pointer-events: none;
-  contain: layout; /* no paint containment: the last active line extends into the space after the row */
+  contain: layout paint;
 }
 .ds-gallery-pager[hidden] { display: none; }
 .ds-gallery-pager__segment {
   --w: 0;
   position: relative;
   flex: none;
-  width: var(--gallery-pager-segment-width);
+  width: var(--gallery-pager-segment-active-width);
   height: var(--gallery-pager-height);
 }
 .ds-gallery-pager__segment::before {
   content: "";
   position: absolute;
-  inset: 0 auto 0 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
   width: calc(var(--gallery-pager-segment-width) + (var(--gallery-pager-segment-active-width) - var(--gallery-pager-segment-width)) * var(--w));
-  background: color-mix(in srgb, var(--gallery-pager-color-active) calc(var(--w) * 100%), var(--gallery-pager-color-idle));
+  background: var(--gallery-pager-color-active);
+  opacity: calc(var(--gallery-pager-idle-opacity) + (1 - var(--gallery-pager-idle-opacity)) * var(--w));
 }
