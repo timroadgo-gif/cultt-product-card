@@ -6,7 +6,7 @@
 // neighbour being scrolled to fills with black from the side facing it (forward: from its left edge, back: from its
 // right edge), in proportion to the scroll fraction. Reversing mid-gesture keeps the roles, so it simply runs back. Pure function of p: drive it from the scroller every frame (finger, momentum, snap);
 // no timers, no transitions; across the loop seam the fill leaves the last line on the right and enters the first.
-const FILL_END = 0.8, FADE_END = 0.65; // fraction of the scroll at which the fill / fade is complete
+const FILL_END = 0.92, FADE_END = 0.78; // fraction of the scroll at which the fill / fade is complete
 const smooth = (x) => x * x * (3 - 2 * x); // soft start and finish, so the line follows the scroll's own easing
 
 export function createGalleryPager({ count = 1 } = {}) {
