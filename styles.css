@@ -127,6 +127,7 @@ html:not([data-sections~="delivery-accordion"]) .delivery-accordion,html[data-se
 .delivery-accordion{margin:calc(var(--space-4) * -1) 0}
 .delivery-accordion .accordion__body>.delivery-accordion__content{display:flex;flex-direction:column;padding:var(--space-1) 0 var(--space-4)}
 .delivery-accordion .delivery-option__title{color:var(--ink)}
+.delivery-accordion__action{padding-top:var(--space-5)} /* options → «Продолжить» 24, as between the options */
 .text-link{position:relative;align-self:flex-start;border:0;background:transparent;padding:0;color:var(--green);font-size:13px;font-family:Manrope,Arial,sans-serif;font-weight:400;line-height:18px}
 .text-link::after{content:"";position:absolute;inset:-13px -8px}
 /* Condition: same rhythm as delivery — heading → scale 16, track → labels 8, scale → wear note 24; text 13/18 regular,
