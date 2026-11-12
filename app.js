@@ -1,15 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=65aedeb9940c';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=65aedeb9940c';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=65aedeb9940c';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=65aedeb9940c';
-import { createButton } from './design-system/components/button/button.js?v=65aedeb9940c';
-import { goToIndex } from './navigation.js?v=65aedeb9940c';
-import { renderSimilarProducts } from './similar-products.js?v=65aedeb9940c';
-import { initSupport } from './support.js?v=65aedeb9940c';
-import { initCostPerWear } from './cost-per-wear.js?v=65aedeb9940c';
-import { createPagePopups } from './popups.js?v=65aedeb9940c';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=391548a1eada';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=391548a1eada';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=391548a1eada';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=391548a1eada';
+import { createButton } from './design-system/components/button/button.js?v=391548a1eada';
+import { goToIndex } from './navigation.js?v=391548a1eada';
+import { renderSimilarProducts } from './similar-products.js?v=391548a1eada';
+import { initSupport } from './support.js?v=391548a1eada';
+import { initCostPerWear } from './cost-per-wear.js?v=391548a1eada';
+import { createPagePopups } from './popups.js?v=391548a1eada';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -269,18 +269,18 @@ bottomAdd.addEventListener('click', () => { if (!isSold()) showToast('Товар
 document.querySelectorAll('.info-button').forEach(button => button.addEventListener('click', () => {
   showToast(button.getAttribute('aria-label'));
 }));
-document.querySelector('.delivery-manager').addEventListener('click', event => {
+document.querySelectorAll('.delivery-manager').forEach(link => link.addEventListener('click', event => {
   event.preventDefault();
   showToast(event.currentTarget.textContent);
-});
+})); // open delivery block + the «Доставка — аккордеон» experiment
 // Category → catalogue (not part of this prototype yet): stay on the card and say where it leads.
 document.querySelector('.product-category').addEventListener('click', event => {
   event.preventDefault();
   showToast('Каталог: Сумка с ручками');
 });
-document.querySelector('.city-link').addEventListener('click', () => showToast('Доступна доставка по Москве'));
+document.querySelectorAll('.city-link').forEach(link => link.addEventListener('click', () => showToast('Доступна доставка по Москве')));
 document.querySelector('.delivery-options .text-link').addEventListener('click', () => {
-  document.querySelector('.accordion summary').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.querySelector('.details-section .accordion summary').scrollIntoView({ behavior: 'smooth', block: 'center' });
   showToast('Примерка в бутике и самовывоз');
 });
 document.querySelectorAll('.capacity-item__image img').forEach(img => img.addEventListener('error', () => { img.hidden = true; }));

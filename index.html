@@ -17,29 +17,29 @@
     <!-- Route and product state before first paint (mirrors SCENARIOS / PRODUCT_STATES in navigation.js): root = index,
          #/product = card, #/product/sold = sold card, #/product/sold-3m = sold over 3 months ago (no price),
          #/product/similar = card with similar products, #/product/support = standard card + contact-support button. -->
-    <script>(function (d, h) { var s = { '#/product/sold': ['sold', 'sold', 'at-sale'], '#/product/sold-3m': ['soldOverThreeMonths', 'sold', 'hidden'] }[h] || ['available', 'available', 'current']; d.dataset.route = h.startsWith('#/product') ? 'product' : 'index'; d.dataset.state = s[0]; d.dataset.availability = s[1]; d.dataset.price = s[2]; d.dataset.sections = { '#/product/similar': 'similar', '#/product/support': 'support cost-per-wear' }[h] || ''; })(document.documentElement, location.hash);</script>
+    <script>(function (d, h) { var s = { '#/product/sold': ['sold', 'sold', 'at-sale'], '#/product/sold-3m': ['soldOverThreeMonths', 'sold', 'hidden'] }[h] || ['available', 'available', 'current']; d.dataset.route = h.startsWith('#/product') ? 'product' : 'index'; d.dataset.state = s[0]; d.dataset.availability = s[1]; d.dataset.price = s[2]; d.dataset.sections = { '#/product/similar': 'similar', '#/product/support': 'support cost-per-wear', '#/product/delivery': 'delivery-accordion' }[h] || ''; })(document.documentElement, location.hash);</script>
     <link rel="preload" href="./assets/manrope-400.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="./assets/manrope-500.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/css/corners.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/css/glass.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/icons/icon.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/components/button/button.css?v=65aedeb9940c" />
+    <link rel="stylesheet" href="./design-system/tokens/tokens.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/css/corners.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/css/glass.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/icons/icon.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/components/icon-button/icon-button.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/components/icon-button-group/icon-button-group.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/components/button/button.css?v=391548a1eada" />
     <!-- Popup System (IOS:UI Agent/playground, linked as popup-css/ and popup/) for the contact-support popup;
          app tokens first so this page's own :root values in styles.css win. -->
-    <link rel="stylesheet" href="./popup-css/tokens.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/css/typography.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/css/backdrop.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/components/alert/alert.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/components/drag-indicator/drag-indicator.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./design-system/components/field/field.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./popup-css/popup.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./popup-css/sheet.css?v=65aedeb9940c" />
-    <link rel="stylesheet" href="./styles.css?v=65aedeb9940c" />
-    <meta name="build" content="65aedeb9940c" />
-  <meta name="app-build" content="65aedeb9940c" />
+    <link rel="stylesheet" href="./popup-css/tokens.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/css/typography.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/css/backdrop.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/components/alert/alert.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/components/drag-indicator/drag-indicator.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./design-system/components/field/field.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./popup-css/popup.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./popup-css/sheet.css?v=391548a1eada" />
+    <link rel="stylesheet" href="./styles.css?v=391548a1eada" />
+    <meta name="build" content="391548a1eada" />
+  <meta name="app-build" content="391548a1eada" />
   <script>(()=>{const m=document.querySelector('meta[name="app-build"]');if(!m||!window.fetch)return;const cur=m.content;const url=new URL('version.json',document.baseURI);const check=()=>fetch(url+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(v=>{if(!v||!v.build||v.build===cur)return;const k='app-build-reload:'+v.build;try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}const u=new URL(location.href);u.searchParams.set('v',v.build);location.replace(u.href)}).catch(()=>{});check();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});addEventListener('pageshow',e=>{if(e.persisted)check()})})();</script>
   </head>
   <body>
@@ -116,6 +116,22 @@
           </div>
         </section>
 
+        <!-- Experiment «Доставка — аккордеон» (#/product/delivery only, html[data-sections~="delivery-accordion"]): the same
+             city line and fulfilment options as .delivery-card, folded into the page's accordion pattern; no extra link. -->
+        <details class="accordion delivery-accordion"><summary>Доставка<span class="accordion-icon" aria-hidden="true"><span class="accordion-icon__bar accordion-icon__bar--h" data-icon="minus"></span><span class="accordion-icon__bar accordion-icon__bar--v" data-icon="minus"></span></span></summary><div class="accordion__body"><div class="delivery-accordion__content">
+          <div class="city-line"><span>Ваш город:</span><button type="button" class="city-link">г. Москва</button></div>
+          <div class="delivery-options">
+            <article class="delivery-option">
+              <h3 class="delivery-option__title"><span class="delivery-option__icon" data-icon="hanger"></span>Примерка в бутике</h3>
+              <p>Сейчас лот не в бутике, но мы можем доставить его туда — это бесплатно. <a class="delivery-manager" href="#manager">Напишите менеджеру, чтобы заказать примерку</a></p>
+            </article>
+            <article class="delivery-option">
+              <h3 class="delivery-option__title"><span class="delivery-option__icon" data-icon="boutique-bag"></span>Самовывоз из бутика</h3>
+              <p>Будет готово к выдаче после оплаты заказа. Адрес: Петровский б-р, 1с1</p>
+            </article>
+          </div>
+        </div></div></details>
+
         <section class="condition-section" aria-labelledby="conditionTitle">
           <div class="section-title-row"><h2 id="conditionTitle">Состояние</h2><button class="info-button" type="button" aria-label="Как мы оцениваем состояние"><span data-icon="info"></span></button></div>
           <div class="condition-scale" role="img" aria-label="Состояние: отличное">
@@ -148,6 +164,6 @@
     </nav>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=65aedeb9940c"></script>
+    <script type="module" src="./app.js?v=391548a1eada"></script>
   </body>
 </html>

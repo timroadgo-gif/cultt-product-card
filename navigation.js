@@ -6,7 +6,7 @@
 // Transition: iOS-style push — the card enters from the right over the index, the index drifts 30 % left; pop reverses it.
 // An interrupted transition reverses from where it is. Safari's own swipe-back animation (hasUAVisualTransition) is
 // not doubled, and reduced motion switches screens instantly.
-import { createIcon } from './design-system/icons/icon.js?v=65aedeb9940c';
+import { createIcon } from './design-system/icons/icon.js?v=391548a1eada';
 
 // Scenario registry: add a row here to list another scenario. `screen` is the screen it opens (only the PDP for now).
 // `state` is the product state the shared PDP renders (PRODUCT_STATES below → html[data-availability] + html[data-price];
@@ -25,6 +25,9 @@ export const SCENARIOS = [
   // Standard available card + floating contact-support button and popup (support.js) + cost per wear (cost-per-wear.js);
   // no similar products.
   { id: 'product-support', title: 'Связаться с поддержкой', route: '#/product/support', screen: 'product', state: 'available', sections: ['support', 'cost-per-wear'], documentTitle: 'Loewe Puzzle — THE CULTT' },
+  // Experiment: standard available card, but the city line + delivery options live in a collapsed «Доставка» accordion above
+  // «Состояние» instead of the open delivery block and «Все способы доставки» (index.html .delivery-accordion).
+  { id: 'product-delivery-accordion', title: 'Доставка — аккордеон', route: '#/product/delivery', screen: 'product', state: 'available', sections: ['delivery-accordion'], documentTitle: 'Loewe Puzzle — THE CULTT' },
 ];
 const INDEX_TITLE = 'Прототипы — THE CULTT';
 
