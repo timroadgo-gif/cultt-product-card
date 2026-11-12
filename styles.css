@@ -46,11 +46,12 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .gallery__counter{position:absolute;right:var(--space-3);bottom:calc(var(--space-3) + 2px);z-index:2;display:inline-flex;align-items:center;height:20px;padding:0 var(--space-2);border-radius:10px;background:rgba(255,255,255,.72);color:var(--ink);font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:pre;pointer-events:none;user-select:none}
 /* Pagination (2026-11-12, user's reference): one short flat line per unique photo, bottom-left on the content inset,
    vertically centred on the counter pill. Active = ink and slightly longer, inactive = light grey; follows the scroll. */
-.gallery__pager{position:absolute;left:clamp(16px,4vw,24px);bottom:calc(var(--space-3) + 11px);z-index:2;height:2px;pointer-events:none;contain:layout paint}
+.gallery__pager{position:absolute;left:calc(clamp(16px,4vw,24px) - 2px);bottom:calc(var(--space-3) + 11px);z-index:2;height:2px;overflow:hidden;pointer-events:none;contain:strict}
 .gallery__pager[hidden]{display:none}
-/* v2: each segment is an 18 px bar placed and sized by transform from the scroll position (app.js paintPager):
-   idle 12 px light grey, active 18 px ink, interpolated continuously; width of the row is fixed in JS. */
-.gallery__pager-segment{position:absolute;left:0;top:0;width:18px;height:2px;background:rgba(7,7,7,.16);transform-origin:0 50%;will-change:transform}
+/* v3: fixed row of grey 12 px segments (6 px gaps) + one 16 px ink indicator that slides over them by transform, driven by
+   the scroll position (app.js paintPager). The row is 2 px wider on each side so the indicator's overhang is not clipped. */
+.gallery__pager-segment{position:absolute;top:0;width:12px;height:2px;background:rgba(7,7,7,.16)}
+.gallery__pager-indicator{position:absolute;left:0;top:0;width:16px;height:2px;background:var(--ink);transform-origin:0 50%;will-change:transform}
 /* Section rhythm (luxury PDPs measured on mobile: Gucci ≈40, Dior ≈52 between groups): 48 between sections, ≤24 inside one,
    so each block reads as a unit. */
 .product-content{position:relative;z-index:1;background:#fff;padding:calc(var(--space-4) + var(--space-1)) clamp(16px,4vw,24px) 136px;display:flex;flex-direction:column;gap:var(--space-7)}

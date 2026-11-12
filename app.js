@@ -1,15 +1,15 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=d272179ae69d';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=d272179ae69d';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=d272179ae69d';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=d272179ae69d';
-import { createButton } from './design-system/components/button/button.js?v=d272179ae69d';
-import { goToIndex } from './navigation.js?v=d272179ae69d';
-import { renderSimilarProducts } from './similar-products.js?v=d272179ae69d';
-import { initSupport } from './support.js?v=d272179ae69d';
-import { initCostPerWear } from './cost-per-wear.js?v=d272179ae69d';
-import { createPagePopups } from './popups.js?v=d272179ae69d';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=a27218eab794';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=a27218eab794';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=a27218eab794';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=a27218eab794';
+import { createButton } from './design-system/components/button/button.js?v=a27218eab794';
+import { goToIndex } from './navigation.js?v=a27218eab794';
+import { renderSimilarProducts } from './similar-products.js?v=a27218eab794';
+import { initSupport } from './support.js?v=a27218eab794';
+import { initCostPerWear } from './cost-per-wear.js?v=a27218eab794';
+import { createPagePopups } from './popups.js?v=a27218eab794';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
@@ -149,27 +149,30 @@ allImages.forEach(img => {
   if (img.complete && !img.naturalWidth && img.currentSrc) img.dispatchEvent(new Event('error'));
 });
 
-// Pagination (2026-11-12 v2): flat segments, the active one slightly longer (12 → 18 px). Driven continuously by the
-// gallery's real scroll position — no timers, no transitions: between photos a and b at progress f, a has weight 1 − f
-// and b has f; length (12 + 6·w) and ink alpha (.16 + .84·w) follow the weight. The two weights always sum to 1, so the
-// row's total length is constant and the indicator never drifts. Segments are absolutely placed and moved with
-// transform (translateX + scaleX of an 18 px bar), so scrolling repaints/composites only — no layout.
-const SEG = { base: 12, active: 18, gap: 4, alphaIdle: .16 };
-const segments = slides.map(() => { const s = document.createElement('span'); s.className = 'gallery__pager-segment'; return s; });
-pager.replaceChildren(...segments);
+// Pagination (2026-11-12 v3, «worm» on a fixed row): the grey segments never move or resize; one black indicator (two
+// DOM copies for the loop) slides over them. Its two edges are driven by the gallery's real scroll position p (in photos):
+// between photos i and i+1 at fraction f, the leading edge runs smoothstep over f ∈ [0, .85] and the trailing edge over
+// f ∈ [.15, 1] — the front starts first, the back follows, the line stretches by at most ~5 px mid-swipe and lands at its
+// rest length exactly when the photo lands. Pure function of p: no timers, no transitions, reversal is automatic.
+// Loop: positions live on a ring of `count` slots — past the last slot the indicator leaves on the right while its copy
+// (shifted by one row length) enters on the left; the row is clipped 2 px outside its ends.
+const SEG = { len: 12, gap: 6, over: 2 }; // grey 12, gap 6; the indicator is 12 + 2 × 2 = 16 at rest
+const PITCH = SEG.len + SEG.gap, ROW = count * PITCH - SEG.gap, IND = SEG.len + 2 * SEG.over;
+const segments = slides.map((_, i) => { const s = document.createElement('span'); s.className = 'gallery__pager-segment'; s.style.left = `${SEG.over + i * PITCH}px`; return s; });
+const indicators = [0, 1].map(() => { const s = document.createElement('span'); s.className = 'gallery__pager-indicator'; return s; });
+pager.replaceChildren(...segments, ...indicators);
 pager.hidden = !looping;
-pager.style.width = `${(count - 1) * (SEG.base + SEG.gap) + SEG.active}px`;
+pager.style.width = `${ROW + 2 * SEG.over}px`;
 
-function paintPager(progress) { // progress in photos: 0 = photo 1, count − 1 = last, −1 / count = loop clones
+const smooth = t => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
+function paintPager(progress) { // 0 = photo 1, count − 1 = last; −1 / count = the loop clones
   const i0 = Math.floor(progress), f = progress - i0;
-  const a = ((i0 % count) + count) % count, b = (a + 1) % count; // clones map onto the real photos → seamless wrap
-  let x = 0;
-  segments.forEach((seg, i) => {
-    const w = i === a ? 1 - f : i === b ? f : 0;
-    const len = SEG.base + (SEG.active - SEG.base) * w;
-    seg.style.transform = `translate3d(${x.toFixed(2)}px,0,0) scaleX(${(len / SEG.active).toFixed(4)})`;
-    seg.style.backgroundColor = `rgba(7,7,7,${(SEG.alphaIdle + (1 - SEG.alphaIdle) * w).toFixed(3)})`;
-    x += len + SEG.gap;
+  let start = i0 + smooth((f - .15) / .85), end = i0 + smooth(f / .85); // trailing / leading edge, in slots
+  const shift = Math.floor(start / count) * count; start -= shift; end -= shift; // onto the ring [0, count)
+  const len = IND + (end - start) * PITCH;
+  indicators.forEach((el, k) => {
+    const x = start * PITCH - k * count * PITCH; // copy 1 = one row to the left (enters while the other leaves)
+    el.style.transform = `translate3d(${x.toFixed(2)}px,0,0) scaleX(${(len / IND).toFixed(4)})`;
   });
 }
 
