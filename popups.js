@@ -1,7 +1,7 @@
 // One Popup System host for the product page (IOS:UI Agent/playground host via ./popup → playground/js): one popup at a
 // time, its own fixed layer above the page, the product screen inert while open, page scroll locked.
-import { createHost } from './popup/popup-host.js?v=bc9d5f215e6c';
-import { node } from './popup/ui/sheet.js?v=bc9d5f215e6c';
+import { createHost } from './popup/popup-host.js?v=f0e9f32aa745';
+import { node } from './popup/ui/sheet.js?v=f0e9f32aa745';
 
 export function createPagePopups(screen) {
   const layer = node('div', 'popup-layer support-popup-layer');

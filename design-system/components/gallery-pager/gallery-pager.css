@@ -1,7 +1,7 @@
-/* GalleryPager: fixed slots, each as wide as the active line (segment.active-width) — slots never move or resize.
-   Inside its slot the visible line (::before) is pinned to the left edge: its weight --w (0…1, set by setProgress)
-   changes only its width (segment.width → segment.active-width, the right edge moves) and its opacity (idle alpha → 1).
-   Height comes from the fixed row/slot height and is never animated: no transform, no scale, no border. */
+/* GalleryPager: equal grey lines in fixed slots; the black fill (::before) flows from line to line with the scroll.
+   Each segment's fill covers the part [--from, --to] of its own length (fractions 0…1, set by setProgress): only the
+   fill's horizontal extent changes — the grey lines, their positions and the height never change (no transform, no
+   scale, no border). The host positions the row. */
 .ds-gallery-pager {
   display: flex;
   gap: var(--gallery-pager-gap);
@@ -11,19 +11,20 @@
 }
 .ds-gallery-pager[hidden] { display: none; }
 .ds-gallery-pager__segment {
-  --w: 0;
+  --from: 0;
+  --to: 0;
   position: relative;
   flex: none;
-  width: var(--gallery-pager-segment-active-width);
+  width: var(--gallery-pager-segment-width);
   height: var(--gallery-pager-height);
+  background: var(--gallery-pager-color-idle);
 }
 .ds-gallery-pager__segment::before {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
-  width: calc(var(--gallery-pager-segment-width) + (var(--gallery-pager-segment-active-width) - var(--gallery-pager-segment-width)) * var(--w));
+  left: calc(var(--from) * 100%);
+  width: calc((var(--to) - var(--from)) * 100%);
   background: var(--gallery-pager-color-active);
-  opacity: calc(var(--gallery-pager-idle-opacity) + (1 - var(--gallery-pager-idle-opacity)) * var(--w));
 }
