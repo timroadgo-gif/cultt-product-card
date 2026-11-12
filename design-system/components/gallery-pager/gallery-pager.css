@@ -1,6 +1,6 @@
 /* GalleryPager: equal grey lines in fixed slots; the black fill (::before) flows from line to line with the scroll.
-   Each segment's fill covers the part [--from, --to] of its own length (fractions 0…1, set by setProgress): only the
-   fill's horizontal extent changes — the grey lines, their positions and the height never change (no transform, no
+   Each segment's fill covers the part [--from, --to] of its own length at --fill-opacity (set by setProgress): only the
+   fill's horizontal extent and opacity change — the grey lines, their positions and the height never change (no transform, no
    scale, no border). The host positions the row. */
 .ds-gallery-pager {
   display: flex;
@@ -13,6 +13,7 @@
 .ds-gallery-pager__segment {
   --from: 0;
   --to: 0;
+  --fill-opacity: 0;
   position: relative;
   flex: none;
   width: var(--gallery-pager-segment-width);
@@ -27,4 +28,5 @@
   left: calc(var(--from) * 100%);
   width: calc((var(--to) - var(--from)) * 100%);
   background: var(--gallery-pager-color-active);
+  opacity: var(--fill-opacity);
 }

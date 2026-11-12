@@ -2,9 +2,9 @@
 // createGalleryPager({ count }) → <div> with setProgress(p): p is the gallery's scroll position in photos
 // (0 = first, fractional while moving; values outside 0…count−1 wrap, so loop clones map onto real photos).
 // Motion (user's reference recording, 2026-11-12): all lines are equal grey tracks; the black fill flows between them.
-// Between photos A (left) and B (right) at fraction f, A's fill covers the right part [f, 1] of A and B's fill the left
-// part [0, f] of B — moving forward the black drains out of A towards B and pours into B from the side facing A;
-// backward it is the mirror image. Pure function of p: drive it from the scroller every frame (finger, momentum, snap);
+// The line of the photo the gallery last rested on keeps its full-length fill and fades it out — no black tail; the
+// neighbour being scrolled to fills with black from the side facing it (forward: from its left edge, back: from its
+// right edge), in proportion to the scroll fraction. Reversing mid-gesture keeps the roles, so it simply runs back. Pure function of p: drive it from the scroller every frame (finger, momentum, snap);
 // no timers, no transitions; across the loop seam the fill leaves the last line on the right and enters the first.
 export function createGalleryPager({ count = 1 } = {}) {
   if (!Number.isInteger(count) || count < 1) throw new Error(`GalleryPager: count must be a positive integer, got ${count}`);
@@ -14,13 +14,22 @@ export function createGalleryPager({ count = 1 } = {}) {
   const segments = Array.from({ length: count }, () => Object.assign(document.createElement("span"), { className: "ds-gallery-pager__segment" }));
   el.append(...segments);
   let labelled = -1;
+  let settled = 0; // the photo the gallery last rested on: its line is the one that fades out
   el.setProgress = (progress) => {
     const i0 = Math.floor(progress), f = progress - i0;
     const a = ((i0 % count) + count) % count, b = (a + 1) % count;
+    if (f < 1e-3) settled = a; else if (f > 1 - 1e-3) settled = b;
+    // Outgoing line (the settled one) keeps its full fill and fades it out — no black tail. The incoming line fills
+    // from the side facing the outgoing one: B (right) from its left edge, A (left) from its right edge.
+    const back = settled === b && a !== b; // moving from B back to A
     segments.forEach((seg, i) => {
-      const [from, to] = i === a ? [f, 1] : i === b && count > 1 ? [0, f] : [0, 0];
+      let from = 0, to = 0, alpha = 0;
+      if (count > 1 && i === a) [from, to, alpha] = back ? [f, 1, 1] : [0, 1, 1 - f];
+      else if (count > 1 && i === b) [from, to, alpha] = back ? [0, 1, f] : [0, f, 1];
+      else if (i === a) [from, to, alpha] = [0, 1, 1];
       seg.style.setProperty("--from", from.toFixed(4));
       seg.style.setProperty("--to", to.toFixed(4));
+      seg.style.setProperty("--fill-opacity", alpha.toFixed(4));
     });
     const current = f < .5 ? a : b; // accessible name follows the photo that covers most of the frame
     if (current !== labelled) { labelled = current; el.setAttribute("aria-label", `Фото ${current + 1} из ${count}`); }

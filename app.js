@@ -1,16 +1,16 @@
 // UI Kit (../IOS:UI Agent/design-system via the design-system link): icons from the approved registry, glass controls
 // through GlassIconButton (live Liquid Glass engine), actions through Button. No local icon or glass implementations.
-import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=f0e9f32aa745';
-import { META as ICON_META } from './design-system/icons/icons.generated.js?v=f0e9f32aa745';
-import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=f0e9f32aa745';
-import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=f0e9f32aa745';
-import { createButton } from './design-system/components/button/button.js?v=f0e9f32aa745';
-import { createGalleryPager } from './design-system/components/gallery-pager/gallery-pager.js?v=f0e9f32aa745';
-import { goToIndex } from './navigation.js?v=f0e9f32aa745';
-import { renderSimilarProducts } from './similar-products.js?v=f0e9f32aa745';
-import { initSupport } from './support.js?v=f0e9f32aa745';
-import { initCostPerWear } from './cost-per-wear.js?v=f0e9f32aa745';
-import { createPagePopups } from './popups.js?v=f0e9f32aa745';
+import { createIcon, applyPresentation } from './design-system/icons/icon.js?v=efdf9eaebab0';
+import { META as ICON_META } from './design-system/icons/icons.generated.js?v=efdf9eaebab0';
+import { createIconButton } from './design-system/components/icon-button/icon-button.js?v=efdf9eaebab0';
+import { createIconButtonGroup } from './design-system/components/icon-button-group/icon-button-group.js?v=efdf9eaebab0';
+import { createButton } from './design-system/components/button/button.js?v=efdf9eaebab0';
+import { createGalleryPager } from './design-system/components/gallery-pager/gallery-pager.js?v=efdf9eaebab0';
+import { goToIndex } from './navigation.js?v=efdf9eaebab0';
+import { renderSimilarProducts } from './similar-products.js?v=efdf9eaebab0';
+import { initSupport } from './support.js?v=efdf9eaebab0';
+import { initCostPerWear } from './cost-per-wear.js?v=efdf9eaebab0';
+import { createPagePopups } from './popups.js?v=efdf9eaebab0';
 
 renderSimilarProducts(document.getElementById('similarList'));
 
